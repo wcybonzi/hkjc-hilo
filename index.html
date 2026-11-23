@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>足智彩「入球大細 2.5」全自動雲端爬蟲與即時天氣陣容分析系統</title>
+  <style>
+    :root {
+      --bg-dark: #09101d;
+      --bg-card: #121c30;
+      --bg-panel: #1a2742;
+      --border: #293a5a;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --bet-green: #10b981;
+      --bet-green-bg: rgba(16, 185, 129, 0.15);
+      --bet-amber: #f59e0b;
+      --bet-amber-bg: rgba(245, 158, 11, 0.16);
+      --pass-red: #ef4444;
+      --pass-red-bg: rgba(239, 68, 68, 0.15);
+      --hkjc-gold: #fbbf24;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "PingFang HK", "Microsoft JhengHei", "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.55;
+      padding-bottom: 88px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1329 0%, #172554 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: var(--hkjc-gold);
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 4px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .brand p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 8px 13px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-primary { background: var(--accent-blue); color: #082f49; }
+    .btn-gold { background: var(--hkjc-gold); color: #0f172a; }
+    .btn-outline { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border); }
+    .btn-outline:hover { background: #243556; }
+
+    .sync-bar {
+      background: #0d1628;
+      border-bottom: 1px solid var(--border);
+      padding: 9px 18px;
+    }
+
+    .sync-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bet-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    .pulse-dot.paused {
+      background: var(--text-muted);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.65); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .feed-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .feed-pill.ok { border-color: rgba(16, 185, 129, 0.5); color: #34d399; }
+    .feed-pill.wait { border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; }
+
+    .sync-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sync-select {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 0.77rem;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1380px;
+      margin: 16px auto;
+      padding: 0 15px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .kpi-label { font-size: 0.75rem; color: var(--text-muted); }
+    .kpi-value { font-size: 1.35rem; font-weight: 800; margin-top: 2px; }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .chip {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: 0.81rem;
+    }
+
+    .chip.active {
+      background: var(--accent-blue);
+      color: #082f49;
+      border-color: var(--accent-blue);
+      font-weight: 800;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 1024px) {
+      .workspace { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+      body { padding-bottom: 32px; }
+    }
+
+    .match-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .match-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .match-card:hover { border-color: #4b5e82; }
+    .match-card.selected { border-color: var(--accent-blue); box-shadow: 0 0 0 1px var(--accent-blue); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fb-code { color: var(--hkjc-gold); font-weight: 800; margin-right: 4px; }
+    .stage-pill { background: var(--bg-panel); padding: 3px 8px; border-radius: 6px; font-weight: 700; color: var(--accent-blue); font-size: 0.73rem; }
+    .teams-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .teams-title { font-size: 1.03rem; font-weight: 800; }
+    .verdict-badge { padding: 5px 10px; border-radius: 8px; font-size: 0.76rem; font-weight: 800; white-space: nowrap; }
+    .v-bet { background: var(--bet-green-bg); color: var(--bet-green); border: 1px solid rgba(16, 185, 129, 0.38); }
+    .v-hold { background: var(--bet-amber-bg); color: var(--bet-amber); border: 1px solid rgba(245, 158, 11, 0.38); }
+    .v-pass { background: var(--pass-red-bg); color: var(--pass-red); border: 1px solid rgba(239, 68, 68, 0.38); }
+
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--bg-dark);
+      padding: 9px 10px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+    }
+
+    .m-label { color: var(--text-muted); font-size: 0.68rem; display: block; }
+    .m-val { font-weight: 700; }
+    .trend-up { color: #34d399; font-size: 0.7rem; }
+    .trend-down { color: #f87171; font-size: 0.7rem; }
+
+    .live-telemetry { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; font-size: 0.73rem; }
+    .tele-tag { background: rgba(26, 39, 66, 0.85); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; color: #cbd5e1; }
+    .tele-tag.warn { border-color: rgba(239, 68, 68, 0.5); color: #fca5a5; }
+    .tele-tag.good { border-color: rgba(16, 185, 129, 0.5); color: #6ee7b7; }
+
+    .review-note-bar {
+      margin-top: 9px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inspector {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      position: sticky;
+      top: 78px;
+    }
+
+    .inspector h2 { font-size: 1.12rem; margin-bottom: 4px; }
+    .sub-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; }
+    .section-title { font-size: 0.81rem; color: var(--accent-blue); margin: 15px 0 9px; font-weight: 800; border-left: 3px solid var(--accent-blue); padding-left: 8px; }
+    .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+    .stage-btn { background: var(--bg-dark); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 6px; font-size: 0.75rem; text-align: center; border-radius: 8px; }
+    .stage-btn.active { background: rgba(251, 191, 36, 0.16); color: var(--hkjc-gold); border-color: var(--hkjc-gold); font-weight: 800; }
+    .odds-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+    .input-group label { display: block; font-size: 0.73rem; color: var(--text-muted); margin-bottom: 4px; }
+    .input-group input, .input-group textarea, .input-group select {
+      width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
+      padding: 8px 10px; border-radius: 8px; font-size: 0.86rem; font-weight: 600;
+    }
+
+    .toggle-list { display: flex; flex-direction: column; gap: 7px; }
+    .toggle-item {
+      display: flex; justify-content: space-between; align-items: center; background: var(--bg-dark);
+      padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); font-size: 0.8rem; gap: 10px;
+    }
+    .toggle-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer; flex-shrink: 0; }
+    .factor-row { margin-bottom: 8px; }
+    .factor-head { display: flex; justify-content: space-between; font-size: 0.76rem; margin-bottom: 3px; }
+    .bar-bg { height: 7px; background: var(--bg-dark); border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #10b981); border-radius: 999px; }
+    .rationale-box { background: var(--bg-panel); border-radius: 10px; padding: 12px; font-size: 0.81rem; color: #e2e8f0; margin-top: 12px; }
+    .log-panel { margin-top: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .log-list { max-height: 145px; overflow-y: auto; font-size: 0.76rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+
+    @media (max-width: 1023px) {
+      .inspector-drawer { display: none; position: fixed; inset: 0; background: rgba(5, 10, 20, 0.85); z-index: 100; padding: 14px; overflow-y: auto; }
+      .inspector-drawer.open { display: block; }
+      .inspector { position: relative; top: 0; max-width: 560px; margin: 10px auto 40px; }
+      .mobile-close-btn { display: inline-block !important; }
+      .header-actions { display: none; }
+    }
+
+    .mobile-close-btn { display: none; float: right; background: var(--bg-panel); color: var(--text-main); padding: 5px 10px; font-size: 0.78rem; }
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(5, 10, 20, 0.86); z-index: 120; padding: 15px; overflow-y: auto; }
+    .modal-backdrop.open { display: flex; align-items: center; justify-content: center; }
+    .modal-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 560px; padding: 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .full-col { grid-column: span 2; }
+
+    .mobile-nav {
+      display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: #0d1527;
+      border-top: 1px solid var(--border); padding: 9px 10px; justify-content: space-around; gap: 6px; z-index: 60;
+    }
+    .mobile-nav button { flex: 1; padding: 9px 6px; font-size: 0.76rem; }
+    @media (min-width: 1024px) { .mobile-nav { display: none; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-badge">香港賽馬會足智彩</span>
+      <div>
+        <h1>入球大細 [2.5] 雲端全自動量化分析系統</h1>
+        <p>GitHub 雲端爬蟲對接 &bull; Open-Meteo 即時球場氣象 &bull; ESPN 正選陣容直連</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-gold" onclick="syncNow(true)">&#8635; 立即全線同步</button>
+      <button class="btn-outline" onclick="openSettingsModal()">雲端與自動設定</button>
+      <button class="btn-outline" onclick="openImportModal()">貼上馬會賠率</button>
+      <button class="btn-primary" onclick="openAddModal()">+ 新增賽事</button>
+    </div>
+  </div>
+</header>
+
+<div class="sync-bar">
+  <div class="sync-inner">
+    <div class="sync-status">
+      <span class="pulse-dot" id="syncDot"></span>
+      <span id="syncStatusText" style="font-weight:700; color:#e2e8f0;">線上自動更新運作中</span>
+      <span class="feed-pill wait" id="pillCloud">雲端馬會 JSON：待設定</span>
+      <span class="feed-pill ok" id="pillWeather">Open-Meteo 天氣：連線中</span>
+      <span class="feed-pill ok" id="pillEspn">ESPN 正選陣容：連線中</span>
+      <span style="color:var(--hkjc-gold); font-weight:700;" id="countdownLabel">下次同步：120秒</span>
+    </div>
+    <div class="sync-controls">
+      <span style="color:var(--text-muted);" id="lastSyncLabel">上次同步：啟動中</span>
+      <select class="sync-select" id="intervalSelect" onchange="changeSyncInterval(this.value)">
+        <option value="60">每 60 秒線上更新</option>
+        <option value="120" selected>每 2 分鐘線上更新</option>
+        <option value="300">每 5 分鐘線上更新</option>
+        <option value="900">每 15 分鐘線上更新</option>
+        <option value="0">暫停自動更新</option>
+      </select>
+      <button class="btn-outline" style="padding:5px 10px; font-size:0.74rem;" onclick="resetDefaults()">重設預設賽程</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="kpi-grid">
+    <div class="kpi-card"><span class="kpi-label">監測中足智彩賽事</span><div class="kpi-value" id="kpiTotal">0</div></div>
+    <div class="kpi-card"><span class="kpi-label">建議投注 (+EV 正數盤)</span><div class="kpi-value" style="color: var(--bet-green);" id="kpiBets">0</div></div>
+    <div class="kpi-card"><span class="kpi-label">暫緩觀望 (待 ESPN 正選)</span><div class="kpi-value" style="color: var(--bet-amber);" id="kpiHolds">0</div></div>
+    <div class="kpi-card"><span class="kpi-label">嚴守紀律放棄 (無優勢)</span><div class="kpi-value" style="color: var(--pass-red);" id="kpiPasses">0</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="chip active" onclick="setFilter('ALL', this)">全部足智彩賽事</button>
+    <button class="chip" onclick="setFilter('BET', this)">只看建議投注 (+EV)</button>
+    <button class="chip" onclick="setFilter('HIGH', this)">建議買「大 2.5」</button>
+    <button class="chip" onclick="setFilter('LOW', this)">建議買「細 2.5」</button>
+    <button class="chip" onclick="setFilter('HOLD', this)">待 T-60m 正選名單</button>
+    <button class="chip" onclick="setFilter('PASS', this)">放棄投注 (水位不足)</button>
+  </div>
+
+  <div class="workspace">
+    <div>
+      <div class="match-list" id="matchList"></div>
+      <div class="log-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:0.83rem; color:var(--accent-blue);">線上自動同步日誌（雲端 JSON / 球場氣象 / 官方陣容）</strong>
+          <span style="font-size:0.73rem; color:var(--text-muted);">自動觸發惡劣天氣與正選解鎖</span>
+        </div>
+        <div class="log-list" id="syncLogList"></div>
+      </div>
+    </div>
+    <div class="inspector-drawer" id="inspectorDrawer">
+      <div class="inspector" id="inspectorContent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-nav">
+  <button class="btn-gold" onclick="syncNow(true)">&#8635; 全線同步</button>
+  <button class="btn-outline" onclick="openSettingsModal()">雲端設定</button>
+  <button class="btn-outline" onclick="openImportModal()">貼上賠率</button>
+  <button class="btn-primary" onclick="openAddModal()">+ 新增</button>
+</div>
+
+<div class="modal-backdrop" id="settingsModal">
+  <div class="modal-card">
+    <h3>全自動線上數據源設定</h3>
+    <p style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
+      如透過 GitHub Pages 開啟本頁，系統已自動連接同資料夾內之馬會雲端賠率檔！
+    </p>
+    <div class="form-grid">
+      <div class="input-group">
+        <label>GitHub 帳號名稱（離線開啟時自動生成網址）</label>
+        <input type="text" id="cfgGhUser" placeholder="例如：wongball88" oninput="buildGithubRawUrl()" />
+      </div>
+      <div class="input-group">
+        <label>GitHub 儲存庫名稱</label>
+        <input type="text" id="cfgGhRepo" placeholder="例如：hkjc-hilo" oninput="buildGithubRawUrl()" />
+      </div>
+      <div class="input-group full-col">
+        <label>馬會雲端爬蟲 JSON 網址</label>
+        <input type="text" id="cfgApiUrl" placeholder="./data/hkjc_hilo.json" />
+      </div>
+      <div class="input-group full-col">
+        <label>The Odds API 金鑰（選填備援）</label>
+        <input type="text" id="cfgOddsApiKey" placeholder="選填" />
+      </div>
+      <div class="input-group full-col">
+        <label class="toggle-item">
+          <span>啟用 Open-Meteo 即時球場風速及降雨監測</span>
+          <input type="checkbox" id="cfgOnlineWeather" checked />
+        </label>
+      </div>
+      <div class="input-group full-col">
+        <label class="toggle-item">
+          <span>啟用 ESPN 官方賽事狀態及 T-60m 正選 11 人名單監測</span>
+          <input type="checkbox" id="cfgOnlineEspn" checked />
+        </label>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+      <button class="btn-outline" onclick="closeModal('settingsModal')">關閉</button>
+      <button class="btn-primary" onclick="saveSettings()">儲存並立即連線同步</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="importModal">
+  <div class="modal-card">
+    <h3>手動備援：貼上足智彩「入球大細」網頁文字解析</h3>
+    <div class="input-group" style="margin-top:12px;">
+      <label>貼上足智彩網頁內容</label>
+      <textarea id="importRawText" rows="5" placeholder="範例：FB9123 女子歐聯 車路士女足 對 巴黎聖日耳門女足 [2.5] 1.66 2.08"></textarea>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button class="btn-outline" onclick="closeModal('importModal')">取消</button>
+      <button class="btn-primary" onclick="parseImportedText()">解析並更新賠率</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="addModal">
+  <div class="modal-card">
+    <h3>新增足智彩監測賽事</h3>
+    <div class="form-grid">
+      <div class="input-group"><label>賽事編號 (FBxxxx)</label><input type="text" id="newCode" placeholder="FB9160" /></div>
+      <div class="input-group">
+        <label>ESPN 聯賽代碼</label>
+        <select id="newEspnLeague">
+          <option value="eng.1">英格蘭超級聯賽 (eng.1)</option>
+          <option value="uefa.champions">歐洲聯賽冠軍盃 (uefa.champions)</option>
+          <option value="uefa.wchampions">女子歐聯 (uefa.wchampions)</option>
+          <option value="esp.1">西班牙甲組聯賽 (esp.1)</option>
+          <option value="ger.1">德國甲組聯賽 (ger.1)</option>
+          <option value="ita.1">意大利甲組聯賽 (ita.1)</option>
+          <option value="bra.1">巴西甲組聯賽 (bra.1)</option>
+          <option value="usa.1">美國職業聯賽 (usa.1)</option>
+          <option value="">其他盃賽（僅氣象追蹤）</option>
+        </select>
+      </div>
+      <div class="input-group"><label>主隊中文名稱</label><input type="text" id="newHome" placeholder="阿仙奴" /></div>
+      <div class="input-group"><label>客隊中文名稱</label><input type="text" id="newAway" placeholder="曼城" /></div>
+      <div class="input-group"><label>主隊英文關鍵字</label><input type="text" id="newEnHome" placeholder="Arsenal" /></div>
+      <div class="input-group">
+        <label>球場城市預設座標</label>
+        <select id="newCityCoords">
+          <option value="51.5549,-0.1084,倫敦">英國倫敦</option>
+          <option value="53.4831,-2.2004,曼徹斯特">英國曼徹斯特</option>
+          <option value="40.4530,-3.6883,馬德里">西班牙馬德里</option>
+          <option value="48.2188,11.6247,慕尼黑">德國慕尼黑</option>
+          <option value="45.4781,9.1240,米蘭">意大利米蘭</option>
+          <option value="-22.9121,-43.2302,里約熱內盧">巴西里約熱內盧</option>
+          <option value="22.2730,114.1890,香港">中國香港</option>
+        </select>
+      </div>
+      <div class="input-group"><label>開賽時間 (YYYY-MM-DD HH:MM)</label><input type="text" id="newKickoffIso" value="2026-11-21 23:00" /></div>
+      <div class="input-group"><label>綜合預期入球 (npxG)</label><input type="number" step="0.05" id="newNpxg" value="2.85" /></div>
+      <div class="input-group"><label>足智彩「大 2.5」賠率</label><input type="number" step="0.01" id="newOddsHigh" value="1.80" /></div>
+      <div class="input-group"><label>足智彩「細 2.5」賠率</label><input type="number" step="0.01" id="newOddsLow" value="1.90" /></div>
+      <div class="input-group full-col"><label>賽前覆核重點備註</label><input type="text" id="newNote" placeholder="輸入觀察重點..." /></div>
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+      <button class="btn-outline" onclick="closeModal('addModal')">取消</button>
+      <button class="btn-primary" onclick="saveNewMatch()">加入並立即連線查詢</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "hkjc_hilo_zh_v3";
+  const CFG_KEY = "hkjc_hilo_cfg_v3";
+
+  const DEFAULT_MATCHES = [
+    {
+      id: "fb9146", code: "FB9146", league: "亞洲盃賽", espnLeague: "afc.champions",
+      kickoffDisplay: "18/11 (周三) 19:30", kickoffIso: "2026-11-18T19:30:00+08:00",
+      home: "淡濱尼流浪", away: "拉查布里", enHome: "Tampines", enAway: "Ratchaburi",
+      venueCity: "新加坡", lat: 1.3530, lon: 103.9403,
+      oddsHigh: 1.62, oddsLow: 2.15, prevHigh: 1.62, npxg: 3.14,
+      tacticsScore: 8.2, teamNewsScore: 7.4, contextScore: 7.0,
+      reviewStage: "T-6h 軍情覆核", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "待開賽前 60 分鐘核實正選",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "東南亞盃賽攻強守弱，淡濱尼主場推進節奏極快；系統自動監測新加坡熱帶雷雨警報。"
+    },
+    {
+      id: "fb9122", code: "FB9122", league: "女子歐聯", espnLeague: "uefa.wchampions",
+      kickoffDisplay: "19/11 (周四) 01:45", kickoffIso: "2026-11-19T01:45:00+08:00",
+      home: "皇家馬德里女足", away: "國際米蘭女足", enHome: "Real Madrid", enAway: "Inter",
+      venueCity: "馬德里", lat: 40.4769, lon: -3.6144,
+      oddsHigh: 1.54, oddsLow: 2.32, prevHigh: 1.54, npxg: 3.02,
+      tacticsScore: 7.5, teamNewsScore: 6.8, contextScore: 6.2,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 女子歐聯陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "抽水陷阱警示：大球賠率被壓低至 1.54，除非臨場回升至 1.68 以上否則放棄。"
+    },
+    {
+      id: "fb9123", code: "FB9123", league: "女子歐聯", espnLeague: "uefa.wchampions",
+      kickoffDisplay: "19/11 (周四) 04:00", kickoffIso: "2026-11-19T04:00:00+08:00",
+      home: "車路士女足", away: "巴黎聖日耳門女足", enHome: "Chelsea", enAway: "Paris",
+      venueCity: "倫敦", lat: 51.4817, lon: -0.1910,
+      oddsHigh: 1.68, oddsLow: 2.05, prevHigh: 1.68, npxg: 3.12,
+      tacticsScore: 8.3, teamNewsScore: 7.5, contextScore: 7.2,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 女子歐聯陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "車路士女足主場壓迫力強，巴黎女足反擊銳利，禁區射門期望值極高。"
+    },
+    {
+      id: "fb9055", code: "FB9055", league: "巴西甲組聯賽", espnLeague: "bra.1",
+      kickoffDisplay: "19/11 (周四) 07:30", kickoffIso: "2026-11-19T07:30:00+08:00",
+      home: "法林明高", away: "帕拉尼恩斯", enHome: "Flamengo", enAway: "Athletico",
+      venueCity: "里約熱內盧", lat: -22.9121, lon: -43.2302,
+      oddsHigh: 1.82, oddsLow: 1.88, prevHigh: 1.82, npxg: 2.88,
+      tacticsScore: 7.2, teamNewsScore: 6.4, contextScore: 6.5,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "待 ESPN 正選解鎖",
+      weatherSummary: "等待氣象連線...", lineupSummary: "暫緩鎖定：等待 ESPN 公佈正選 11 人",
+      lineupDoubt: true, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: true,
+      watchNote: "當 ESPN 接口偵測到雙方公佈正選 11 人名單，系統將自動解除暫緩鎖定！"
+    },
+    {
+      id: "fb9052", code: "FB9052", league: "巴西甲組聯賽", espnLeague: "bra.1",
+      kickoffDisplay: "19/11 (周四) 08:30", kickoffIso: "2026-11-19T08:30:00+08:00",
+      home: "哥連泰斯", away: "保地花高", enHome: "Corinthians", enAway: "Botafogo",
+      venueCity: "聖保羅", lat: -23.5453, lon: -46.4742,
+      oddsHigh: 2.02, oddsLow: 1.70, prevHigh: 2.02, npxg: 2.14,
+      tacticsScore: 3.5, teamNewsScore: 4.4, contextScore: 4.0,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 巴甲陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "巴甲硬仗防守紀律極嚴，保地花高作客低位緊密，細 [2.5] 具備顯著正期望值。"
+    },
+    {
+      id: "fb9140", code: "FB9140", league: "阿聯酋職業聯賽", espnLeague: "",
+      kickoffDisplay: "19/11 (周四) 23:25", kickoffIso: "2026-11-19T23:25:00+08:00",
+      home: "艾阿恩", away: "艾達夫拉", enHome: "Al Ain", enAway: "Al Dhafra",
+      venueCity: "艾阿恩", lat: 24.2447, lon: 55.7158,
+      oddsHigh: 1.48, oddsLow: 2.45, prevHigh: 1.48, npxg: 3.18,
+      tacticsScore: 7.8, teamNewsScore: 6.8, contextScore: 6.0,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "水位過低放棄區間",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "足智彩大 [2.5] 僅開 1.48，扣除抽水無正期望值，嚴守紀律放棄。"
+    },
+    {
+      id: "fb9134", code: "FB9134", league: "女子歐聯", espnLeague: "uefa.wchampions",
+      kickoffDisplay: "20/11 (周五) 04:00", kickoffIso: "2026-11-20T04:00:00+08:00",
+      home: "阿仙奴女足", away: "里昂女足", enHome: "Arsenal", enAway: "Lyon",
+      venueCity: "倫敦", lat: 51.5549, lon: -0.1084,
+      oddsHigh: 1.65, oddsLow: 2.10, prevHigh: 1.65, npxg: 3.20,
+      tacticsScore: 8.5, teamNewsScore: 7.6, contextScore: 7.4,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 女子歐聯陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "歐洲女足頂級對攻戰，里昂女足客場高位反搶極具威脅，大 [2.5] 值博率高。"
+    },
+    {
+      id: "fb9054", code: "FB9054", league: "巴西甲組聯賽", espnLeague: "bra.1",
+      kickoffDisplay: "20/11 (周五) 06:30", kickoffIso: "2026-11-20T06:30:00+08:00",
+      home: "華斯高", away: "國際體育會", enHome: "Vasco", enAway: "Internacional",
+      venueCity: "里約熱內盧", lat: -22.8909, lon: -43.2281,
+      oddsHigh: 2.05, oddsLow: 1.68, prevHigh: 2.05, npxg: 2.10,
+      tacticsScore: 3.4, teamNewsScore: 4.3, contextScore: 4.0,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 巴甲陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "國際體育會客場預期失球極低，華斯高破密集能力偏弱，推薦投注細 [2.5]。"
+    },
+    {
+      id: "fb9079", code: "FB9079", league: "美職季後賽", espnLeague: "usa.1",
+      kickoffDisplay: "20/11 (周五) 08:30", kickoffIso: "2026-11-20T08:30:00+08:00",
+      home: "奧蘭多城", away: "FC辛辛那提", enHome: "Orlando", enAway: "Cincinnati",
+      venueCity: "奧蘭多", lat: 28.5411, lon: -81.3893,
+      oddsHigh: 1.75, oddsLow: 1.95, prevHigh: 1.75, npxg: 3.06,
+      tacticsScore: 8.0, teamNewsScore: 7.4, contextScore: 7.6,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 美職陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "美職單場淘汰賽制，早段破門後落後一方必須全線壓上，大 [2.5] 具正期望值。"
+    },
+    {
+      id: "fb9078", code: "FB9078", league: "美職季後賽", espnLeague: "usa.1",
+      kickoffDisplay: "20/11 (周五) 11:00", kickoffIso: "2026-11-20T11:00:00+08:00",
+      home: "西雅圖海灣者", away: "皇家鹽湖城", enHome: "Seattle", enAway: "Salt Lake",
+      venueCity: "西雅圖", lat: 47.5952, lon: -122.3316,
+      oddsHigh: 1.88, oddsLow: 1.82, prevHigh: 1.88, npxg: 2.20,
+      tacticsScore: 3.8, teamNewsScore: 4.5, contextScore: 4.2,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: "初始載入",
+      weatherSummary: "等待氣象連線...", lineupSummary: "ESPN 美職陣容監測中",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+      watchNote: "西雅圖海灣者主場防守穩健，系統同步監測西雅圖沿海強風降雨對細球之額外利好。"
+    }
+  ];
+
+  const defaultCloudPath = window.location.protocol.startsWith("http") ? "./data/hkjc_hilo.json" : "";
+  let matches = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_MATCHES));
+  let config = JSON.parse(localStorage.getItem(CFG_KEY)) || {
+    ghUser: "", ghRepo: "", apiUrl: defaultCloudPath, oddsApiKey: "",
+    onlineWeather: true, onlineEspn: true, intervalSec: 120
+  };
+
+  let currentFilter = "ALL";
+  let selectedId = matches[0]?.id || null;
+  let syncLogs = [];
+  let countdownRemaining = config.intervalSec || 120;
+  let timerHandle = null;
+
+  function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(matches)); }
+  function saveConfigState() { localStorage.setItem(CFG_KEY, JSON.stringify(config)); }
+  function formatTimeNow() { return new Date().toLocaleTimeString("zh-HK", { hour12: false }); }
+
+  function addSyncLog(msg) {
+    syncLogs.unshift(`[${formatTimeNow()}] ${msg}`);
+    if (syncLogs.length > 35) syncLogs.pop();
+    const logEl = document.getElementById("syncLogList");
+    if (logEl) logEl.innerHTML = syncLogs.map(item => `<div>&bull; ${item}</div>`).join("");
+  }
+
+  function buildGithubRawUrl() {
+    const user = document.getElementById("cfgGhUser").value.trim();
+    const repo = document.getElementById("cfgGhRepo").value.trim();
+    if (user && repo) {
+      document.getElementById("cfgApiUrl").value = `https://raw.githubusercontent.com/${user}/${repo}/main/data/hkjc_hilo.json`;
+    }
+  }
+
+  function getKickoffCountdown(m) {
+    if (!m.kickoffIso) return "賽前監測中";
+    const diffMs = new Date(m.kickoffIso).getTime() - Date.now();
+    if (isNaN(diffMs)) return "賽前監測中";
+    if (diffMs <= 0) return "已開賽 / 截止投注";
+    const totalMins = Math.floor(diffMs / 60000);
+    const hrs = Math.floor(totalMins / 60);
+    const mins = totalMins % 60;
+    if (totalMins <= 75 && m.reviewStage !== "T-60m 正選鎖定") {
+      m.reviewStage = "T-60m 正選鎖定";
+    } else if (totalMins <= 360 && totalMins > 75 && m.reviewStage === "T-24h 初盤掃描") {
+      m.reviewStage = "T-6h 軍情覆核";
+    }
+    if (hrs >= 24) return `距離開賽 ${Math.floor(hrs / 24)}日${hrs % 24}小時`;
+    return `距離開賽 ${hrs}小時${mins}分`;
+  }
+
+  function evaluateMatch(m) {
+    let f1 = Math.min(0.92, Math.max(0.12, (m.npxg - 1.45) / 2.35));
+    let f2 = Math.min(0.95, Math.max(0.10, m.tacticsScore / 10));
+    let f3 = m.teamNewsScore / 10;
+    if (m.cbOrGkOut) f3 += 0.18;
+    if (m.starStrikerOut) f3 -= 0.24;
+    if (m.highFatigue) f3 += 0.08;
+    f3 = Math.min(0.95, Math.max(0.08, f3));
+
+    let f4 = m.contextScore / 10;
+    if (m.badWeather) f4 -= 0.28;
+    f4 = Math.min(0.92, Math.max(0.08, f4));
+
+    const invH = 1 / m.oddsHigh;
+    const invL = 1 / m.oddsLow;
+    const vigFreeHigh = invH / (invH + invL);
+    const vigFreeLow = 1 - vigFreeHigh;
+    let f5 = vigFreeHigh;
+
+    let probHigh = (0.35 * f1) + (0.25 * f2) + (0.20 * f3) + (0.10 * f4) + (0.10 * f5);
+    probHigh = Math.min(0.86, Math.max(0.15, probHigh));
+    const probLow = 1 - probHigh;
+
+    const edgeHigh = probHigh - vigFreeHigh;
+    const edgeLow = probLow - vigFreeLow;
+    const evHigh = (probHigh * m.oddsHigh) - 1;
+    const evLow = (probLow * m.oddsLow) - 1;
+
+    let actionType = "PASS";
+    let badgeText = "放棄投注 (無優勢)";
+    let badgeClass = "v-pass";
+    let adviceDetail = "馬會賠率已充分反映入球預期，扣除抽水後不具正期望值，建議嚴守紀律放棄。";
+
+    if (m.lineupDoubt) {
+      actionType = "HOLD";
+      badgeText = "暫緩觀望 • 待正選";
+      badgeClass = "v-hold";
+      adviceDetail = "關鍵陣容存疑；系統正透過 ESPN 接口自動監測官方正選名單，公佈後即自動解鎖建議。";
+    } else if (edgeHigh >= 0.035 && evHigh >= 0.025) {
+      actionType = "HIGH";
+      badgeText = "建議投注：大 [2.5]";
+      badgeClass = "v-bet";
+      adviceDetail = `正期望值出擊「大 [2.5]」@ ${m.oddsHigh.toFixed(2)}（去水優勢 +${(edgeHigh * 100).toFixed(1)}%，EV +${(evHigh * 100).toFixed(1)}%）。`;
+    } else if (edgeLow >= 0.035 && evLow >= 0.025) {
+      actionType = "LOW";
+      badgeText = "建議投注：細 [2.5]";
+      badgeClass = "v-bet";
+      adviceDetail = `正期望值出擊「細 [2.5]」@ ${m.oddsLow.toFixed(2)}（去水優勢 +${(edgeLow * 100).toFixed(1)}%，EV +${(evLow * 100).toFixed(1)}%）。`;
+    }
+
+    return { f1, f2, f3, f4, f5, probHigh, probLow, vigFreeHigh, vigFreeLow, edgeHigh, edgeLow, evHigh, evLow, actionType, badgeText, badgeClass, adviceDetail };
+  }
+
+  async function syncCloudHkjcJson() {
+    const pill = document.getElementById("pillCloud");
+    if (!config.apiUrl) {
+      pill.textContent = "雲端馬會 JSON：待設定網址";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+    try {
+      const bustUrl = config.apiUrl + (config.apiUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
+      const res = await fetch(bustUrl, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const incoming = Array.isArray(data) ? data : (data.matches || []);
+      let changed = 0;
+
+      incoming.forEach(item => {
+        if (!item.oddsHigh || !item.oddsLow) return;
+        const target = matches.find(m => m.code === item.code || (item.home && m.home === item.home));
+        if (target) {
+          if (target.oddsHigh !== parseFloat(item.oddsHigh) || target.oddsLow !== parseFloat(item.oddsLow)) {
+            target.prevHigh = target.oddsHigh;
+            target.oddsHigh = parseFloat(item.oddsHigh);
+            target.oddsLow = parseFloat(item.oddsLow);
+            changed++;
+          }
+          target.lastReviewed = `雲端馬會同步 ${formatTimeNow()}`;
+        } else if (item.code) {
+          matches.push({
+            id: item.code.toLowerCase(), code: item.code, league: item.league || "足智彩雲端同步", espnLeague: "",
+            kickoffDisplay: item.kickoffIso ? item.kickoffIso.slice(5, 16).replace("T", " ") : "最新雲端賽程",
+            kickoffIso: item.kickoffIso || "", home: item.home || `${item.code} 主隊`, away: item.away || "客隊",
+            enHome: "", enAway: "", venueCity: "香港", lat: 22.2730, lon: 114.1890,
+            oddsHigh: parseFloat(item.oddsHigh), oddsLow: parseFloat(item.oddsLow), prevHigh: parseFloat(item.oddsHigh),
+            npxg: 2.75, tacticsScore: 6.5, teamNewsScore: 6.5, contextScore: 6.0,
+            reviewStage: "T-24h 初盤掃描", lastReviewed: `雲端新增 ${formatTimeNow()}`,
+            weatherSummary: "待設定球場座標", lineupSummary: "雲端新增賽事",
+            lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false,
+            watchNote: "由 GitHub Actions 馬會雲端爬蟲自動匯入之新開盤賽事。"
+          });
+          changed++;
+        }
+      });
+
+      pill.textContent = `雲端馬會 JSON：已連線 (${incoming.length}場)`;
+      pill.className = "feed-pill ok";
+      return changed;
+    } catch (e) {
+      pill.textContent = "雲端馬會 JSON：等待首次排程";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+  }
+
+  async function syncOnlineWeather() {
+    const pill = document.getElementById("pillWeather");
+    if (!config.onlineWeather) {
+      pill.textContent = "Open-Meteo 天氣：已關閉";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+    const withCoords = matches.filter(m => typeof m.lat === "number" && typeof m.lon === "number");
+    if (withCoords.length === 0) return 0;
+    try {
+      const lats = withCoords.map(m => m.lat.toFixed(4)).join(",");
+      const lons = withCoords.map(m => m.lon.toFixed(4)).join(",");
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,precipitation,wind_speed_10m&timezone=Asia%2FHong_Kong`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Weather HTTP error");
+      const payload = await res.json();
+      const arr = Array.isArray(payload) ? payload : [payload];
+      let weatherAlerts = 0;
+      arr.forEach((wData, idx) => {
+        const m = withCoords[idx];
+        if (!m || !wData.current) return;
+        const temp = wData.current.temperature_2m;
+        const wind = wData.current.wind_speed_10m;
+        const rain = wData.current.precipitation;
+        m.weatherSummary = `${m.venueCity || "球場"} ${temp}&deg;C &bull; 風速 ${wind}km/h &bull; 降雨 ${rain}mm`;
+        const isSevere = (wind >= 30 || rain >= 4.0);
+        if (isSevere && !m.badWeather) {
+          m.badWeather = true;
+          weatherAlerts++;
+          addSyncLog(`氣象警報：${m.code} ${m.home} 錄得強風或大雨，已自動下調大球預期！`);
+        } else if (!isSevere && m.badWeather) {
+          m.badWeather = false;
+        }
+      });
+      pill.textContent = `Open-Meteo 天氣：即時正常 (${arr.length}場)`;
+      pill.className = "feed-pill ok";
+      return weatherAlerts;
+    } catch (err) {
+      pill.textContent = "Open-Meteo 天氣：離線";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+  }
+
+  async function syncOnlineEspnLineups() {
+    const pill = document.getElementById("pillEspn");
+    if (!config.onlineEspn) {
+      pill.textContent = "ESPN 正選陣容：已關閉";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+    const slugs = [...new Set(matches.map(m => m.espnLeague).filter(Boolean))];
+    if (slugs.length === 0) return 0;
+    let unlockedCount = 0;
+    try {
+      for (const slug of slugs) {
+        const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard`;
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const data = await res.json();
+        const events = data.events || [];
+        for (const ev of events) {
+          const comp = ev.competitions?.[0];
+          if (!comp) continue;
+          const competitors = comp.competitors || [];
+          const namesJoined = competitors.map(c => (c.team?.displayName || "").toLowerCase()).join(" ");
+          const target = matches.find(m => m.espnLeague === slug && m.enHome && namesJoined.includes(m.enHome.toLowerCase()));
+          if (!target) continue;
+          const statusDesc = ev.status?.type?.shortDetail || "賽前排程正常";
+          const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/summary?event=${ev.id}`);
+          if (sumRes.ok) {
+            const sumData = await sumRes.json();
+            const rosters = sumData.rosters || [];
+            const homeStarters = (rosters[0]?.roster || []).filter(p => p.starter);
+            const awayStarters = (rosters[1]?.roster || []).filter(p => p.starter);
+            if (homeStarters.length >= 11 && awayStarters.length >= 11) {
+              target.lineupSummary = `官方正選 11 人已確認 (${statusDesc})`;
+              target.reviewStage = "T-60m 正選鎖定";
+              if (target.lineupDoubt) {
+                target.lineupDoubt = false;
+                unlockedCount++;
+                addSyncLog(`正選公佈解鎖：${target.code} ${target.home} 雙方正選 11 人已確認！`);
+              }
+            } else {
+              target.lineupSummary = `ESPN 已連線 (${statusDesc}) &bull; 待 T-60m 公佈正選`;
+            }
+          }
+        }
+      }
+      pill.textContent = `ESPN 正選陣容：已連線 (${slugs.length}聯賽)`;
+      pill.className = "feed-pill ok";
+      return unlockedCount;
+    } catch (err) {
+      pill.textContent = "ESPN 正選陣容：連線受限";
+      pill.className = "feed-pill wait";
+      return 0;
+    }
+  }
+
+  async function syncNow(manualTrigger = false) {
+    const statusEl = document.getElementById("syncStatusText");
+    if (statusEl) statusEl.textContent = "正在線上同步天氣、陣容及雲端賠率...";
+    const [cloudChanges] = await Promise.all([syncCloudHkjcJson(), syncOnlineWeather(), syncOnlineEspnLineups()]);
+    matches.forEach(m => getKickoffCountdown(m));
+    document.getElementById("lastSyncLabel").textContent = `上次同步：${formatTimeNow()}`;
+    if (statusEl) statusEl.textContent = config.intervalSec > 0 ? "線上自動更新運作中" : "手動更新模式";
+    if (manualTrigger || cloudChanges > 0) {
+      addSyncLog(`線上同步完成：雲端賠率變動 ${cloudChanges} 場，氣象及陣容已更新。`);
+    }
+    countdownRemaining = config.intervalSec || 120;
+    saveState();
+    renderAll();
+  }
+
+  function startAutoTimer() {
+    if (timerHandle) clearInterval(timerHandle);
+    const dot = document.getElementById("syncDot");
+    const cdEl = document.getElementById("countdownLabel");
+    const statusEl = document.getElementById("syncStatusText");
+    if (!config.intervalSec || config.intervalSec <= 0) {
+      if (dot) dot.classList.add("paused");
+      if (statusEl) statusEl.textContent = "已暫停自動更新";
+      if (cdEl) cdEl.textContent = "手動模式";
+      return;
+    }
+    if (dot) dot.classList.remove("paused");
+    countdownRemaining = config.intervalSec;
+    timerHandle = setInterval(() => {
+      countdownRemaining--;
+      if (countdownRemaining <= 0) syncNow(false);
+      else if (cdEl) cdEl.textContent = `下次同步：${countdownRemaining}秒`;
+    }, 1000);
+  }
+
+  function changeSyncInterval(val) {
+    config.intervalSec = parseInt(val, 10) || 0;
+    saveConfigState();
+    startAutoTimer();
+  }
+
+  function renderAll() {
+    const listEl = document.getElementById("matchList");
+    listEl.innerHTML = "";
+    let total = matches.length, bets = 0, holds = 0, passes = 0;
+
+    matches.forEach(m => {
+      const res = evaluateMatch(m);
+      const cdText = getKickoffCountdown(m);
+      if (res.actionType === "HIGH" || res.actionType === "LOW") bets++;
+      else if (res.actionType === "HOLD") holds++;
+      else passes++;
+
+      const show = currentFilter === "ALL" ||
+        (currentFilter === "BET" && (res.actionType === "HIGH" || res.actionType === "LOW")) ||
+        currentFilter === res.actionType;
+      if (!show) return;
+
+      const card = document.createElement("div");
+      card.className = "match-card" + (m.id === selectedId ? " selected" : "");
+      card.onclick = () => selectMatch(m.id);
+
+      const bestEdge = res.edgeHigh >= res.edgeLow
+        ? `大 ${(res.edgeHigh >= 0 ? "+" : "")}${(res.edgeHigh * 100).toFixed(1)}%`
+        : `細 ${(res.edgeLow >= 0 ? "+" : "")}${(res.edgeLow * 100).toFixed(1)}%`;
+
+      let trendHtml = "";
+      if (m.prevHigh && m.prevHigh !== m.oddsHigh) {
+        trendHtml = m.oddsHigh < m.prevHigh ? ` <span class="trend-down">&#9660;落飛</span>` : ` <span class="trend-up">&#9650;回升</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-top">
+          <span><span class="fb-code">${m.code}</span>${m.league} &bull; ${m.kickoffDisplay}</span>
+          <span class="stage-pill">${m.reviewStage}</span>
+        </div>
+        <div class="teams-row">
+          <div class="teams-title">${m.home} 對 ${m.away}</div>
+          <span class="verdict-badge ${res.badgeClass}">${res.badgeText}</span>
+        </div>
+        <div class="metrics-strip">
+          <div><span class="m-label">大 / 細 [2.5] 賠率</span><span class="m-val">${m.oddsHigh.toFixed(2)} / ${m.oddsLow.toFixed(2)}${trendHtml}</span></div>
+          <div><span class="m-label">綜合預期入球</span><span class="m-val">${m.npxg.toFixed(2)} 球</span></div>
+          <div><span class="m-label">模型大球機率</span><span class="m-val">${(res.probHigh * 100).toFixed(1)}%</span></div>
+          <div><span class="m-label">去水價值優勢</span><span class="m-val">${bestEdge}</span></div>
+        </div>
+        <div class="live-telemetry">
+          <span class="tele-tag ${m.badWeather ? 'warn' : ''}">${m.weatherSummary || '氣象連線中'}</span>
+          <span class="tele-tag ${m.reviewStage === 'T-60m 正選鎖定' ? 'good' : ''}">${m.lineupSummary || '陣容監測中'}</span>
+        </div>
+        <div class="review-note-bar">
+          <span>${cdText} &bull; ${m.lastReviewed}</span>
+          <span style="color:var(--accent-blue); font-weight:700;">詳細覆核 &rarr;</span>
+        </div>
+      `;
+      listEl.appendChild(card);
+    });
+
+    document.getElementById("kpiTotal").textContent = total;
+    document.getElementById("kpiBets").textContent = bets;
+    document.getElementById("kpiHolds").textContent = holds;
+    document.getElementById("kpiPasses").textContent = passes;
+    renderInspector();
+  }
+
+  function renderInspector() {
+    const m = matches.find(x => x.id === selectedId) || matches[0];
+    if (!m) return;
+    const res = evaluateMatch(m);
+    const box = document.getElementById("inspectorContent");
+
+    box.innerHTML = `
+      <button class="mobile-close-btn" onclick="closeMobileDrawer()">關閉 &times;</button>
+      <h2><span style="color:var(--hkjc-gold);">${m.code}</span> ${m.home} 對 ${m.away}</h2>
+      <div class="sub-meta">${m.league} &bull; 開賽：${m.kickoffDisplay}</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--bg-dark); padding:12px; border-radius:10px; border:1px solid var(--border);">
+        <div>
+          <div style="font-size:0.73rem; color:var(--text-muted);">目前系統投注結論</div>
+          <div style="font-size:0.84rem; margin-top:3px;">${res.adviceDetail}</div>
+        </div>
+        <span class="verdict-badge ${res.badgeClass}">${res.badgeText}</span>
+      </div>
+
+      <div class="section-title">1. 賽前覆核階段切換</div>
+      <div class="stage-tabs">
+        <button class="stage-btn ${m.reviewStage === 'T-24h 初盤掃描' ? 'active' : ''}" onclick="updateStage('${m.id}', 'T-24h 初盤掃描')">T-24h 初盤掃描</button>
+        <button class="stage-btn ${m.reviewStage === 'T-6h 軍情覆核' ? 'active' : ''}" onclick="updateStage('${m.id}', 'T-6h 軍情覆核')">T-6h 軍情及賠率</button>
+        <button class="stage-btn ${m.reviewStage === 'T-60m 正選鎖定' ? 'active' : ''}" onclick="updateStage('${m.id}', 'T-60m 正選鎖定')">T-60m 正選鎖定</button>
+      </div>
+
+      <div class="section-title">2. 足智彩即時賠率與底層預期入球校準</div>
+      <div class="odds-inputs">
+        <div class="input-group"><label>足智彩「大 2.5」</label><input type="number" step="0.01" value="${m.oddsHigh}" onchange="updateNumeric('${m.id}', 'oddsHigh', this.value)" /></div>
+        <div class="input-group"><label>足智彩「細 2.5」</label><input type="number" step="0.01" value="${m.oddsLow}" onchange="updateNumeric('${m.id}', 'oddsLow', this.value)" /></div>
+        <div class="input-group"><label>綜合 npxG</label><input type="number" step="0.05" value="${m.npxg}" onchange="updateNumeric('${m.id}', 'npxg', this.value)" /></div>
+      </div>
+
+      <div class="section-title">3. 臨場最新軍情與環境動態開關</div>
+      <div class="toggle-list">
+        <label class="toggle-item"><span>正選陣容未明朗（ESPN 確認正選後自動取消勾選）</span><input type="checkbox" ${m.lineupDoubt ? 'checked' : ''} onchange="toggleFlag('${m.id}', 'lineupDoubt', this.checked)" /></label>
+        <label class="toggle-item"><span>正選門將或主力中堅拍檔缺陣（推高大球率）</span><input type="checkbox" ${m.cbOrGkOut ? 'checked' : ''} onchange="toggleFlag('${m.id}', 'cbOrGkOut', this.checked)" /></label>
+        <label class="toggle-item"><span>首席射手或核心進攻中場缺陣（下調入球預期）</span><input type="checkbox" ${m.starStrikerOut ? 'checked' : ''} onchange="toggleFlag('${m.id}', 'starStrikerOut', this.checked)" /></label>
+        <label class="toggle-item"><span>暴雨積水或強風 &gt; 30 km/h（氣象超標自動勾選）</span><input type="checkbox" ${m.badWeather ? 'checked' : ''} onchange="toggleFlag('${m.id}', 'badWeather', this.checked)" /></label>
+        <label class="toggle-item"><span>一周三賽嚴重體能負荷（70分鐘後尾段入球率升）</span><input type="checkbox" ${m.highFatigue ? 'checked' : ''} onchange="toggleFlag('${m.id}', 'highFatigue', this.checked)" /></label>
+      </div>
+
+      <div class="rationale-box">
+        <strong>分析師觀察重點：</strong>${m.watchNote}
+      </div>
+    `;
+  }
+
+  function selectMatch(id) {
+    selectedId = id;
+    renderAll();
+    if (window.innerWidth < 1024) document.getElementById("inspectorDrawer").classList.add("open");
+  }
+
+  function closeMobileDrawer() { document.getElementById("inspectorDrawer").classList.remove("open"); }
+
+  function updateStage(id, stage) {
+    const m = matches.find(x => x.id === id);
+    if (!m) return;
+    m.reviewStage = stage;
+    if (stage === "T-60m 正選鎖定") m.lineupDoubt = false;
+    m.lastReviewed = `手動覆核 ${formatTimeNow()}`;
+    saveState();
+    renderAll();
+  }
+
+  function updateNumeric(id, field, val) {
+    const m = matches.find(x => x.id === id);
+    const num = parseFloat(val);
+    if (!m || isNaN(num) || num <= 0.5) return;
+    if (field === "oddsHigh") m.prevHigh = m.oddsHigh;
+    m[field] = num;
+    m.lastReviewed = `手動校準 ${formatTimeNow()}`;
+    saveState();
+    renderAll();
+  }
+
+  function toggleFlag(id, field, checked) {
+    const m = matches.find(x => x.id === id);
+    if (!m) return;
+    m[field] = checked;
+    m.lastReviewed = `條件更新 ${formatTimeNow()}`;
+    saveState();
+    renderAll();
+  }
+
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    if (btn) btn.classList.add("active");
+    renderAll();
+  }
+
+  function openImportModal() { document.getElementById("importModal").classList.add("open"); }
+  function openSettingsModal() {
+    document.getElementById("cfgGhUser").value = config.ghUser || "";
+    document.getElementById("cfgGhRepo").value = config.ghRepo || "";
+    document.getElementById("cfgApiUrl").value = config.apiUrl || "";
+    document.getElementById("cfgOddsApiKey").value = config.oddsApiKey || "";
+    document.getElementById("cfgOnlineWeather").checked = config.onlineWeather !== false;
+    document.getElementById("cfgOnlineEspn").checked = config.onlineEspn !== false;
+    document.getElementById("settingsModal").classList.add("open");
+  }
+  function openAddModal() { document.getElementById("addModal").classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  function saveSettings() {
+    config.ghUser = document.getElementById("cfgGhUser").value.trim();
+    config.ghRepo = document.getElementById("cfgGhRepo").value.trim();
+    config.apiUrl = document.getElementById("cfgApiUrl").value.trim();
+    config.oddsApiKey = document.getElementById("cfgOddsApiKey").value.trim();
+    config.onlineWeather = document.getElementById("cfgOnlineWeather").checked;
+    config.onlineEspn = document.getElementById("cfgOnlineEspn").checked;
+    saveConfigState();
+    closeModal("settingsModal");
+    syncNow(true);
+  }
+
+  function parseImportedText() {
+    const raw = document.getElementById("importRawText").value.trim();
+    if (!raw) return;
+    let updatedCount = 0;
+    raw.split(/\n+/).forEach(line => {
+      const codeMatch = line.match(/FB\d{4}/i);
+      const oddsMatch = line.match(/\[2\.5\]\s*(\d+\.\d{2})\s+(\d+\.\d{2})/) || line.match(/(\d+\.\d{2})\s+(\d+\.\d{2})/);
+      if (codeMatch && oddsMatch) {
+        const existing = matches.find(m => m.code === codeMatch[0].toUpperCase());
+        if (existing) {
+          existing.prevHigh = existing.oddsHigh;
+          existing.oddsHigh = parseFloat(oddsMatch[1]);
+          existing.oddsLow = parseFloat(oddsMatch[2]);
+          existing.lastReviewed = `網頁貼上更新 ${formatTimeNow()}`;
+          updatedCount++;
+        }
+      }
+    });
+    closeModal("importModal");
+    document.getElementById("importRawText").value = "";
+    addSyncLog(`手動文字解析完成：已更新 ${updatedCount} 場賽事賠率。`);
+    saveState();
+    renderAll();
+  }
+
+  function saveNewMatch() {
+    const code = (document.getElementById("newCode").value.trim() || "FB9999").toUpperCase();
+    const espnLeague = document.getElementById("newEspnLeague").value;
+    const leagueLabel = document.getElementById("newEspnLeague").selectedOptions[0].text.split(" (")[0];
+    const home = document.getElementById("newHome").value.trim() || "主隊";
+    const away = document.getElementById("newAway").value.trim() || "客隊";
+    const enHome = document.getElementById("newEnHome").value.trim();
+    const coordsParts = document.getElementById("newCityCoords").value.split(",");
+    const rawIso = document.getElementById("newKickoffIso").value.trim();
+    const oddsHigh = parseFloat(document.getElementById("newOddsHigh").value) || 1.85;
+    const oddsLow = parseFloat(document.getElementById("newOddsLow").value) || 1.85;
+    const npxg = parseFloat(document.getElementById("newNpxg").value) || 2.80;
+    const watchNote = document.getElementById("newNote").value.trim() || "系統已納入自動氣象及 ESPN 正選名單監測。";
+    const isoFormatted = rawIso.includes("T") ? rawIso : rawIso.replace(" ", "T") + ":00+08:00";
+
+    matches.unshift({
+      id: "m" + Date.now(), code, league: leagueLabel, espnLeague,
+      kickoffDisplay: rawIso, kickoffIso: isoFormatted, home, away, enHome, enAway: "",
+      venueCity: coordsParts[2] || "球場", lat: parseFloat(coordsParts[0]), lon: parseFloat(coordsParts[1]),
+      oddsHigh, oddsLow, prevHigh: oddsHigh, npxg,
+      tacticsScore: 6.8, teamNewsScore: 6.8, contextScore: 6.2,
+      reviewStage: "T-24h 初盤掃描", lastReviewed: `手動新增 ${formatTimeNow()}`,
+      weatherSummary: "正在查詢球場氣象...", lineupSummary: espnLeague ? "正在連接 ESPN 陣容..." : "手動軍情模式",
+      lineupDoubt: false, cbOrGkOut: false, starStrikerOut: false, badWeather: false, highFatigue: false, watchNote
+    });
+    selectedId = matches[0].id;
+    saveState();
+    closeModal("addModal");
+    syncNow(true);
+  }
+
+  function resetDefaults() {
+    localStorage.removeItem(STORAGE_KEY);
+    matches = JSON.parse(JSON.stringify(DEFAULT_MATCHES));
+    selectedId = matches[0].id;
+    syncNow(true);
+  }
+
+  document.getElementById("intervalSelect").value = String(config.intervalSec ?? 120);
+  renderAll();
+  startAutoTimer();
+  syncNow(false);
+</script>
+</body>
+</html>
