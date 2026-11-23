@@ -1,0 +1,336 @@
+{
+  "updatedAt": "2026-11-23 15:13:36 HKT",
+  "count": 33,
+  "matches": [
+    {
+      "code": "FB9430",
+      "league": "女子日本職業聯賽",
+      "home": "東京綠茵女足",
+      "away": "神戶雌獅女足",
+      "kickoffIso": "2026-11-23+08:00",
+      "oddsHigh": 1.12,
+      "oddsLow": 4.95,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9460",
+      "league": "女子阿根廷甲組聯賽",
+      "home": "河床女足",
+      "away": "泰拿尼斯女足",
+      "kickoffIso": "2026-11-23+08:00",
+      "oddsHigh": 1.97,
+      "oddsLow": 1.74,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9439",
+      "league": "埃及超級聯賽",
+      "home": "艾古納",
+      "away": "扎馬雷克",
+      "kickoffIso": "2026-11-23+08:00",
+      "oddsHigh": 2.58,
+      "oddsLow": 1.44,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9438",
+      "league": "埃及超級聯賽",
+      "home": "華迪戴加",
+      "away": "亞歷山大港聯",
+      "kickoffIso": "2026-11-23+08:00",
+      "oddsHigh": 2.68,
+      "oddsLow": 1.4,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9433",
+      "league": "亞冠精英盃",
+      "home": "艾阿恩",
+      "away": "艾斯迪格拿",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.7,
+      "oddsLow": 2.02,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9432",
+      "league": "亞冠精英盃",
+      "home": "泰拉克托",
+      "away": "艾華斯爾",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 2.15,
+      "oddsLow": 1.62,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9385",
+      "league": "瑞典超級聯賽",
+      "home": "奧基迪",
+      "away": "卡爾馬",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.8,
+      "oddsLow": 1.9,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9289",
+      "league": "丹麥超級聯賽",
+      "home": "邦比",
+      "away": "米迪蘭特",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.52,
+      "oddsLow": 2.35,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9440",
+      "league": "埃及超級聯賽",
+      "home": "艾阿里",
+      "away": "金字塔FC",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9436",
+      "league": "亞冠精英盃",
+      "home": "空軍體育會",
+      "away": "艾加拉法",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9391",
+      "league": "西班牙乙組聯賽",
+      "home": "施奧達",
+      "away": "艾美利亞",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.7,
+      "oddsLow": 2.02,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9355",
+      "league": "法國乙組聯賽",
+      "home": "南特",
+      "away": "格勒諾布爾",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.85,
+      "oddsLow": 1.85,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9389",
+      "league": "法國乙組聯賽",
+      "home": "索察",
+      "away": "登卡基",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.89,
+      "oddsLow": 1.81,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9312",
+      "league": "阿根廷甲組聯賽",
+      "home": "甘拿斯亞",
+      "away": "紐維爾舊生",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 2.35,
+      "oddsLow": 1.52,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB8907",
+      "league": "英格蘭超級聯賽",
+      "home": "賓福特",
+      "away": "愛華頓",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.73,
+      "oddsLow": 1.98,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9247",
+      "league": "西班牙甲組聯賽",
+      "home": "利雲特",
+      "away": "艾爾切",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.68,
+      "oddsLow": 2.05,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9419",
+      "league": "烏拉圭甲組聯賽",
+      "home": "艾比安FC",
+      "away": "達奴比奧",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.89,
+      "oddsLow": 1.81,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9339",
+      "league": "巴西甲組聯賽",
+      "home": "國際體育會",
+      "away": "維多利亞",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.78,
+      "oddsLow": 1.92,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9342",
+      "league": "巴西甲組聯賽",
+      "home": "保地花高",
+      "away": "聖保羅",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.89,
+      "oddsLow": 1.81,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9347",
+      "league": "巴西甲組聯賽",
+      "home": "山度士",
+      "away": "甘美奧",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.56,
+      "oddsLow": 2.27,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9396",
+      "league": "美國職業聯賽",
+      "home": "聖路易城SC",
+      "away": "FC洛杉磯",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.63,
+      "oddsLow": 2.13,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9459",
+      "league": "亞冠精英盃",
+      "home": "大田市民",
+      "away": "FC北京",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.54,
+      "oddsLow": 2.3,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9451",
+      "league": "亞冠精英盃",
+      "home": "京都不死鳥",
+      "away": "浦項制鐵",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.78,
+      "oddsLow": 1.92,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9458",
+      "league": "亞冠精英盃",
+      "home": "上海海港",
+      "away": "武里南聯",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9453",
+      "league": "亞冠精英盃",
+      "home": "河內公安",
+      "away": "神戶勝利船",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9456",
+      "league": "俄羅斯盃",
+      "home": "阿克隆陶爾亞蒂",
+      "away": "莫斯科中央陸軍",
+      "kickoffIso": "2026-11-24+08:00",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9454",
+      "league": "亞冠精英盃",
+      "home": "沙比阿爾阿里",
+      "away": "艾卡迪沙",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.72,
+      "oddsLow": 2.0,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9455",
+      "league": "俄羅斯盃",
+      "home": "辛尼特",
+      "away": "森馬拉",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.64,
+      "oddsLow": 2.12,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9449",
+      "league": "歐洲聯賽冠軍盃",
+      "home": "阿仙奴",
+      "away": "多蒙特",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9445",
+      "league": "歐洲聯賽冠軍盃",
+      "home": "飛燕諾",
+      "away": "波圖",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.51,
+      "oddsLow": 2.38,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9441",
+      "league": "智利盃",
+      "home": "哥甘保",
+      "away": "卡拉雷聯",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9452",
+      "league": "美國職業聯賽",
+      "home": "聖荷西地震",
+      "away": "侯斯頓戴拿模",
+      "kickoffIso": "2026-11-25+08:00",
+      "oddsHigh": 1.68,
+      "oddsLow": 2.05,
+      "source": "HKJC_GraphQL"
+    },
+    {
+      "code": "FB9437",
+      "league": "阿根廷甲組聯賽",
+      "home": "小保加",
+      "away": "利華達維亞獨立",
+      "kickoffIso": "2026-11-26+08:00",
+      "oddsHigh": 2.1,
+      "oddsLow": 1.65,
+      "source": "HKJC_GraphQL"
+    }
+  ]
+}
