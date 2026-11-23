@@ -10,6 +10,19 @@ HKJC_HILO_URL = "https://bet.hkjc.com/ch/football/hil"
 OUTPUT_PATH = "data/hkjc_hilo.json"
 
 
+def normalize_hkjc_kickoff(raw_str):
+    if not raw_str:
+        return ""
+    raw_str = str(raw_str).strip()
+    if "T" in raw_str:
+        return raw_str
+    m = re.search(r"(\d{2})/(\d{2})/(\d{4})\s+(\d{2}):(\d{2})", raw_str)
+    if m:
+        dd, mm, yyyy, hh, mn = m.groups()
+        return f"{yyyy}-{mm}-{dd}T{hh}:{mn}:00+08:00"
+    return raw_str
+
+
 def extract_from_graphql_payload(payload, results_by_code):
     if not isinstance(payload, dict):
         return
@@ -26,7 +39,7 @@ def extract_from_graphql_payload(payload, results_by_code):
         home = (m.get("homeTeam") or {}).get("name_ch") or ""
         away = (m.get("awayTeam") or {}).get("name_ch") or ""
         league = (m.get("tournament") or {}).get("name_ch") or "足智彩賽事"
-        kickoff = m.get("matchDate") or m.get("kickOffTime") or ""
+        kickoff = normalize_hkjc_kickoff(m.get("matchDate") or m.get("kickOffTime") or "")
 
         pools = m.get("foPools") or m.get("pools") or []
         odds_high, odds_low = None, None
@@ -62,6 +75,7 @@ def extract_from_graphql_payload(payload, results_by_code):
 
 async def scrape_hkjc_hilo():
     results_by_code = {}
+    now_year = datetime.now(HKT).year
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -95,17 +109,18 @@ async def scrape_hkjc_hilo():
 
         body_text = await page.inner_text("body")
         pattern = re.compile(
-            r"(FB\d{4})\s+([^\n]+?)\s+對\s+([^\n]+?)[\s\S]{0,160}?\[2\.5\]\s*(\d+\.\d{2})\s+(\d+\.\d{2})"
+            r"(FB\d{4})\s+([^\n]+?)\s+對\s+([^\n]+?)[\s\S]{0,180}?(?:(\d{2})/(\d{2})\s+(\d{2}):(\d{2})[\s\S]{0,80}?)?\[2\.5\]\s*(\d+\.\d{2})\s+(\d+\.\d{2})"
         )
         for match in pattern.finditer(body_text):
-            code, home, away, hi, lo = match.groups()
+            code, home, away, dd, mm, hh, mn, hi, lo = match.groups()
+            ko_iso = f"{now_year}-{mm}-{dd}T{hh}:{mn}:00+08:00" if dd and mm and hh and mn else ""
             if code not in results_by_code:
                 results_by_code[code] = {
                     "code": code.strip(),
                     "league": "足智彩賽事",
                     "home": home.strip(),
                     "away": away.strip(),
-                    "kickoffIso": "",
+                    "kickoffIso": ko_iso,
                     "oddsHigh": float(hi),
                     "oddsLow": float(lo),
                     "source": "HKJC_DOM"
@@ -113,11 +128,16 @@ async def scrape_hkjc_hilo():
 
         await browser.close()
 
+    sorted_matches = sorted(
+        results_by_code.values(),
+        key=lambda x: x.get("kickoffIso") or "9999-12-31T23:59:00+08:00"
+    )
+
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     output_data = {
         "updatedAt": datetime.now(HKT).strftime("%Y-%m-%d %H:%M:%S HKT"),
-        "count": len(results_by_code),
-        "matches": list(results_by_code.values())
+        "count": len(sorted_matches),
+        "matches": sorted_matches
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
