@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>足智彩「入球大細 2.5」全自動量化分析系統 v12</title>
+  <title>足智彩「入球大細 2.5」全自動量化分析系統 v13</title>
   <style>
     :root {
       --bg-dark: #09101d; --bg-card: #121c30; --bg-panel: #1a2742; --border: #293a5a;
@@ -36,8 +36,11 @@
     .feed-pill { padding: 2px 8px; border-radius: 999px; font-size: 0.71rem; font-weight: 700; border: 1px solid var(--border); background: var(--bg-card); }
     .feed-pill.ok { border-color: rgba(16,185,129,0.5); color: #34d399; }
     .feed-pill.wait { border-color: rgba(245,158,11,0.45); color: #fbbf24; }
+    .feed-pill.err { border-color: rgba(239,68,68,0.5); color: #fca5a5; }
     .sync-select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 0.76rem; font-weight: 600; }
     .container { max-width: 1400px; margin: 16px auto; padding: 0 15px; }
+    .diag-banner { display: none; background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.45); color: #fde68a; border-radius: 11px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.79rem; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .diag-banner.show { display: flex; }
     .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
     @media (min-width: 768px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
     .kpi-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
@@ -95,7 +98,7 @@
     .toggle-item input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent-blue); cursor: pointer; flex-shrink: 0; }
     .rationale-box { background: var(--bg-panel); border-radius: 10px; padding: 12px; font-size: 0.79rem; color: #e2e8f0; margin-top: 10px; }
     .log-panel { margin-top: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
-    .log-list { max-height: 140px; overflow-y: auto; font-size: 0.74rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+    .log-list { max-height: 150px; overflow-y: auto; font-size: 0.74rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
     @media (max-width: 1023px) {
       .inspector-drawer { display: none; position: fixed; inset: 0; background: rgba(5,10,20,0.85); z-index: 100; padding: 14px; overflow-y: auto; }
       .inspector-drawer.open { display: block; }
@@ -119,10 +122,10 @@
 <header>
   <div class="header-inner">
     <div class="brand">
-      <span class="brand-badge">足智彩 v12 雙層校準</span>
+      <span class="brand-badge">足智彩 v13 穩定連線版</span>
       <div>
-        <h1>入球大細 [2.5] 全自動量化分析系統（四重開賽時間擷取 + 全賽事即時建議）</h1>
-        <p>HKJC 網頁/GraphQL + SofaScore + ESPN 25聯賽 + TheSportsDB 全球賽程 &bull; 絕不因單一來源延遲而停止分析</p>
+        <h1>入球大細 [2.5] 全自動量化分析系統（多源容錯自動尋址 + 全賽事即時建議）</h1>
+        <p>自動偵測 GitHub 雲端 JSON (main / master / Pages) + SofaScore + ESPN 25聯賽 + TheSportsDB 全球賽程</p>
       </div>
     </div>
     <div class="header-actions">
@@ -160,6 +163,14 @@
 </div>
 
 <div class="container">
+  <div class="diag-banner" id="diagBanner">
+    <span id="diagBannerText">雲端狀態提示</span>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-outline" style="padding:5px 10px; font-size:0.74rem;" onclick="openSettingsModal()">設定 GitHub 帳號</button>
+      <button class="btn-gold" style="padding:5px 10px; font-size:0.74rem;" onclick="openImportModal()">手動貼上馬會賠率</button>
+    </div>
+  </div>
+
   <div class="kpi-grid">
     <div class="kpi-card"><span class="kpi-label">顯示中賽事總數</span><div class="kpi-value" id="kpiTotal">0</div></div>
     <div class="kpi-card"><span class="kpi-label">建議投注 (+EV 精選)</span><div class="kpi-value" style="color:var(--bet-green);" id="kpiBets">0</div></div>
@@ -198,7 +209,7 @@
 
   <div class="log-panel">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:0.81rem; font-weight:800; color:var(--accent-blue);">多源數據與開賽時間同步日誌（HKJC + SofaScore + ESPN 25聯賽 + TheSportsDB + 全球氣象）</span>
+      <span style="font-size:0.81rem; font-weight:800; color:var(--accent-blue);">多源數據與連線診斷日誌（HKJC 雲端 + SofaScore + ESPN 25聯賽 + TheSportsDB + 全球氣象）</span>
       <span style="font-size:0.72rem; color:var(--text-muted);">香港時間 HKT (UTC+8)</span>
     </div>
     <div class="log-list" id="syncLogList"></div>
@@ -215,23 +226,24 @@
 <div class="modal-backdrop" id="settingsModal">
   <div class="modal-card">
     <h3>雲端資料源設定</h3>
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">若你已部署至 GitHub Pages，系統會自動偵測帳號與儲存庫；如用本地檔案開啟，請填入下方兩格。</p>
     <div class="form-grid">
       <div class="input-group">
         <label>GitHub 帳號名稱 (Username)</label>
-        <input type="text" id="ghUser" placeholder="留空可自動從網頁路徑讀取" oninput="buildGithubRawUrl()" />
+        <input type="text" id="ghUser" placeholder="例如：wong123" oninput="buildGithubRawUrl()" />
       </div>
       <div class="input-group">
         <label>GitHub 儲存庫名稱 (Repository)</label>
         <input type="text" id="ghRepo" placeholder="例如：hkjc-hilo-app" oninput="buildGithubRawUrl()" />
       </div>
       <div class="input-group full-col">
-        <label>自動產生之 HKJC + SofaScore JSON 網址</label>
-        <input type="url" id="cfgJsonUrl" placeholder="留空時自動讀取 ./data/hkjc_hilo.json" />
+        <label>自訂 JSON 網址 (選填，留空則自動依序嘗試 Raw main / master / Pages)</label>
+        <input type="url" id="cfgJsonUrl" placeholder="https://raw.githubusercontent.com/帳號/儲存庫/main/data/hkjc_hilo.json" />
       </div>
       <div class="input-group full-col">
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#e2e8f0;">
           <input type="checkbox" id="cfgHideFinished" checked style="width:17px; height:17px;" />
-          自動隱藏已完場超過 3 小時之舊賽事
+          自動隱藏已完場超過 4 小時之舊賽事
         </label>
       </div>
     </div>
@@ -263,7 +275,7 @@
       <div class="input-group"><label>聯賽名稱</label><input type="text" id="newLeague" placeholder="日本乙組聯賽" /></div>
       <div class="input-group"><label>主隊名稱</label><input type="text" id="newHome" placeholder="千葉市原" /></div>
       <div class="input-group"><label>客隊名稱</label><input type="text" id="newAway" placeholder="大宮松鼠" /></div>
-      <div class="input-group"><label>開賽日期與時間 (HKT)</label><input type="text" id="newTime" placeholder="28/11/2026 13:00" /></div>
+      <div class="input-group"><label>開賽日期與時間 (HKT)</label><input type="text" id="newTime" placeholder="28/11/2026 18:00" /></div>
       <div class="input-group"><label>自訂預期總入球 (選填)</label><input type="number" step="0.05" id="newCustomXg" placeholder="留空由泊松引擎推算" /></div>
       <div class="input-group"><label>大 [2.5] 賠率</label><input type="number" step="0.01" id="newHigh" value="1.88" /></div>
       <div class="input-group"><label>細 [2.5] 賠率</label><input type="number" step="0.01" id="newLow" value="1.82" /></div>
@@ -276,8 +288,8 @@
 </div>
 
 <script>
-  const STORAGE_KEY = "hkjc_hilo_matches_v12";
-  const CFG_KEY = "hkjc_hilo_cfg_v12";
+  const STORAGE_KEY = "hkjc_hilo_matches_v13";
+  const CFG_KEY = "hkjc_hilo_cfg_v13";
   const WEEKDAYS_ZH = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
   const LEAGUE_PROFILES = [
@@ -333,51 +345,44 @@
     "燕豪芬":"PSV","阿積士":"Ajax","飛燕諾":"Feyenoord","賓菲加":"Benfica","波圖":"Porto","士砵亭":"Sporting","些路迪":"Celtic","格拉斯哥流浪":"Rangers"
   };
 
-  const DEFAULT_MATCHES = [
-    {
-      id: "m1", code: "FB9240", league: "英格蘭超級聯賽", home: "賓福特", away: "愛華頓",
-      enHome: "Brentford", enAway: "Everton", kickoffIso: "2026-11-24T04:00:00+08:00",
-      stage: "T-6h 軍情覆核", openHigh: 1.92, openLow: 1.78, oddsHigh: 1.95, oddsLow: 1.75,
-      hadHome: 2.05, hadDraw: 3.35, hadAway: 3.15,
-      sofaMatched: true, sofaFormLambda: 2.52, sofaOver25Rate: 0.48, sofaMissingHome: 1, sofaMissingAway: 2, sofaLineupConfirmed: false,
-      espnMatched: true, espnCombinedGoals: 2.56,
-      missingDef: false, missingAtt: false, lowBlockTrap: true, congested: false, badWeather: false, highStakesUnder: false,
-      weatherText: "英國待測", lineupText: "待 T-60m 正選", notes: "愛華頓作客低位防線緊密，去水後細球具正期望值。", lastUpdated: "預設驗證賽程"
-    },
-    {
-      id: "m2", code: "FB9255", league: "歐洲聯賽冠軍盃", home: "阿仙奴", away: "多蒙特",
-      enHome: "Arsenal", enAway: "Borussia Dortmund", kickoffIso: "2026-11-25T04:00:00+08:00",
-      stage: "T-24h 初盤掃描", openHigh: 1.65, openLow: 2.10, oddsHigh: 1.62, oddsLow: 2.15,
-      hadHome: 1.52, hadDraw: 4.00, hadAway: 4.80,
-      sofaMatched: true, sofaFormLambda: 2.86, sofaOver25Rate: 0.62, sofaMissingHome: 1, sofaMissingAway: 1, sofaLineupConfirmed: false,
-      espnMatched: true, espnCombinedGoals: 2.90,
-      missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
-      weatherText: "歐洲賽場待測", lineupText: "待 T-60m 正選", notes: "大球賠率被壓低至 1.62，去水門檻過高，嚴守紀律放棄。", lastUpdated: "預設驗證賽程"
-    },
-    {
-      id: "m3", code: "FB9256", league: "歐洲聯賽冠軍盃", home: "曼城", away: "拿玻里",
-      enHome: "Manchester City", enAway: "Napoli", kickoffIso: "2026-11-25T04:00:00+08:00",
-      stage: "T-24h 初盤掃描", openHigh: 1.72, openLow: 2.00, oddsHigh: 1.74, oddsLow: 1.96,
-      hadHome: 1.55, hadDraw: 3.95, hadAway: 4.60,
-      sofaMatched: true, sofaFormLambda: 3.05, sofaOver25Rate: 0.68, sofaMissingHome: 2, sofaMissingAway: 0, sofaLineupConfirmed: false,
-      espnMatched: true, espnCombinedGoals: 3.02,
-      missingDef: true, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
-      weatherText: "歐洲賽場待測", lineupText: "待 T-60m 正選", notes: "曼城高位防線配合拿玻里快速反擊，模型大球具正期望值。", lastUpdated: "預設驗證賽程"
-    },
-    {
-      id: "m4", code: "FB9266", league: "歐洲聯賽冠軍盃", home: "里爾", away: "拜仁慕尼黑",
-      enHome: "Lille", enAway: "Bayern Munich", kickoffIso: "2026-11-26T04:00:00+08:00",
-      stage: "T-24h 初盤掃描", openHigh: 1.68, openLow: 2.06, oddsHigh: 1.70, oddsLow: 2.02,
-      hadHome: 4.50, hadDraw: 3.90, hadAway: 1.56,
-      sofaMatched: true, sofaFormLambda: 3.12, sofaOver25Rate: 0.72, sofaMissingHome: 1, sofaMissingAway: 1, sofaLineupConfirmed: false,
-      espnMatched: true, espnCombinedGoals: 3.14,
-      missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
-      weatherText: "歐洲賽場待測", lineupText: "待 T-60m 正選", notes: "拜仁前場壓迫強度極高，大 [2.5] 1.70 具去水優勢。", lastUpdated: "預設驗證賽程"
-    }
-  ];
+  function buildDynamicStarterMatches() {
+    const baseMs = Date.now();
+    return [
+      {
+        id: "demo1", isDemo: true, code: "FB9240", league: "英格蘭超級聯賽", home: "賓福特", away: "愛華頓",
+        enHome: "Brentford", enAway: "Everton", kickoffIso: msToHktIso(baseMs + 5 * 3600000),
+        stage: "T-6h 軍情覆核", openHigh: 1.92, openLow: 1.78, oddsHigh: 1.95, oddsLow: 1.75,
+        hadHome: 2.05, hadDraw: 3.35, hadAway: 3.15,
+        sofaMatched: true, sofaFormLambda: 2.52, sofaOver25Rate: 0.48, sofaMissingHome: 1, sofaMissingAway: 2, sofaLineupConfirmed: false,
+        espnMatched: true, espnCombinedGoals: 2.56,
+        missingDef: false, missingAtt: false, lowBlockTrap: true, congested: false, badWeather: false, highStakesUnder: false,
+        weatherText: "英國待測", lineupText: "待 T-60m 正選", notes: "雲端連線前預載示範（連上馬會 JSON 後會自動替換為最新實時賽程）。", lastUpdated: "預載示範"
+      },
+      {
+        id: "demo2", isDemo: true, code: "FB9255", league: "歐洲聯賽冠軍盃", home: "阿仙奴", away: "多蒙特",
+        enHome: "Arsenal", enAway: "Borussia Dortmund", kickoffIso: msToHktIso(baseMs + 14 * 3600000),
+        stage: "T-24h 初盤掃描", openHigh: 1.65, openLow: 2.10, oddsHigh: 1.62, oddsLow: 2.15,
+        hadHome: 1.52, hadDraw: 4.00, hadAway: 4.80,
+        sofaMatched: true, sofaFormLambda: 2.86, sofaOver25Rate: 0.62, sofaMissingHome: 1, sofaMissingAway: 1, sofaLineupConfirmed: false,
+        espnMatched: true, espnCombinedGoals: 2.90,
+        missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
+        weatherText: "歐洲賽場待測", lineupText: "待 T-60m 正選", notes: "大球賠率被壓低至 1.62，去水門檻過高，嚴守紀律放棄。", lastUpdated: "預載示範"
+      },
+      {
+        id: "demo3", isDemo: true, code: "FB9256", league: "歐洲聯賽冠軍盃", home: "曼城", away: "拿玻里",
+        enHome: "Manchester City", enAway: "Napoli", kickoffIso: msToHktIso(baseMs + 22 * 3600000),
+        stage: "T-24h 初盤掃描", openHigh: 1.72, openLow: 2.00, oddsHigh: 1.74, oddsLow: 1.96,
+        hadHome: 1.55, hadDraw: 3.95, hadAway: 4.60,
+        sofaMatched: true, sofaFormLambda: 3.05, sofaOver25Rate: 0.68, sofaMissingHome: 2, sofaMissingAway: 0, sofaLineupConfirmed: false,
+        espnMatched: true, espnCombinedGoals: 3.02,
+        missingDef: true, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
+        weatherText: "歐洲賽場待測", lineupText: "待 T-60m 正選", notes: "曼城高位防線配合拿玻里快速反擊，模型大球具正期望值。", lastUpdated: "預載示範"
+      }
+    ];
+  }
 
   let matches = [];
-  let selectedId = "m1";
+  let selectedId = "";
   let currentFilter = "ALL";
   let currentTimeWindow = "ALL";
   let currentSortMode = "TIME_ASC";
@@ -403,7 +408,6 @@
     return /[A-Za-z]{3,}/.test(zhName) ? zhName.trim() : "";
   }
 
-  // 多格式馬會日期與時間解析（支援 ISO、DD/MM/YYYY HH:MM、DD/MM HH:MM、MM月DD日 HH:MM、跨欄位組合與時間戳）
   function parseFlexibleDateMs(rawVal, fallbackDate = "") {
     if (rawVal === null || rawVal === undefined) return NaN;
     if (typeof rawVal === "number") return rawVal > 1e11 ? rawVal : rawVal * 1000;
@@ -416,7 +420,6 @@
       const n = Number(s);
       return n > 1e11 ? n : n * 1000;
     }
-    // 正規化無冒號時區如 +0800 -> +08:00
     s = s.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
 
     let m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})[\s\S]{0,24}?(\d{1,2}):(\d{2})/);
@@ -507,7 +510,6 @@
     return 1 - pUnder;
   }
 
-  // v12 雙層置信度 7 因子引擎：即使時間或外部次級聯賽尚在補齊，仍即時計算完整方向與投注建議
   function evaluateMatch(m) {
     const invH = 1 / m.oddsHigh;
     const invL = 1 / m.oddsLow;
@@ -569,10 +571,9 @@
     const hasExternalVerify = Boolean(m.sofaMatched || m.espnMatched || m.sportsDbMatched || (m.customXg && m.customXg > 0.5) || m.missingDef || m.missingAtt || m.lowBlockTrap);
     const confirmedLineup = Boolean(m.sofaLineupConfirmed || (m.stage && m.stage.includes("T-60m")));
 
-    // 雙層門檻：多源已核實採用標準門檻 (3.5%)；純聯賽+盤口量化採用嚴謹門檻 (4.2%)，絕不癱瘓建議
     const reqEdge = hasExternalVerify ? (confirmedLineup ? 0.033 : 0.038) : 0.042;
     const reqEv = hasExternalVerify ? 0.022 : 0.030;
-    const timeNote = hkt ? "" : "（註：開賽時間正由雲端補齊，落注前請核對臨場時間）";
+    const timeNote = hkt ? "" : "（開賽時間待同步，請核對臨場時間）";
 
     let status = "PASS";
     let label = "放棄投注 (無優勢)";
@@ -607,112 +608,172 @@
   function addLog(msg) {
     const t = nowHktClockStr() || "HKT";
     syncLogs.unshift(`[${t}] ${msg}`);
-    if (syncLogs.length > 30) syncLogs.pop();
+    if (syncLogs.length > 35) syncLogs.pop();
     const el = document.getElementById("syncLogList");
     if (el) el.innerHTML = syncLogs.map(l => `<div>&bull; ${l}</div>`).join("");
   }
 
-  function autoDetectRelativeJsonUrl() {
-    if (appConfig.jsonUrl) return appConfig.jsonUrl;
-    if (location.protocol.startsWith("http")) return "./data/hkjc_hilo.json";
-    return "";
+  // 自動建構多條候選雲端網址：支援自訂 URL、GitHub Pages 自動推導 Raw main/master、以及相對路徑 ./data/hkjc_hilo.json
+  function getCandidateJsonUrls() {
+    const urls = [];
+    if (appConfig.jsonUrl) urls.push(appConfig.jsonUrl);
+
+    let detectedUser = appConfig.ghUser;
+    let detectedRepo = appConfig.ghRepo;
+    if ((!detectedUser || !detectedRepo) && location.hostname.endsWith("github.io")) {
+      detectedUser = location.hostname.split(".").at(0) || "";
+      const pathParts = location.pathname.split("/").filter(Boolean);
+      if (pathParts.length > 0 && !pathParts.at(0).endsWith(".html")) {
+        detectedRepo = pathParts.at(0);
+      }
+    }
+    if (detectedUser && detectedRepo) {
+      urls.push(`https://raw.githubusercontent.com/${detectedUser}/${detectedRepo}/main/data/hkjc_hilo.json`);
+      urls.push(`https://raw.githubusercontent.com/${detectedUser}/${detectedRepo}/master/data/hkjc_hilo.json`);
+    }
+    if (location.protocol.startsWith("http")) {
+      urls.push("./data/hkjc_hilo.json");
+    }
+    return Array.from(new Set(urls));
   }
 
   async function syncCloudHkjcAndSofa() {
-    const targetUrl = autoDetectRelativeJsonUrl();
+    const candidateUrls = getCandidateJsonUrls();
     const pill = document.getElementById("pillCloud");
-    if (!targetUrl) {
+    const banner = document.getElementById("diagBanner");
+    const bannerTxt = document.getElementById("diagBannerText");
+
+    if (candidateUrls.length === 0) {
       pill.className = "feed-pill wait";
-      pill.textContent = "馬會雲端：本地預覽模式";
+      pill.textContent = "馬會雲端：本地檔案模式";
+      bannerTxt.textContent = "你目前以本地檔案開啟網頁；如需連上 GitHub 24/7 馬會雲端賠率，請按右側「設定 GitHub 帳號」填入帳號與儲存庫名稱。";
+      banner.classList.add("show");
       return 0;
     }
-    try {
-      const sep = targetUrl.includes("?") ? "&" : "?";
-      const res = await fetch(`${targetUrl}${sep}t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const payload = await res.json();
-      const feed = Array.isArray(payload) ? payload : (payload.matches || []);
-      let updated = 0, withTime = 0;
 
-      feed.forEach(item => {
-        const hOdds = parseFloat(item.oddsHigh);
-        const lOdds = parseFloat(item.oddsLow);
-        if (!hOdds || !lOdds) return;
+    let loadedPayload = null;
+    let usedUrl = "";
+    let lastErr = "";
 
-        const rawTimeCandidate = item.kickoffIso || item.kickOffTime || item.startTime || item.time || "";
-        const parsedMs = parseFlexibleDateMs(rawTimeCandidate, item.matchDate || item.date || "");
-        const cleanIso = !isNaN(parsedMs) ? msToHktIso(parsedMs) : "";
-        if (cleanIso) withTime++;
-
-        let target = matches.find(m =>
-          (item.code && m.code === item.code) ||
-          (item.home && item.away && m.home === item.home && m.away === item.away)
-        );
-
-        if (target) {
-          target.code = item.code || target.code;
-          target.league = item.league || target.league;
-          target.oddsHigh = hOdds;
-          target.oddsLow = lOdds;
-          if (cleanIso) target.kickoffIso = cleanIso;
-          if (item.enHome) target.enHome = item.enHome;
-          if (item.enAway) target.enAway = item.enAway;
-          if (item.hadHome) { target.hadHome = item.hadHome; target.hadDraw = item.hadDraw; target.hadAway = item.hadAway; }
-          if (item.sofaMatched) {
-            target.sofaMatched = true;
-            target.sofaFormLambda = item.sofaFormLambda || target.sofaFormLambda;
-            target.sofaOver25Rate = item.sofaOver25Rate ?? target.sofaOver25Rate;
-            target.sofaMissingHome = item.sofaMissingHome ?? target.sofaMissingHome;
-            target.sofaMissingAway = item.sofaMissingAway ?? target.sofaMissingAway;
-            target.sofaLineupConfirmed = Boolean(item.sofaLineupConfirmed);
-            if (target.sofaLineupConfirmed) target.stage = "T-60m 正選鎖定";
-          }
-          target.lastUpdated = "馬會雲端同步";
-          updated++;
-        } else if (item.home && item.away) {
-          matches.push({
-            id: "m_" + (item.code || Math.random().toString(36).slice(2, 8)),
-            code: item.code || "FB----",
-            league: item.league || "足智彩賽事",
-            home: item.home, away: item.away,
-            enHome: item.enHome || inferEnglishTeam(item.home),
-            enAway: item.enAway || inferEnglishTeam(item.away),
-            kickoffIso: cleanIso,
-            stage: item.sofaLineupConfirmed ? "T-60m 正選鎖定" : "T-24h 初盤掃描",
-            openHigh: hOdds, openLow: lOdds, oddsHigh: hOdds, oddsLow: lOdds,
-            hadHome: item.hadHome || null, hadDraw: item.hadDraw || null, hadAway: item.hadAway || null,
-            sofaMatched: Boolean(item.sofaMatched),
-            sofaFormLambda: item.sofaFormLambda || null,
-            sofaOver25Rate: item.sofaOver25Rate ?? null,
-            sofaMissingHome: item.sofaMissingHome ?? 0,
-            sofaMissingAway: item.sofaMissingAway ?? 0,
-            sofaLineupConfirmed: Boolean(item.sofaLineupConfirmed),
-            espnMatched: false, sportsDbMatched: false, espnCombinedGoals: null,
-            missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
-            weatherText: "球場氣象待測",
-            lineupText: item.sofaMatched ? `SofaScore 傷停 主${item.sofaMissingHome||0}/客${item.sofaMissingAway||0}` : "聯賽基準量化中",
-            notes: "已載入馬會賠率並完成 7 因子泊松量化評估。",
-            lastUpdated: "馬會雲端同步"
-          });
-          updated++;
+    for (const baseUrl of candidateUrls) {
+      try {
+        const sep = baseUrl.includes("?") ? "&" : "?";
+        const res = await fetch(`${baseUrl}${sep}t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) {
+          lastErr = `${baseUrl} -> HTTP ${res.status}`;
+          continue;
         }
-      });
+        const json = await res.json();
+        const arr = Array.isArray(json) ? json : (json.matches || []);
+        if (arr.length > 0) {
+          loadedPayload = json;
+          usedUrl = baseUrl;
+          break;
+        } else {
+          lastErr = `${baseUrl} -> 賽事陣列為空 (0 場)`;
+        }
+      } catch (err) {
+        lastErr = `${baseUrl} -> ${err.message || "連線失敗"}`;
+      }
+    }
 
-      pill.className = "feed-pill ok";
-      pill.textContent = `馬會雲端：${updated} 場 (時間已鎖定 ${withTime} 場)`;
-      return updated;
-    } catch (_) {
-      pill.className = "feed-pill wait";
-      pill.textContent = "雲端 JSON：等待首次產生";
+    if (!loadedPayload) {
+      pill.className = "feed-pill err";
+      pill.textContent = "馬會雲端：等待產生 JSON";
+      bannerTxt.textContent = `尚未讀取到 data/hkjc_hilo.json（${lastErr}）。請到 GitHub Actions 按一次 Run workflow 產生最新馬會檔案，或先點右側「手動貼上馬會賠率」。`;
+      banner.classList.add("show");
+      addLog(`雲端 JSON 尚未就緒：${lastErr}`);
       return 0;
     }
+
+    banner.classList.remove("show");
+    const feed = Array.isArray(loadedPayload) ? loadedPayload : (loadedPayload.matches || []);
+
+    // 成功載入真實馬會雲端賽事時，自動清除預載示範賽事
+    if (feed.length > 0) {
+      matches = matches.filter(m => !m.isDemo);
+    }
+
+    let updated = 0, withTime = 0, withSofa = 0;
+    feed.forEach(item => {
+      const hOdds = parseFloat(item.oddsHigh);
+      const lOdds = parseFloat(item.oddsLow);
+      if (!hOdds || !lOdds) return;
+
+      const rawTimeCandidate = item.kickoffIso || item.kickOffTime || item.startTime || item.time || "";
+      const parsedMs = parseFlexibleDateMs(rawTimeCandidate, item.matchDate || item.date || "");
+      const cleanIso = !isNaN(parsedMs) ? msToHktIso(parsedMs) : "";
+      if (cleanIso) withTime++;
+      if (item.sofaMatched) withSofa++;
+
+      let target = matches.find(m =>
+        (item.code && m.code === item.code) ||
+        (item.home && item.away && m.home === item.home && m.away === item.away)
+      );
+
+      if (target) {
+        target.code = item.code || target.code;
+        target.league = item.league || target.league;
+        target.oddsHigh = hOdds;
+        target.oddsLow = lOdds;
+        if (cleanIso) target.kickoffIso = cleanIso;
+        if (item.enHome) target.enHome = item.enHome;
+        if (item.enAway) target.enAway = item.enAway;
+        if (item.hadHome) { target.hadHome = item.hadHome; target.hadDraw = item.hadDraw; target.hadAway = item.hadAway; }
+        if (item.sofaMatched) {
+          target.sofaMatched = true;
+          target.sofaFormLambda = item.sofaFormLambda || target.sofaFormLambda;
+          target.sofaOver25Rate = item.sofaOver25Rate ?? target.sofaOver25Rate;
+          target.sofaMissingHome = item.sofaMissingHome ?? target.sofaMissingHome;
+          target.sofaMissingAway = item.sofaMissingAway ?? target.sofaMissingAway;
+          target.sofaLineupConfirmed = Boolean(item.sofaLineupConfirmed);
+          if (target.sofaLineupConfirmed) target.stage = "T-60m 正選鎖定";
+        }
+        target.lastUpdated = "馬會雲端同步";
+        updated++;
+      } else if (item.home && item.away) {
+        matches.push({
+          id: "m_" + (item.code || Math.random().toString(36).slice(2, 8)),
+          code: item.code || "FB----",
+          league: item.league || "足智彩賽事",
+          home: item.home, away: item.away,
+          enHome: item.enHome || inferEnglishTeam(item.home),
+          enAway: item.enAway || inferEnglishTeam(item.away),
+          kickoffIso: cleanIso,
+          stage: item.sofaLineupConfirmed ? "T-60m 正選鎖定" : "T-24h 初盤掃描",
+          openHigh: hOdds, openLow: lOdds, oddsHigh: hOdds, oddsLow: lOdds,
+          hadHome: item.hadHome || null, hadDraw: item.hadDraw || null, hadAway: item.hadAway || null,
+          sofaMatched: Boolean(item.sofaMatched),
+          sofaFormLambda: item.sofaFormLambda || null,
+          sofaOver25Rate: item.sofaOver25Rate ?? null,
+          sofaMissingHome: item.sofaMissingHome ?? 0,
+          sofaMissingAway: item.sofaMissingAway ?? 0,
+          sofaLineupConfirmed: Boolean(item.sofaLineupConfirmed),
+          espnMatched: false, sportsDbMatched: false, espnCombinedGoals: null,
+          missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
+          weatherText: "球場氣象待測",
+          lineupText: item.sofaMatched ? `SofaScore 傷停 主${item.sofaMissingHome||0}/客${item.sofaMissingAway||0}` : "聯賽基準量化中",
+          notes: "已載入馬會賠率並完成 7 因子泊松量化評估。",
+          lastUpdated: "馬會雲端同步"
+        });
+        updated++;
+      }
+    });
+
+    if (!selectedId || !matches.some(m => m.id === selectedId)) {
+      selectedId = matches.at(0)?.id || "";
+    }
+
+    pill.className = "feed-pill ok";
+    pill.textContent = `馬會雲端：${updated} 場 (時間 ${withTime} / Sofa ${withSofa})`;
+    addLog(`成功讀取馬會雲端 (${usedUrl})：共 ${updated} 場，開賽時間已鎖定 ${withTime} 場，SofaScore 對齊 ${withSofa} 場。`);
+    return updated;
   }
 
   function normToken(str) {
     return String(str || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(w => w.length >= 3 && !["club","united","utd","city","sporting","real"].includes(w)).at(0) || "";
   }
 
-  // 瀏覽器雙重賽程與時間補齊：ESPN 25聯賽 + TheSportsDB 全球次級聯賽公開賽程（支援埃及超、西甲/西乙、日乙、南美等）
   async function syncEspnAndGlobalSchedules() {
     const pill = document.getElementById("pillEspn");
     let matchedCount = 0;
@@ -727,14 +788,13 @@
           .then(r => r.ok ? r.json() : null).catch(() => null)
       );
 
-      // 同步查詢未來 5 日 TheSportsDB 全球公開足球賽程（覆蓋埃及超 ZED FC 等全球次級聯賽開賽時間）
-      const sdbDays =.map(offset => {
+      const sdbPromises = Array.from({ length: 5 }, (_, offset) => {
         const dStr = new Date(now.getTime() + offset * 86400000).toISOString().slice(0, 10);
         return fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${dStr}&s=Soccer`)
           .then(r => r.ok ? r.json() : null).catch(() => null);
       });
 
-      const [espnRes, sdbRes] = await Promise.all([Promise.all(espnPromises), Promise.all(sdbDays)]);
+      const [espnRes, sdbRes] = await Promise.all([Promise.all(espnPromises), Promise.all(sdbPromises)]);
 
       const espnEvents = [];
       espnRes.forEach((val, idx) => {
@@ -795,11 +855,10 @@
           continue;
         }
 
-        // 若非 ESPN 25 聯賽，自動從 TheSportsDB 全球次級聯賽補齊開賽時間
         const foundSdb = sdbEvents.find(ev => {
           const sh = String(ev.strHomeTeam || "").toLowerCase();
           const sa = String(ev.strAwayTeam || "").toLowerCase();
-          return (hTok && sh.includes(hTok)) || (aTok && sa.includes(aTok));
+          return (hTok && sh.includes(hTok)) && (aTok && sa.includes(aTok));
         });
         if (foundSdb && foundSdb.dateEvent && foundSdb.strTime) {
           const utcStr = `${foundSdb.dateEvent}T${foundSdb.strTime.slice(0,5)}:00Z`;
@@ -865,15 +924,24 @@
     const ts = nowHktClockStr();
     document.getElementById("lastSyncLabel").textContent = `上次同步：${ts}`;
     document.getElementById("syncStatusText").textContent = "多源自動更新中";
-    if (manual) addLog("已完成全線同步：馬會開賽時間/賠率 + SofaScore + ESPN 25聯賽 + TheSportsDB 全球賽程 + 氣象。");
+    if (manual) addLog("已完成手動全線同步。");
     countdownSec = syncIntervalSec || 120;
   }
 
   function getVisibleMatches() {
     const now = Date.now();
-    const list = matches.filter(m => {
+    let basePool = matches.filter(m => {
       const p = getHktParts(m.kickoffIso);
-      if (appConfig.hideFinished && p && (now - p.ms) > 3 * 3600000) return false;
+      if (appConfig.hideFinished && p && (now - p.ms) > 4 * 3600000) return false;
+      return true;
+    });
+    // 安全保護：若全部快取賽事皆為已完場舊賽，保留最近賽事而不顯示空白 0 場
+    if (basePool.length === 0 && matches.length > 0) {
+      basePool = matches.slice();
+    }
+
+    const list = basePool.filter(m => {
+      const p = getHktParts(m.kickoffIso);
       const ev = evaluateMatch(m);
       if (currentFilter === "BET" && ev.status !== "BET") return false;
       if (currentFilter === "HOLD" && ev.status !== "HOLD") return false;
@@ -918,7 +986,7 @@
 
     const listEl = document.getElementById("matchList");
     if (visible.length === 0) {
-      listEl.innerHTML = `<div class="match-card" style="text-align:center; color:var(--text-muted); padding:28px;">目前篩選條件下沒有賽事。</div>`;
+      listEl.innerHTML = `<div class="match-card" style="text-align:center; color:var(--text-muted); padding:28px;">目前篩選條件下沒有符合賽事，請切回「全部賽事」或「全部開賽時段」。</div>`;
     } else {
       let html = "", lastDateKey = "";
       visible.forEach(m => {
@@ -1108,6 +1176,7 @@
     const raw = document.getElementById("rawOddsText").value;
     const lines = raw.split(/\n+/);
     let cnt = 0;
+    matches = matches.filter(m => !m.isDemo);
     lines.forEach(line => {
       const codeM = line.match(/(FB\d{4})/);
       const teamM = line.match(/([^\s\d]+)\s*對\s*([^\s\[]+)/);
@@ -1140,6 +1209,7 @@
     const home = document.getElementById("newHome").value.trim();
     const away = document.getElementById("newAway").value.trim();
     if (!home || !away) return;
+    matches = matches.filter(m => !m.isDemo);
     const ms = parseFlexibleDateMs(document.getElementById("newTime").value.trim());
     const cXg = parseFloat(document.getElementById("newCustomXg").value);
     const h = parseFloat(document.getElementById("newHigh").value) || 1.85;
@@ -1163,24 +1233,25 @@
   function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(matches)); }
   function resetDefaults() {
     localStorage.removeItem(STORAGE_KEY);
-    matches = JSON.parse(JSON.stringify(DEFAULT_MATCHES));
-    selectedId = matches.at(0).id;
-    addLog("已清除舊快取並升級至 v12（四重開賽時間擷取 + 全賽事即時建議引擎）。");
+    matches = buildDynamicStarterMatches();
+    selectedId = matches.at(0)?.id || "";
+    addLog("已清除舊快取並重新連線拉取馬會雲端資料。");
     syncNow(true);
   }
 
   function init() {
+    document.getElementById("pillHktClock").textContent = `香港時間：${nowHktClockStr()}`;
     try {
       const savedCfg = JSON.parse(localStorage.getItem(CFG_KEY) || "null");
       if (savedCfg) appConfig = { ...appConfig, ...savedCfg };
       const savedMatches = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-      matches = Array.isArray(savedMatches) && savedMatches.length > 0 ? savedMatches : JSON.parse(JSON.stringify(DEFAULT_MATCHES));
+      matches = Array.isArray(savedMatches) && savedMatches.length > 0 ? savedMatches : buildDynamicStarterMatches();
     } catch (_) {
-      matches = JSON.parse(JSON.stringify(DEFAULT_MATCHES));
+      matches = buildDynamicStarterMatches();
     }
     selectedId = matches.at(0)?.id || "";
     renderAll();
-    addLog("系統啟動：v12 已啟用四重開賽時間補齊（HKJC + SofaScore + ESPN + TheSportsDB）及全賽事即時建議模式。");
+    addLog("系統啟動：v13 多源容錯連線引擎運作中（自動搜尋 Raw main / master / Pages）。");
     syncNow(false);
 
     countdownTimer = setInterval(() => {
