@@ -294,8 +294,8 @@
 </div>
 
 <script>
-  const STORAGE_KEY = "hkjc_hilo_zh_v7";
-  const CFG_KEY = "hkjc_hilo_cfg_v7";
+  const STORAGE_KEY = "hkjc_hilo_zh_v8";
+  const CFG_KEY = "hkjc_hilo_cfg_v8";
   const WEEKDAYS_ZH = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
   const WEEKDAYS_LONG_ZH = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
@@ -469,7 +469,7 @@
 
     let m = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})[^\d]+(\d{1,2}):(\d{2})/);
     if (m) {
-      return new Date(`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}T${m[4].padStart(2,"0")}:${m[5]}:00+08:00`).getTime();
+      return new Date(`${m[3]}-${m[2].padStart(2,"0")}-${m.padStart(2,"0")}T${m[4].padStart(2,"0")}:${m[5]}:00+08:00`).getTime();
     }
 
     m = raw.match(/(\d{1,2})\/(\d{1,2})(?!\/\d)[^\d]+(\d{1,2}):(\d{2})/);
@@ -480,12 +480,12 @@
       const mmNum = parseInt(m[2], 10);
       if (curMonth === 12 && mmNum === 1) yyyy += 1;
       else if (curMonth === 1 && mmNum === 12) yyyy -= 1;
-      return new Date(`${yyyy}-${String(mmNum).padStart(2,"0")}-${m[1].padStart(2,"0")}T${m[3].padStart(2,"0")}:${m[4]}:00+08:00`).getTime();
+      return new Date(`${yyyy}-${String(mmNum).padStart(2,"0")}-${m.padStart(2,"0")}T${m[3].padStart(2,"0")}:${m[4]}:00+08:00`).getTime();
     }
 
     m = raw.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
     if (m) {
-      return new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]||"00"}+08:00`).getTime();
+      return new Date(`${m}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]||"00"}+08:00`).getTime();
     }
 
     if (/^\d{4}-\d{2}-\d{2}([+-]\d{2}:?\d{2})?$/.test(raw) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(raw)) {
@@ -578,7 +578,7 @@
 
   function getKickoffCountdown(m) {
     const koTime = getMatchTimestamp(m);
-    if (koTime === Number.MAX_SAFE_INTEGER) return "請更新雲端爬蟲以同步開賽時間";
+    if (koTime === Number.MAX_SAFE_INTEGER) return "等待馬會雲端更新開賽時間";
     const diffMs = koTime - Date.now();
     if (diffMs <= 0) return "已開賽 / 即場進行中";
     const totalMins = Math.floor(diffMs / 60000);
@@ -662,9 +662,12 @@
           if (item.code && item.code.startsWith("FB")) target.code = item.code;
           if (cleanedHome) target.home = cleanedHome;
           if (cleanedAway) target.away = cleanedAway;
-          if (parsedKo) target.kickoffIso = parsedKo.isoHkt;
-          if (!target.enHome) target.enHome = inferEnglishTeam(target.home);
-          if (!target.enAway) target.enAway = inferEnglishTeam(target.away);
+          if (parsedKo && target.kickoffIso !== parsedKo.isoHkt) {
+            target.kickoffIso = parsedKo.isoHkt;
+            changed++;
+          }
+          if (!target.enHome) target.enHome = item.enHome || inferEnglishTeam(target.home);
+          if (!target.enAway) target.enAway = item.enAway || inferEnglishTeam(target.away);
           if (!target.espnLeague && item.league) target.espnLeague = inferEspnLeague(item.league);
           if (target.oddsHigh !== parseFloat(item.oddsHigh) || target.oddsLow !== parseFloat(item.oddsLow)) {
             target.prevHigh = target.oddsHigh;
@@ -797,7 +800,7 @@
                 const sumData = await sumRes.json();
                 const rosters = sumData.rosters || [];
                 const h11 = (rosters[0]?.roster || []).filter(p => p.starter);
-                const a11 = (rosters[1]?.roster || []).filter(p => p.starter);
+                const a11 = (rosters?.roster || []).filter(p => p.starter);
                 if (h11.length >= 11 && a11.length >= 11) {
                   target.lineupSummary = "官方正選 11 人已確認";
                   target.reviewStage = "T-60m 正選鎖定";
@@ -897,7 +900,7 @@
         const banner = document.createElement("div");
         banner.className = "date-group-header";
         banner.innerHTML = `
-          <span>&#128197; ${hkt ? hkt.dateBanner : "等待雲端更新開賽日期（請按一次 GitHub Run workflow）"}</span>
+          <span>&#128197; ${hkt ? hkt.dateBanner : "等待雲端更新開賽日期（請執行一次 GitHub Run workflow）"}</span>
           <span class="date-group-sub">香港時間 HKT (UTC+8)</span>
         `;
         listEl.appendChild(banner);
@@ -914,7 +917,7 @@
         <div class="card-top">
           <div>
             <span class="ko-badge">&#128338; ${hkt ? `${hkt.timeOnly} 開賽` : "待同步時間"}</span>
-            <span class="fb-code">${m.code}</span>${m.league} &bull; ${hkt ? hkt.fullDisplay : "請更新 Box 2 爬蟲"}
+            <span class="fb-code">${m.code}</span>${m.league} &bull; ${hkt ? hkt.fullDisplay : "待雲端更新"}
           </div>
           <span class="stage-pill">${m.reviewStage}</span>
         </div>
@@ -1076,14 +1079,14 @@
     const blocks = raw.split(/(?=FB\d{4})/);
     blocks.forEach(block => {
       const fbMatch = block.match(/FB\d{4}/);
-      const oddsMatch = block.match(/\[2\.5\]\s*(\d+\.\d{2})\s+(\d+\.\d{2})/);
+      const oddsMatch = block.match(/\[?2\.5\]?\s*(\d+\.\d{2})\s+(\d+\.\d{2})/);
       if (!oddsMatch) return;
       const code = fbMatch ? fbMatch[0] : "";
-      const high = parseFloat(oddsMatch[1]), low = parseFloat(oddsMatch[2]);
+      const high = parseFloat(oddsMatch), low = parseFloat(oddsMatch[2]);
       const koMatch = block.match(/\d{1,2}\/\d{1,2}(?:\/\d{4})?\s*(?:\([周星期一二三四五六日]\))?\s*\d{1,2}:\d{2}/);
       const parsedKo = koMatch ? getHktParts(koMatch[0]) : null;
       const teamMatch = block.match(/([^\n\d\[]+?)\s+對\s+([^\n\[]+?)(?=\s*\[|\s*\d|$)/);
-      const hName = teamMatch ? cleanTeamString(teamMatch[1]) : "";
+      const hName = teamMatch ? cleanTeamString(teamMatch) : "";
       const aName = teamMatch ? cleanTeamString(teamMatch[2]) : "";
 
       let target = matches.find(x => (code && x.code === code) || (hName && aName && x.home.includes(hName) && x.away.includes(aName)));
@@ -1136,7 +1139,7 @@
       id: newId, code, league: "自訂足智彩賽事", espnLeague,
       kickoffIso: parsedKo ? parsedKo.isoHkt : "2026-11-26T04:00:00+08:00",
       home, away, enHome, enAway,
-      lat: parseFloat(coords[0]), lon: parseFloat(coords[1]), venueCity: coords[2],
+      lat: parseFloat(coords[0]), lon: parseFloat(coords), venueCity: coords[2],
       oddsHigh, oddsLow, prevHigh: oddsHigh, npxg,
       tacticsScore: npxg >= 2.8 ? 7.8 : 4.5, teamNewsScore: 6.5, contextScore: 6.0,
       reviewStage: "T-24h 初盤掃描", lastReviewed: `新增於 ${formatTimeNow()}`,
@@ -1156,14 +1159,10 @@
   }
 
   document.getElementById("intervalSelect").value = String(config.intervalSec ?? 120);
-  addSyncLog("系統啟動：已升級 v7 多格式馬會時間解析引擎，自動清除舊版待定快取並按香港開賽時間排序。");
+  addSyncLog("系統啟動：已升級 v8 潔淨顯示引擎，自動按香港開賽時間排序。");
   renderAll();
   syncNow(false);
   startAutoTimer();
 </script>
 </body>
 </html>
-
-
-if __name__ == "__main__":
-    asyncio.run(scrape_hkjc_hilo())
