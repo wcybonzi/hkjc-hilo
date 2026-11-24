@@ -211,14 +211,13 @@ def is_exact_25_condition(cond_raw) -> bool:
         return False
 
 
-# 注意：絕不可檢查 node.get("inPlay") 布林值（馬會賽前賽事帶有 inPlay=True 代表「設有即場投注」而非「已開賽」！）
-# 僅檢查明確的比賽狀態字串 (COMPLETED / INPLAY / STARTED)
 def is_status_started_or_ended(node: dict) -> bool:
-    st = str(node.get("status") or node.get("matchStatus") or node.get("matchState") or "").upper()
-    for bad in ("INPLAY", "IN_PLAY", "STARTED", "FIRSTHALF", "SECONDHALF", "HALFTIME", "COMPLETED", "ENDED", "CANCELLED", "ABANDONED"):
-        if bad in st:
-            return True
-    return False
+    st = str(node.get("status") or node.get("matchStatus") or node.get("matchState") or "").strip().upper()
+    bad_set = {
+        "INPLAY", "IN_PLAY", "STARTED", "FIRSTHALF", "SECONDHALF",
+        "HALFTIME", "COMPLETED", "ENDED", "CANCELLED", "ABANDONED", "CLOSED",
+    }
+    return st in bad_set
 
 
 def clean_team_name(name: str) -> str:
@@ -325,7 +324,7 @@ def collect_hkjc_graphql(
                         v2 = c_second.get("currentOdds") or c_second.get("odds")
                         if v1 and v2:
                             h_val, l_val = float(v1), float(v2)
-                    if h_val and l_val and 1.25 <= h_val <= 4.40 and 1.25 <= l_val <= 4.40:
+                    if h_val and l_val and 1.18 <= h_val <= 4.80 and 1.18 <= l_val <= 4.80:
                         for ok in owner_keys:
                             if ok:
                                 hilo_map[ok] = (h_val, l_val)
@@ -381,7 +380,7 @@ async def query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_
         if resp.status == 200:
             data = await resp.json()
             collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
-            print(f"Direct HKJC GraphQL query succeeded: {len(hilo_map)} HIL [2.5] entries.")
+            print(f"Direct HKJC GraphQL query succeeded: {len(hilo_map)} HIL 2.5 entries.")
     except Exception as exc:
         print(f"Direct HKJC GraphQL query notice: {exc}")
 
@@ -631,7 +630,6 @@ async def scrape_hkjc_and_sofascore():
         await page.wait_for_timeout(2000)
         await scroll_and_harvest(page, dom_row_store, steps=7)
 
-        # 主動執行官方 GraphQL matchList 查詢，確保 100% 取得 kickOffTime 與 [2.5] 賠率
         await query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
 
         try:
@@ -660,7 +658,6 @@ async def scrape_hkjc_and_sofascore():
                     or (dom_row_store.get(fb_code) or {}).get("kickoffIso")
                     or ""
                 )
-                # 嚴格排除開賽時間已過之完場或走地賽事
                 if ko_final:
                     try:
                         if datetime.fromisoformat(ko_final).timestamp() <= (now_ts - 300):
@@ -709,10 +706,10 @@ async def scrape_hkjc_and_sofascore():
                         captured_matches[fb_code]["enAway"] = en_m.group(2).strip()
             else:
                 tm = re.search(r"([^\n\r\t]+?)\s*對\s*([^\n\r\t]+)", r_txt)
-                om = re.search(r"\[?2\.5(?:/2\.5)?(?:\s*球)?\]?\s*(\d+\.\d{2})\s+(\d+\.\d{2})", r_txt)
+                om = re.search(r"2\.5(?:/2\.5)?(?:\s*球)?[^\d]{0,8}(\d+\.\d{2})\s+(\d+\.\d{2})", r_txt)
                 if tm and om:
                     h_o, l_o = float(om.group(1)), float(om.group(2))
-                    if 1.25 <= h_o <= 4.40 and 1.25 <= l_o <= 4.40:
+                    if 1.18 <= h_o <= 4.80 and 1.18 <= l_o <= 4.80:
                         captured_matches[fb_code] = {
                             "code": fb_code,
                             "league": "足智彩入球大細",
@@ -728,7 +725,7 @@ async def scrape_hkjc_and_sofascore():
                         }
 
         final_list = list(captured_matches.values())
-        print(f"HKJC upcoming pre-match [2.5] captured: {len(final_list)} matches.")
+        print(f"HKJC upcoming pre-match 2.5 captured: {len(final_list)} matches.")
 
         try:
             await asyncio.wait_for(enrich_with_sofascore(context, final_list), timeout=40.0)
@@ -737,7 +734,6 @@ async def scrape_hkjc_and_sofascore():
 
         await browser.close()
 
-    # SofaScore 補齊時間後再次剔除任何已開賽賽事
     final_list = [
         m for m in final_list
         if not m.get("kickoffIso") or datetime.fromisoformat(m["kickoffIso"]).timestamp() > (now_ts - 300)
@@ -748,7 +744,6 @@ async def scrape_hkjc_and_sofascore():
     ko_ok_count = sum(1 for x in final_list if x.get("kickoffIso"))
     sofa_ok_count = sum(1 for x in final_list if x.get("sofaMatched"))
 
-    # 永遠寫入最新 updatedAtHkt 覆蓋舊版 Run #1 殘留檔，絕不保留過期舊快照
     output_payload = {
         "updatedAtHkt": datetime.now(HKT).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
         "matchCount": len(final_list),
@@ -763,3 +758,54 @@ async def scrape_hkjc_and_sofascore():
 
 if __name__ == "__main__":
     asyncio.run(scrape_hkjc_and_sofascore())
+
+
+Box 3: .github/workflows/hkjc_sync.yml (Keep as-is if already updated)
+
+name: HKJC HiLo 2.5 Auto Sync
+
+on:
+  schedule:
+    - cron: '0,20,40 0-23 1-31 1-12 0-6'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'hkjc_scraper.py'
+      - '.github/workflows/hkjc_sync.yml'
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  scrape-hkjc-and-sofascore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Playwright Chromium
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Run HKJC and SofaScore collector
+        run: python hkjc_scraper.py
+
+      - name: Pull latest changes and commit JSON feed
+        run: |
+          git config user.name "hkjc-sync-bot"
+          git config user.email "hkjc-sync-bot@users.noreply.github.com"
+          git add data/hkjc_hilo.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: auto-sync HKJC pre-match HiLo 2.5 odds and kickoff times"
+            git pull --rebase origin main || git pull --rebase || true
+            git push
+          fi
