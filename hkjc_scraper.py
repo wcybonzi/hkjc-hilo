@@ -46,7 +46,6 @@ def resolve_date_from_weekday(wk_token: str, hh_int: int) -> str:
     if target_wk is None:
         return ""
     days_ahead = (target_wk - now_hkt.weekday()) % 7
-    # 馬會「周六」賽事若於凌晨 00:00–05:59 開賽，實際日曆通常為翌晨（周日凌晨）
     if 0 <= hh_int <= 5:
         days_ahead = (days_ahead + 1) % 7
     cand = now_hkt + timedelta(days=days_ahead)
@@ -54,7 +53,6 @@ def resolve_date_from_weekday(wk_token: str, hh_int: int) -> str:
 
 
 def normalize_hkjc_kickoff(raw_val, fallback_date="") -> str:
-    """支援馬會 GraphQL 及網頁所有日期時間格式（含跨行、中間夾雜 FB 編號/周次、分欄日期+時間）"""
     if raw_val is None:
         return ""
     if isinstance(raw_val, (int, float)) or re.fullmatch(r"\d{10,13}", str(raw_val).strip()):
@@ -67,10 +65,8 @@ def normalize_hkjc_kickoff(raw_val, fallback_date="") -> str:
     if not s:
         return ""
 
-    # 修正 +0800 -> +08:00
     s_norm = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", s)
 
-    # 1. ISO 日期時間 YYYY-MM-DDTHH:MM
     if re.search(r"\d{4}-\d{2}-\d{2}[T\s]+\d{1,2}:\d{2}", s_norm):
         try:
             iso_clean = s_norm.replace("Z", "+00:00")
@@ -84,26 +80,22 @@ def normalize_hkjc_kickoff(raw_val, fallback_date="") -> str:
                 yyyy, mm, dd, hh, mn = m_iso.groups()
                 return f"{yyyy}-{mm}-{dd}T{int(hh):02d}:{mn}:00+08:00"
 
-    # 先獨立尋找字串內之時鐘時間 HH:MM（排除賠率小數點，僅匹配冒號時間）
-    m_clock = re.search(r"(?<![\d:])([01]?\d|2[0-3]):([0-5]\d)(?![\d])", s)
+    m_clock = re.search(r"(?<![\d:])(0?\d|1\d|2[0-3]):([0-5]\d)(?![\d])", s)
     if not m_clock:
         return ""
     hh_int, mn_str = int(m_clock.group(1)), m_clock.group(2)
 
-    # 2. 字串本身或 fallback_date 含 DD/MM/YYYY
     combo = f"{s} {fallback_date}"
     m_dmy = re.search(r"(\d{1,2})/(\d{1,2})/(\d{4})", combo)
     if m_dmy:
         dd, mm, yyyy = m_dmy.groups()
         return f"{yyyy}-{int(mm):02d}-{int(dd):02d}T{hh_int:02d}:{mn_str}:00+08:00"
 
-    # 3. 字串或 fallback_date 含 YYYY-MM-DD
     m_ymd = re.search(r"(\d{4})-(\d{2})-(\d{2})", combo)
     if m_ymd:
         yyyy, mm, dd = m_ymd.groups()
         return f"{yyyy}-{mm}-{dd}T{hh_int:02d}:{mn_str}:00+08:00"
 
-    # 4. 中文日期 MM月DD日
     m_zh = re.search(r"(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日", combo)
     if m_zh:
         yyyy_raw, mm, dd = m_zh.groups()
@@ -111,14 +103,12 @@ def normalize_hkjc_kickoff(raw_val, fallback_date="") -> str:
         yyyy = int(yyyy_raw) if yyyy_raw else resolve_year_for_month(mm_int)
         return f"{yyyy}-{mm_int:02d}-{int(dd):02d}T{hh_int:02d}:{mn_str}:00+08:00"
 
-    # 5. DD/MM（排除亞洲讓球盤線如 2/2.5、2.5/3）
     for m_dm in re.finditer(r"(?<![\.\d])(\d{1,2})/(\d{1,2})(?![/\.\d])", combo):
         dd_int, mm_int = int(m_dm.group(1)), int(m_dm.group(2))
         if 1 <= dd_int <= 31 and 1 <= mm_int <= 12:
             yyyy = resolve_year_for_month(mm_int)
             return f"{yyyy}-{mm_int:02d}-{dd_int:02d}T{hh_int:02d}:{mn_str}:00+08:00"
 
-    # 6. 周次代碼推算（如 周六 15 + 04:00）
     m_wk = re.search(r"(星期[一二三四五六日]|周[一二三四五六日]|\b(?:MON|TUE|WED|THU|FRI|SAT|SUN)\b)", combo, re.IGNORECASE)
     if m_wk:
         ymd = resolve_date_from_weekday(m_wk.group(1), hh_int)
@@ -166,8 +156,7 @@ def extract_fb_code(node: dict) -> str:
         m = re.search(r"(FB\d{4})", val)
         if m:
             return m.group(1)
-    # 深度搜尋字串欄位內是否帶有 FBxxxx
-    for k, val in node.items():
+    for val in node.values():
         if isinstance(val, str) and "FB" in val:
             m = re.search(r"(FB\d{4})", val)
             if m:
@@ -208,7 +197,6 @@ def collect_hkjc_graphql(payload, match_meta: dict, kickoff_by_key: dict, hilo_m
         fb_code = extract_fb_code(payload)
         raw_id = str(payload.get("id") or payload.get("matchId") or fb_code or "").strip()
 
-        # 不論是否有 homeTeam，只要節點帶有 ID/FB 編號與時間，即先記錄至 kickoff_by_key
         if raw_id or fb_code:
             ko_any = scan_nested_kickoff(payload, str(payload.get("matchDate") or payload.get("frontEndId") or ""))
             if ko_any:
@@ -296,8 +284,7 @@ def collect_hkjc_graphql(payload, match_meta: dict, kickoff_by_key: dict, hilo_m
             collect_hkjc_graphql(item, match_meta, kickoff_by_key, hilo_map, had_map)
 
 
-async def harvest_dom_rows_at_scroll(page, dom_row_Store: dict):
-    """在每次捲動畫面時即時擷取每個 FBxxxx 獨立列容器文字與最近上方日期標題（克服虛擬捲動卸載問題）"""
+async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
     try:
         rows = await page.evaluate(
             """() => {
@@ -328,8 +315,8 @@ async def harvest_dom_rows_at_scroll(page, dom_row_Store: dict):
             if not code:
                 continue
             ko = normalize_hkjc_kickoff(r.get("rowText") or "", r.get("bannerDate") or "")
-            existing = dom_row_Store.get(code, {})
-            dom_row_Store[code] = {
+            existing = dom_row_store.get(code, {})
+            dom_row_store[code] = {
                 "rowText": r.get("rowText") if len(r.get("rowText") or "") >= len(existing.get("rowText") or "") else existing.get("rowText"),
                 "kickoffIso": ko or existing.get("kickoffIso") or "",
             }
@@ -349,24 +336,30 @@ async def scroll_and_harvest(page, dom_row_store: dict, steps: int = 6):
                     });
                 }"""
             )
-            await page.wait_for_timeout(1000)
+            await page.wait_for_timeout(900)
             await harvest_dom_rows_at_scroll(page, dom_row_store)
         except Exception:
             break
 
 
-async def fetch_sofascore_json(page, url: str):
-    try:
-        return await page.evaluate(
-            """async (targetUrl) => {
-                const r = await fetch(targetUrl, { headers: { 'Accept': 'application/json' } });
-                if (!r.ok) return null;
-                return await r.json();
-            }""",
-            url,
-        )
-    except Exception:
-        return None
+async def fetch_sofa_dual_host(context, path_part: str):
+    """同時支援 api.sofascore.com 與 www.sofascore.com，單次逾時上限 7 秒，絕不卡死"""
+    for host in ("https://api.sofascore.com", "https://www.sofascore.com"):
+        try:
+            resp = await context.request.get(
+                f"{host}{path_part}",
+                headers={
+                    "Accept": "application/json, text/plain, */*",
+                    "Referer": "https://www.sofascore.com/",
+                    "Origin": "https://www.sofascore.com",
+                },
+                timeout=7000,
+            )
+            if resp.status == 200:
+                return await resp.json()
+        except Exception:
+            continue
+    return None
 
 
 def parse_streak_fraction(val_str: str):
@@ -383,28 +376,77 @@ async def enrich_with_sofascore(context, matches_list: list):
         return
     sofa_page = await context.new_page()
     try:
-        await sofa_page.goto("https://www.sofascore.com/", wait_until="domcontentloaded", timeout=30000)
-        await sofa_page.wait_for_timeout(2000)
+        try:
+            await sofa_page.goto("https://www.sofascore.com/", wait_until="domcontentloaded", timeout=15000)
+            await sofa_page.wait_for_timeout(1200)
+        except Exception:
+            pass
 
         now_utc = datetime.now(timezone.utc)
         date_strs = [(now_utc + timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, 4)]
+        schedule_paths = [
+            f"/api/v1/sport/football/scheduled-events/{ds}{suffix}"
+            for ds in date_strs
+            for suffix in ("", "/inverse")
+        ]
+        sched_results = await asyncio.gather(*(fetch_sofa_dual_host(context, p) for p in schedule_paths))
         sofa_events = []
-
-        for ds in date_strs:
-            for suffix in ("", "/inverse"):
-                url = f"https://www.sofascore.com/api/v1/sport/football/scheduled-events/{ds}{suffix}"
-                payload = await fetch_sofascore_json(sofa_page, url)
-                if payload and isinstance(payload.get("events"), list):
-                    sofa_events.extend(payload.get("events"))
+        for payload in sched_results:
+            if payload and isinstance(payload.get("events"), list):
+                sofa_events.extend(payload.get("events"))
 
         print(f"SofaScore loaded {len(sofa_events)} global + lower-league events.")
-        detail_budget = 40
+        if not sofa_events:
+            return
 
+        sem = asyncio.Semaphore(5)
+
+        async def enrich_single_match(m: dict, ev_id: int):
+            async with sem:
+                pf, st_data, lu = await asyncio.gather(
+                    fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/pregame-form"),
+                    fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/team-streaks"),
+                    fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/lineups"),
+                )
+                form_lambda = None
+                if pf:
+                    hr = float((pf.get("homeTeam") or {}).get("avgRating") or 0)
+                    ar = float((pf.get("awayTeam") or {}).get("avgRating") or 0)
+                    if hr > 5.5 and ar > 5.5:
+                        form_lambda = round(2.45 + ((hr + ar) - 13.6) * 0.45, 2)
+
+                over25_rates = []
+                if st_data:
+                    for group_key in ("general", "head2head"):
+                        for item in st_data.get(group_key) or []:
+                            nm = str(item.get("name") or "").lower()
+                            frac = parse_streak_fraction(item.get("value"))
+                            if frac is not None:
+                                if "more than 2.5" in nm:
+                                    over25_rates.append(frac)
+                                elif "less than 2.5" in nm:
+                                    over25_rates.append(1.0 - frac)
+
+                if over25_rates:
+                    avg_over = sum(over25_rates) / len(over25_rates)
+                    m["sofaOver25Rate"] = round(avg_over, 3)
+                    p_u = min(0.88, max(0.12, 1.0 - avg_over))
+                    lam_est = -math.log(p_u) * 1.85
+                    form_lambda = round((form_lambda + lam_est) / 2.0, 2) if form_lambda else round(lam_est, 2)
+
+                if form_lambda:
+                    m["sofaFormLambda"] = max(1.45, min(4.10, form_lambda))
+
+                if lu:
+                    m["sofaLineupConfirmed"] = bool(lu.get("confirmed"))
+                    m["sofaMissingHome"] = len((lu.get("home") or {}).get("missingPlayers") or [])
+                    m["sofaMissingAway"] = len((lu.get("away") or {}).get("missingPlayers") or [])
+
+        tasks = []
         for m in matches_list:
             en_h, en_a = m.get("enHome") or "", m.get("enAway") or ""
             if not en_h or not en_a:
                 continue
-
             ko_str = m.get("kickoffIso") or ""
             ko_ts = None
             if ko_str:
@@ -431,49 +473,13 @@ async def enrich_with_sofascore(context, matches_list: list):
                 ev_ts = best_ev.get("startTimestamp")
                 if ev_ts and not m.get("kickoffIso"):
                     m["kickoffIso"] = normalize_hkjc_kickoff(ev_ts)
+                if ev_id and len(tasks) < 35:
+                    tasks.append(enrich_single_match(m, ev_id))
 
-                if detail_budget <= 0 or not ev_id:
-                    continue
-                detail_budget -= 1
-
-                pf = await fetch_sofascore_json(sofa_page, f"https://www.sofascore.com/api/v1/event/{ev_id}/pregame-form")
-                form_lambda = None
-                if pf:
-                    hr = float((pf.get("homeTeam") or {}).get("avgRating") or 0)
-                    ar = float((pf.get("awayTeam") or {}).get("avgRating") or 0)
-                    if hr > 5.5 and ar > 5.5:
-                        form_lambda = round(2.45 + ((hr + ar) - 13.6) * 0.45, 2)
-
-                st_data = await fetch_sofascore_json(sofa_page, f"https://www.sofascore.com/api/v1/event/{ev_id}/team-streaks")
-                over25_rates = []
-                if st_data:
-                    for group_key in ("general", "head2head"):
-                        for item in st_data.get(group_key) or []:
-                            nm = str(item.get("name") or "").lower()
-                            frac = parse_streak_fraction(item.get("value"))
-                            if frac is not None:
-                                if "more than 2.5" in nm:
-                                    over25_rates.append(frac)
-                                elif "less than 2.5" in nm:
-                                    over25_rates.append(1.0 - frac)
-
-                if over25_rates:
-                    avg_over = sum(over25_rates) / len(over25_rates)
-                    m["sofaOver25Rate"] = round(avg_over, 3)
-                    p_u = min(0.88, max(0.12, 1.0 - avg_over))
-                    lam_est = -math.log(p_u) * 1.85
-                    form_lambda = round((form_lambda + lam_est) / 2.0, 2) if form_lambda else round(lam_est, 2)
-
-                if form_lambda:
-                    m["sofaFormLambda"] = max(1.45, min(4.10, form_lambda))
-
-                lu = await fetch_sofascore_json(sofa_page, f"https://www.sofascore.com/api/v1/event/{ev_id}/lineups")
-                if lu:
-                    m["sofaLineupConfirmed"] = bool(lu.get("confirmed"))
-                    m["sofaMissingHome"] = len((lu.get("home") or {}).get("missingPlayers") or [])
-                    m["sofaMissingAway"] = len((lu.get("away") or {}).get("missingPlayers") or [])
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
     except Exception as exc:
-        print(f"SofaScore enrichment warning: {exc}")
+        print(f"SofaScore enrichment non-fatal warning: {exc}")
     finally:
         await sofa_page.close()
 
@@ -484,13 +490,17 @@ async def scrape_hkjc_and_sofascore():
     captured_matches = {}
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(
+            headless=True,
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
+        )
         context = await browser.new_context(
             locale="zh-HK",
             timezone_id="Asia/Hong_Kong",
             viewport={"width": 1440, "height": 2200},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
         )
+        await context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined});")
         page = await context.new_page()
 
         async def handle_response(response):
@@ -503,23 +513,26 @@ async def scrape_hkjc_and_sofascore():
 
         page.on("response", handle_response)
 
-        # 第 1 步：載入足智彩中文「入球大細」網頁並逐段捲動擷取 GraphQL + DOM 列時間
         try:
             await page.goto(HKJC_HILO_CH_URL, wait_until="domcontentloaded", timeout=45000)
         except Exception as exc:
             print(f"HKJC CH navigation notice: {exc}")
-        await page.wait_for_timeout(5500)
+
+        # 動態等待馬會 GraphQL 封包抵達（最多 12 秒）
+        for _ in range(12):
+            if hilo_map:
+                break
+            await page.wait_for_timeout(1000)
+        await page.wait_for_timeout(2000)
         await scroll_and_harvest(page, dom_row_store, steps=6)
 
-        # 第 2 步：快速開啟英文版足智彩「HiLo」補齊任何遺漏之開賽時間與官方英文隊名
         try:
             await page.goto(HKJC_HILO_EN_URL, wait_until="domcontentloaded", timeout=35000)
-            await page.wait_for_timeout(4000)
+            await page.wait_for_timeout(3500)
             await scroll_and_harvest(page, dom_row_store, steps=4)
         except Exception as exc:
             print(f"HKJC EN pass notice: {exc}")
 
-        # 合併 GraphQL 與 DOM 列之開賽時間
         for key, meta in match_meta.items():
             fb_code = meta.get("code") or (key if key.startswith("FB") else "")
             odds_pair = hilo_map.get(key) or (hilo_map.get(fb_code) if fb_code else None)
@@ -550,7 +563,6 @@ async def scrape_hkjc_and_sofascore():
                     "sofaMatched": False,
                 }
 
-        # 純 DOM 補漏（若某場僅出現在網頁文字中）
         for fb_code, row_info in dom_row_store.items():
             r_txt = row_info.get("rowText") or ""
             ko_dom = row_info.get("kickoffIso") or ""
@@ -580,7 +592,14 @@ async def scrape_hkjc_and_sofascore():
                     }
 
         final_list = list(captured_matches.values())
-        await enrich_with_sofascore(context, final_list)
+        print(f"HKJC captured {len(final_list)} matches before SofaScore enrichment.")
+
+        # SofaScore 限時 40 秒保護：即使 SofaScore 被雲端防火牆攔截，亦絕不影響馬會賽程與賠率存檔
+        try:
+            await asyncio.wait_for(enrich_with_sofascore(context, final_list), timeout=40.0)
+        except asyncio.TimeoutError:
+            print("SofaScore enrichment reached 40s cap; proceeding with HKJC matches.")
+
         await browser.close()
 
     final_list.sort(key=lambda x: x.get("kickoffIso") or "9999-12-31T23:59:00+08:00")
