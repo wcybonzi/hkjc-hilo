@@ -11,6 +11,7 @@ from playwright.async_api import async_playwright
 HKT = timezone(timedelta(hours=8))
 HKJC_HILO_CH_URL = "https://bet.hkjc.com/ch/football/hil"
 HKJC_HILO_EN_URL = "https://bet.hkjc.com/en/football/hil"
+HKJC_GQL_URL = "https://info.cld.hkjc.com/graphql/base/"
 OUTPUT_PATH = "data/hkjc_hilo.json"
 
 WEEKDAY_MAP = {
@@ -22,6 +23,38 @@ WEEKDAY_MAP = {
     "周六": 5, "星期六": 5, "SAT": 5,
     "周日": 6, "星期日": 6, "SUN": 6,
 }
+
+DIRECT_GQL_QUERY = """
+query matchList($startDate: String, $endDate: String, $fbOddsTypes: [FBOddsType]!, $fbOddsTypesM: [FBOddsType]!, $inplayOnly: Boolean) {
+  matches(startDate: $startDate, endDate: $endDate, fbOddsTypes: $fbOddsTypes, fbOddsTypesM: $fbOddsTypesM, inplayOnly: $inplayOnly) {
+    id
+    frontEndId
+    matchDate
+    kickOffTime
+    status
+    homeTeam { name_en name_ch }
+    awayTeam { name_en name_ch }
+    tournament { name_en name_ch }
+    foPools(fbOddsTypes: $fbOddsTypes) {
+      id
+      oddsType
+      status
+      lines {
+        lineId
+        status
+        condition
+        main
+        combinations {
+          combId
+          str
+          status
+          currentOdds
+        }
+      }
+    }
+  }
+}
+"""
 
 
 def at(seq, idx, default=None):
@@ -151,7 +184,7 @@ def scan_nested_kickoff(obj, fallback_date="") -> str:
 
 
 def extract_fb_code(node: dict) -> str:
-    for key in ("code", "fbId", "matchCode", "frontEndId", "id"):
+    for key in ("frontEndId", "code", "fbId", "matchCode", "id"):
         val = str(node.get(key) or "").strip()
         m = re.search(r"(FB\d{4})", val)
         if m:
@@ -178,11 +211,11 @@ def is_exact_25_condition(cond_raw) -> bool:
         return False
 
 
-def is_node_inplay(node: dict) -> bool:
-    if bool(node.get("inPlay") or node.get("isInPlay") or node.get("live")):
-        return True
+# 注意：絕不可檢查 node.get("inPlay") 布林值（馬會賽前賽事帶有 inPlay=True 代表「設有即場投注」而非「已開賽」！）
+# 僅檢查明確的比賽狀態字串 (COMPLETED / INPLAY / STARTED)
+def is_status_started_or_ended(node: dict) -> bool:
     st = str(node.get("status") or node.get("matchStatus") or node.get("matchState") or "").upper()
-    for bad in ("INPLAY", "IN_PLAY", "STARTED", "FIRSTHALF", "SECONDHALF", "HALFTIME", "COMPLETED", "ENDED"):
+    for bad in ("INPLAY", "IN_PLAY", "STARTED", "FIRSTHALF", "SECONDHALF", "HALFTIME", "COMPLETED", "ENDED", "CANCELLED", "ABANDONED"):
         if bad in st:
             return True
     return False
@@ -215,14 +248,13 @@ def team_similarity(a: str, b: str) -> float:
 logged_sample = False
 
 
-# 支援父子節點直連 (parent_id / parent_fb)：確保 FootballMatch 的 kickOffTime 與下層 foPools 100% 綁定
 def collect_hkjc_graphql(
     payload,
     match_meta: dict,
     kickoff_by_key: dict,
     hilo_map: dict,
     had_map: dict,
-    inplay_keys: set,
+    started_keys: set,
     parent_id: str = "",
     parent_fb: str = "",
 ):
@@ -235,11 +267,10 @@ def collect_hkjc_graphql(
         cur_id = parent_id
         if is_match_node:
             cur_id = str(payload.get("id") or payload.get("matchId") or own_fb or parent_id or "").strip()
-
-        if is_node_inplay(payload):
-            for k in (cur_id, cur_fb):
-                if k:
-                    inplay_keys.add(k)
+            if is_status_started_or_ended(payload):
+                for k in (cur_id, cur_fb):
+                    if k:
+                        started_keys.add(k)
 
         ko_here = scan_nested_kickoff(payload, str(payload.get("matchDate") or payload.get("frontEndId") or ""))
         if ko_here:
@@ -251,7 +282,7 @@ def collect_hkjc_graphql(
             if not logged_sample:
                 print(
                     f"Sample HKJC FootballMatch keys: {list(payload.keys())} | "
-                    f"kickOffTime={payload.get('kickOffTime')} | matchDate={payload.get('matchDate')} | fb={cur_fb}"
+                    f"kickOffTime={payload.get('kickOffTime')} | status={payload.get('status')} | fb={cur_fb}"
                 )
                 logged_sample = True
             h_obj, a_obj = payload.get("homeTeam") or {}, payload.get("awayTeam") or {}
@@ -267,7 +298,6 @@ def collect_hkjc_graphql(
                 "enHome": h_obj.get("name_en") or prev.get("enHome") or "",
                 "enAway": a_obj.get("name_en") or prev.get("enAway") or "",
                 "kickoffIso": ko_iso or prev.get("kickoffIso") or "",
-                "isInPlay": (cur_id in inplay_keys) or (cur_fb in inplay_keys),
             }
             for k in (cur_id, cur_fb):
                 if k:
@@ -277,34 +307,28 @@ def collect_hkjc_graphql(
         owner_keys = [str(payload.get("matchId") or ""), cur_fb, cur_id]
 
         if odds_type == "HIL":
-            if bool(payload.get("inPlay") or payload.get("isInPlay")):
-                for ok in owner_keys:
-                    if ok:
-                        inplay_keys.add(ok)
-            else:
-                for line in payload.get("lines") or []:
-                    if is_exact_25_condition(line.get("condition")):
-                        h_val, l_val = None, None
-                        combs = line.get("combinations") or []
-                        for c in combs:
-                            tag = str(c.get("str") or c.get("selection") or "").upper()
-                            val = c.get("currentOdds") or c.get("odds")
-                            if val:
-                                if tag in ("H", "HIGH", "OVER", "大"):
-                                    h_val = float(val)
-                                elif tag in ("L", "LOW", "UNDER", "細"):
-                                    l_val = float(val)
-                        if (h_val is None or l_val is None) and len(combs) == 2:
-                            c_first, c_second = at(combs, 0, {}), at(combs, 1, {})
-                            v1 = c_first.get("currentOdds") or c_first.get("odds")
-                            v2 = c_second.get("currentOdds") or c_second.get("odds")
-                            if v1 and v2:
-                                h_val, l_val = float(v1), float(v2)
-                        # 只收錄正常賽前 [2.5] 正盤 (排除走地極端賠率如 1.09 / 5.60)
-                        if h_val and l_val and 1.25 <= h_val <= 4.40 and 1.25 <= l_val <= 4.40:
-                            for ok in owner_keys:
-                                if ok:
-                                    hilo_map[ok] = (h_val, l_val)
+            for line in payload.get("lines") or []:
+                if is_exact_25_condition(line.get("condition")):
+                    h_val, l_val = None, None
+                    combs = line.get("combinations") or []
+                    for c in combs:
+                        tag = str(c.get("str") or c.get("selection") or "").upper()
+                        val = c.get("currentOdds") or c.get("odds")
+                        if val:
+                            if tag in ("H", "HIGH", "OVER", "大"):
+                                h_val = float(val)
+                            elif tag in ("L", "LOW", "UNDER", "細"):
+                                l_val = float(val)
+                    if (h_val is None or l_val is None) and len(combs) == 2:
+                        c_first, c_second = at(combs, 0, {}), at(combs, 1, {})
+                        v1 = c_first.get("currentOdds") or c_first.get("odds")
+                        v2 = c_second.get("currentOdds") or c_second.get("odds")
+                        if v1 and v2:
+                            h_val, l_val = float(v1), float(v2)
+                    if h_val and l_val and 1.25 <= h_val <= 4.40 and 1.25 <= l_val <= 4.40:
+                        for ok in owner_keys:
+                            if ok:
+                                hilo_map[ok] = (h_val, l_val)
 
         elif odds_type == "HAD":
             for line in payload.get("lines") or []:
@@ -325,10 +349,41 @@ def collect_hkjc_graphql(
                             had_map[ok] = (hm, dr, aw)
 
         for v in payload.values():
-            collect_hkjc_graphql(v, match_meta, kickoff_by_key, hilo_map, had_map, inplay_keys, cur_id, cur_fb)
+            collect_hkjc_graphql(v, match_meta, kickoff_by_key, hilo_map, had_map, started_keys, cur_id, cur_fb)
     elif isinstance(payload, list):
         for item in payload:
-            collect_hkjc_graphql(item, match_meta, kickoff_by_key, hilo_map, had_map, inplay_keys, parent_id, parent_fb)
+            collect_hkjc_graphql(item, match_meta, kickoff_by_key, hilo_map, had_map, started_keys, parent_id, parent_fb)
+
+
+async def query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_map, had_map, started_keys):
+    now_hkt = datetime.now(HKT)
+    start_str = now_hkt.strftime("%Y-%m-%d")
+    end_str = (now_hkt + timedelta(days=7)).strftime("%Y-%m-%d")
+    variables = {
+        "startDate": start_str,
+        "endDate": end_str,
+        "fbOddsTypes": ["HIL", "HAD"],
+        "fbOddsTypesM": ["HIL", "HAD"],
+        "inplayOnly": False,
+    }
+    try:
+        resp = await context.request.post(
+            HKJC_GQL_URL,
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Origin": "https://bet.hkjc.com",
+                "Referer": "https://bet.hkjc.com/",
+            },
+            data=json.dumps({"query": DIRECT_GQL_QUERY, "variables": variables}),
+            timeout=15000,
+        )
+        if resp.status == 200:
+            data = await resp.json()
+            collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
+            print(f"Direct HKJC GraphQL query succeeded: {len(hilo_map)} HIL [2.5] entries.")
+    except Exception as exc:
+        print(f"Direct HKJC GraphQL query notice: {exc}")
 
 
 async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
@@ -362,13 +417,13 @@ async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
             if not code:
                 continue
             r_txt = r.get("rowText") or ""
-            in_play_dom = bool(re.search(r"(即場|上半場|下半場|半場|加時|\bLIVE\b|\bHT\b)", r_txt, re.IGNORECASE))
+            live_clock_dom = bool(re.search(r"(上半場|下半場|半場|加時|\bHT\b|\d{1,2}\'\s)", r_txt, re.IGNORECASE))
             ko = normalize_hkjc_kickoff(r_txt, r.get("bannerDate") or "")
             existing = dom_row_store.get(code, {})
             dom_row_store[code] = {
                 "rowText": r_txt if len(r_txt) >= len(existing.get("rowText") or "") else existing.get("rowText"),
                 "kickoffIso": ko or existing.get("kickoffIso") or "",
-                "isInPlay": in_play_dom or bool(existing.get("isInPlay")),
+                "isLiveDom": live_clock_dom or bool(existing.get("isLiveDom")),
             }
     except Exception:
         pass
@@ -528,14 +583,14 @@ async def enrich_with_sofascore(context, matches_list: list):
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
     except Exception as exc:
-        print(f"SofaScore enrichment non-fatal warning: {exc}")
+        print(f"SofaScore enrichment warning: {exc}")
     finally:
         await sofa_page.close()
 
 
 async def scrape_hkjc_and_sofascore():
     match_meta, kickoff_by_key, hilo_map, had_map = {}, {}, {}, {}
-    inplay_keys = set()
+    started_keys = set()
     dom_row_store = {}
     captured_matches = {}
     now_ts = datetime.now(HKT).timestamp()
@@ -558,7 +613,7 @@ async def scrape_hkjc_and_sofascore():
             if "graphql" in response.url.lower() and response.status == 200:
                 try:
                     data = await response.json()
-                    collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, inplay_keys)
+                    collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
                 except Exception:
                     pass
 
@@ -576,9 +631,12 @@ async def scrape_hkjc_and_sofascore():
         await page.wait_for_timeout(2000)
         await scroll_and_harvest(page, dom_row_store, steps=7)
 
+        # 主動執行官方 GraphQL matchList 查詢，確保 100% 取得 kickOffTime 與 [2.5] 賠率
+        await query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
+
         try:
             await page.goto(HKJC_HILO_EN_URL, wait_until="domcontentloaded", timeout=35000)
-            await page.wait_for_timeout(3500)
+            await page.wait_for_timeout(3000)
             await scroll_and_harvest(page, dom_row_store, steps=5)
         except Exception as exc:
             print(f"HKJC EN pass notice: {exc}")
@@ -587,9 +645,9 @@ async def scrape_hkjc_and_sofascore():
             fb_code = meta.get("code") or (key if key.startswith("FB") else "")
             if not fb_code:
                 continue
-            if (key in inplay_keys) or (fb_code in inplay_keys) or meta.get("isInPlay"):
+            if (key in started_keys) or (fb_code in started_keys):
                 continue
-            if (dom_row_store.get(fb_code) or {}).get("isInPlay"):
+            if (dom_row_store.get(fb_code) or {}).get("isLiveDom"):
                 continue
 
             odds_pair = hilo_map.get(key) or hilo_map.get(fb_code)
@@ -602,10 +660,10 @@ async def scrape_hkjc_and_sofascore():
                     or (dom_row_store.get(fb_code) or {}).get("kickoffIso")
                     or ""
                 )
-                # 排除已開賽超過 10 分鐘之賽事
+                # 嚴格排除開賽時間已過之完場或走地賽事
                 if ko_final:
                     try:
-                        if datetime.fromisoformat(ko_final).timestamp() < (now_ts - 600):
+                        if datetime.fromisoformat(ko_final).timestamp() <= (now_ts - 300):
                             continue
                     except ValueError:
                         pass
@@ -629,12 +687,18 @@ async def scrape_hkjc_and_sofascore():
                     "sofaMatched": False,
                 }
 
-        # DOM 嚴格補漏：必須明確出現 2.5 球盤口字樣且非即場走地
         for fb_code, row_info in dom_row_store.items():
-            if row_info.get("isInPlay") or (fb_code in inplay_keys):
+            if row_info.get("isLiveDom") or (fb_code in started_keys):
                 continue
             r_txt = row_info.get("rowText") or ""
             ko_dom = row_info.get("kickoffIso") or ""
+            if ko_dom:
+                try:
+                    if datetime.fromisoformat(ko_dom).timestamp() <= (now_ts - 300):
+                        continue
+                except ValueError:
+                    pass
+
             if fb_code in captured_matches:
                 if ko_dom and not captured_matches[fb_code].get("kickoffIso"):
                     captured_matches[fb_code]["kickoffIso"] = ko_dom
@@ -664,7 +728,7 @@ async def scrape_hkjc_and_sofascore():
                         }
 
         final_list = list(captured_matches.values())
-        print(f"HKJC pre-match [2.5] captured: {len(final_list)} matches.")
+        print(f"HKJC upcoming pre-match [2.5] captured: {len(final_list)} matches.")
 
         try:
             await asyncio.wait_for(enrich_with_sofascore(context, final_list), timeout=40.0)
@@ -673,15 +737,18 @@ async def scrape_hkjc_and_sofascore():
 
         await browser.close()
 
+    # SofaScore 補齊時間後再次剔除任何已開賽賽事
+    final_list = [
+        m for m in final_list
+        if not m.get("kickoffIso") or datetime.fromisoformat(m["kickoffIso"]).timestamp() > (now_ts - 300)
+    ]
     final_list.sort(key=lambda x: x.get("kickoffIso") or "9999-12-31T23:59:00+08:00")
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
-    if not final_list and os.path.exists(OUTPUT_PATH):
-        print("No pre-match fixtures found right now; keeping previous JSON snapshot.")
-        return
-
     ko_ok_count = sum(1 for x in final_list if x.get("kickoffIso"))
     sofa_ok_count = sum(1 for x in final_list if x.get("sofaMatched"))
+
+    # 永遠寫入最新 updatedAtHkt 覆蓋舊版 Run #1 殘留檔，絕不保留過期舊快照
     output_payload = {
         "updatedAtHkt": datetime.now(HKT).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
         "matchCount": len(final_list),
@@ -691,7 +758,7 @@ async def scrape_hkjc_and_sofascore():
     }
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
-    print(f"Saved {len(final_list)} pre-match HKJC games (Kick-off times resolved: {ko_ok_count}, SofaScore enriched: {sofa_ok_count}).")
+    print(f"Saved {len(final_list)} upcoming HKJC games (Kick-off times resolved: {ko_ok_count}, SofaScore enriched: {sofa_ok_count}).")
 
 
 if __name__ == "__main__":
