@@ -15,10 +15,11 @@ def normalize_hkjc_kickoff(raw_val, fallback_date: str = "") -> str:
     if raw_val is None:
         return ""
 
-    # 1. Epoch seconds or milliseconds
     raw_str = str(raw_val).strip()
     if not raw_str:
         return ""
+
+    # 1. Epoch seconds or milliseconds
     if isinstance(raw_val, (int, float)) or re.fullmatch(r"\d{10,13}", raw_str):
         num = float(raw_str)
         if num > 1e11:
@@ -93,6 +94,35 @@ def find_fb_code(node: dict) -> str:
     return ""
 
 
+def extract_any_kickoff_from_node(node: dict) -> str:
+    """Extract kick-off timestamp from standard HKJC fields or any timestamp-like field on the match object."""
+    raw_date_only = node.get("matchDate") or node.get("businessDate") or ""
+    priority_fields = (
+        "kickOffTime",
+        "kickoffTime",
+        "startTime",
+        "esst",
+        "matchTime",
+        "scheduledTime",
+    )
+    for field in priority_fields:
+        val = node.get(field)
+        if val:
+            ko = normalize_hkjc_kickoff(val, fallback_date=raw_date_only)
+            if ko:
+                return ko
+
+    # Deep scan any other date/time key on the match node (e.g. if HKJC renames kickOffTime)
+    for k_name, k_val in node.items():
+        if isinstance(k_val, (str, int, float)) and any(
+            token in k_name.lower() for token in ("time", "date", "ko", "start")
+        ):
+            ko = normalize_hkjc_kickoff(k_val, fallback_date=raw_date_only)
+            if ko:
+                return ko
+    return ""
+
+
 def extract_hil_25_from_pools(pools: list) -> tuple:
     """Return (high_odds, low_odds) for HiLo 2.5 from foPools list."""
     if not isinstance(pools, list):
@@ -148,11 +178,10 @@ def extract_hil_25_from_pools(pools: list) -> tuple:
                 elif sel in ("L", "LOW", "UNDER", "細", "02", "2"):
                     low_odds = val
 
-            # Fallback if HKJC returns exactly 2 selections [High, Low] without labels
             if (high_odds is None or low_odds is None) and len(combs) == 2:
                 try:
                     o1 = float(combs[0].get("currentOdds") or combs[0].get("odds"))
-                    o2 = float(combs[1].get("currentOdds") or combs[1].get("odds"))
+                    o2 = float(combs.get("currentOdds") or combs.get("odds"))
                     if o1 > 1.0 and o2 > 1.0:
                         high_odds, low_odds = o1, o2
                 except Exception:
@@ -173,8 +202,7 @@ def collect_graphql_data(payload, meta_store: dict, odds_store: dict) -> None:
             fb_code = find_fb_code(node)
             keys = [k for k in (fb_code, raw_id) if k]
 
-            # Capture match metadata (teams, tournament, kickOffTime)
-            if keys and ("homeTeam" in node or "kickOffTime" in node or "kickoffTime" in node):
+            if keys and ("homeTeam" in node or "kickOffTime" in node or "kickoffTime" in node or "foPools" in node):
                 home_obj = node.get("homeTeam") if isinstance(node.get("homeTeam"), dict) else {}
                 away_obj = node.get("awayTeam") if isinstance(node.get("awayTeam"), dict) else {}
                 tourn_obj = node.get("tournament") if isinstance(node.get("tournament"), dict) else {}
@@ -184,17 +212,7 @@ def collect_graphql_data(payload, meta_store: dict, odds_store: dict) -> None:
                 en_home = str(home_obj.get("name_en") or home_obj.get("nameEn") or "").strip()
                 en_away = str(away_obj.get("name_en") or away_obj.get("nameEn") or "").strip()
                 league = str(tourn_obj.get("name_ch") or tourn_obj.get("nameCh") or "").strip()
-
-                raw_ko = (
-                    node.get("kickOffTime")
-                    or node.get("kickoffTime")
-                    or node.get("startTime")
-                    or node.get("esst")
-                    or node.get("matchTime")
-                    or ""
-                )
-                raw_date_only = node.get("matchDate") or node.get("businessDate") or ""
-                ko_iso = normalize_hkjc_kickoff(raw_ko, fallback_date=raw_date_only)
+                ko_iso = extract_any_kickoff_from_node(node)
 
                 info = {
                     "code": fb_code,
@@ -214,7 +232,6 @@ def collect_graphql_data(payload, meta_store: dict, odds_store: dict) -> None:
                     }
                     meta_store[k] = merged
 
-            # Capture HIL [2.5] pool odds
             if "foPools" in node and isinstance(node["foPools"], list):
                 h_odds, l_odds = extract_hil_25_from_pools(node["foPools"])
                 if h_odds and l_odds and keys:
@@ -271,14 +288,12 @@ async def scrape_hkjc_hilo():
         page.on("response", handle_response)
 
         try:
-            # Use domcontentloaded instead of networkidle so background HKJC polling never times out
             await page.goto(HKJC_HILO_URL, wait_until="domcontentloaded", timeout=45000)
         except Exception as nav_err:
             print(f"Navigation warning (continuing): {nav_err}")
 
         await page.wait_for_timeout(6000)
 
-        # Scroll down smoothly to trigger any lazy-loaded HKJC match rows
         for _ in range(5):
             try:
                 await page.evaluate("window.scrollBy(0, 900)")
@@ -303,27 +318,26 @@ async def scrape_hkjc_hilo():
                 "enAway": meta.get("enAway") or "",
                 "kickoffIso": meta.get("kickoffIso") or "",
                 "oddsHigh": odds_pair[0],
-                "oddsLow": odds_pair[1],
+                "oddsLow": odds_pair,
             }
 
-        # 2. Webpage text fallback & kick-off time backfill
+        # 2. Webpage text fallback & kick-off time backfill (looks both before and after FBxxxx)
         try:
             body_text = await page.inner_text("body")
         except Exception:
             body_text = ""
 
         if body_text:
-            chunks = re.split(r"(?=FB\d{4})", body_text)
-            for chunk in chunks:
-                m_code = re.match(r"(FB\d{4})", chunk.strip())
-                if not m_code:
-                    continue
-                code = m_code.group(1)
-                window = chunk[:500]
+            for m_fb in re.finditer(r"FB\d{4}", body_text):
+                code = m_fb.group(0)
+                start_idx = max(0, m_fb.start() - 120)
+                end_idx = min(len(body_text), m_fb.end() + 450)
+                around = body_text[start_idx:end_idx]
+                after = body_text[m_fb.start():end_idx]
 
                 m_time = re.search(
                     r"(\d{1,2}/\d{1,2}(?:/\d{4})?[\s\n]*(?:\([周星期一二三四五六日]\))?[\s\n]*\d{1,2}:\d{2})",
-                    window,
+                    around,
                 )
                 ko_iso = normalize_hkjc_kickoff(m_time.group(1)) if m_time else ""
 
@@ -332,13 +346,12 @@ async def scrape_hkjc_hilo():
                         captured_matches[code]["kickoffIso"] = ko_iso
                     continue
 
-                # Supports both "[2.5] 1.85 1.85" and "2.5 1.85 1.85" across spaces or newlines
                 m_odds = re.search(
                     r"\[?2\.5\]?[\s\n]+(\d+\.\d{2})[\s\n]+(\d+\.\d{2})",
-                    window,
+                    after,
                 )
                 if m_odds:
-                    m_teams = re.search(r"([^\n\[]+?)\s*(?:對|vs|VS)\s*([^\n\[]+)", window)
+                    m_teams = re.search(r"([^\n\[]+?)\s*(?:對|vs|VS)\s*([^\n\[]+)", after)
                     home = clean_team_name(m_teams.group(1)) if m_teams else f"{code} 主隊"
                     away = clean_team_name(m_teams.group(2)) if m_teams else "客隊"
                     captured_matches[code] = {
@@ -361,7 +374,6 @@ async def scrape_hkjc_hilo():
     )
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    # Preserve existing matches if HKJC is temporarily under maintenance (0 matches returned)
     if not sorted_matches and os.path.exists(OUTPUT_PATH):
         try:
             with open(OUTPUT_PATH, "r", encoding="utf-8") as prev_f:
