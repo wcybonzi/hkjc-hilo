@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>足智彩「入球大細 2.5」全自動量化分析系統 v14</title>
+  <title>足智彩「入球大細 2.5」全自動量化分析系統 v15</title>
   <style>
     :root {
       --bg-dark: #09101d; --bg-card: #121c30; --bg-panel: #1a2742; --border: #293a5a;
@@ -34,7 +34,7 @@
     .pulse-dot.paused { background: var(--text-muted); animation: none; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.65); } 70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
     .feed-pill { padding: 2px 8px; border-radius: 999px; font-size: 0.71rem; font-weight: 700; border: 1px solid var(--border); background: var(--bg-card); }
-    .feed-pill.ok { border-color: rgba(16,185,129,0.5); color: #34d399; }
+    .feed-pill.ok { border-color: rgba(16,185,129,0.55); background: rgba(16,185,129,0.12); color: #34d399; }
     .feed-pill.wait { border-color: rgba(245,158,11,0.45); color: #fbbf24; }
     .feed-pill.err { border-color: rgba(239,68,68,0.5); color: #fca5a5; }
     .sync-select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 0.76rem; font-weight: 600; }
@@ -122,10 +122,10 @@
 <header>
   <div class="header-inner">
     <div class="brand">
-      <span class="brand-badge">足智彩 v14 賽前精準版</span>
+      <span class="brand-badge">足智彩 v15 零快取直連版</span>
       <div>
-        <h1>入球大細 [2.5] 全自動量化分析系統（賽前正盤過濾 + 四重時間對齊）</h1>
-        <p>自動攔截即場走地與 [1.5] 錯線賠率 • HKJC GraphQL 父子節點直連 + SofaScore + ESPN 25聯賽 + 全球氣象</p>
+        <h1>入球大細 [2.5] 全自動量化分析系統（自動清除完場賽事 + 零延遲雲端直連）</h1>
+        <p>直連 GitHub API 繞過 5 分鐘快取 • 自動剔除已開賽與完場舊盤 • HKJC + SofaScore + ESPN 25聯賽 + 全球氣象</p>
       </div>
     </div>
     <div class="header-actions">
@@ -172,16 +172,16 @@
   </div>
 
   <div class="kpi-grid">
-    <div class="kpi-card"><span class="kpi-label">顯示中賽前賽事</span><div class="kpi-value" id="kpiTotal">0</div></div>
+    <div class="kpi-card"><span class="kpi-label">顯示中未開賽正盤</span><div class="kpi-value" id="kpiTotal">0</div></div>
     <div class="kpi-card"><span class="kpi-label">建議投注 (+EV 精選)</span><div class="kpi-value" style="color:var(--bet-green);" id="kpiBets">0</div></div>
     <div class="kpi-card"><span class="kpi-label">輕注觀望 (邊際傾向大/細)</span><div class="kpi-value" style="color:var(--bet-amber);" id="kpiHolds">0</div></div>
-    <div class="kpi-card"><span class="kpi-label">嚴守紀律放棄 / 異常盤攔截</span><div class="kpi-value" style="color:var(--pass-red);" id="kpiPasses">0</div></div>
+    <div class="kpi-card"><span class="kpi-label">嚴守紀律放棄 (無優勢)</span><div class="kpi-value" style="color:var(--pass-red);" id="kpiPasses">0</div></div>
   </div>
 
   <div class="controls-stack">
     <div class="filter-row">
       <div class="filter-bar">
-        <button class="chip active" onclick="setFilter('ALL', this)">全部賽事</button>
+        <button class="chip active" onclick="setFilter('ALL', this)">全部未開賽賽事</button>
         <button class="chip" onclick="setFilter('BET', this)">建議投注 (大/細)</button>
         <button class="chip" onclick="setFilter('HOLD', this)">輕注觀望 (具方向傾向)</button>
         <button class="chip" onclick="setFilter('PASS', this)">放棄投注</button>
@@ -193,7 +193,7 @@
       </select>
     </div>
     <div class="filter-bar">
-      <button class="chip chip-time active" onclick="setTimeWindow('ALL', this)">全部開賽時段</button>
+      <button class="chip chip-time active" onclick="setTimeWindow('ALL', this)">全部未來時段</button>
       <button class="chip chip-time" onclick="setTimeWindow('12H', this)">12 小時內開賽</button>
       <button class="chip chip-time" onclick="setTimeWindow('24H', this)">24 小時內開賽</button>
       <button class="chip chip-time" onclick="setTimeWindow('48H', this)">48 小時內開賽</button>
@@ -209,7 +209,7 @@
 
   <div class="log-panel">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:0.81rem; font-weight:800; color:var(--accent-blue);">多源數據與連線診斷日誌（顯示 JSON 產出時間以確認 GitHub 是否已更新）</span>
+      <span style="font-size:0.81rem; font-weight:800; color:var(--accent-blue);">即時同步與完場過濾診斷日誌</span>
       <span style="font-size:0.72rem; color:var(--text-muted);">香港時間 HKT (UTC+8)</span>
     </div>
     <div class="log-list" id="syncLogList"></div>
@@ -226,7 +226,7 @@
 <div class="modal-backdrop" id="settingsModal">
   <div class="modal-card">
     <h3>雲端資料源設定</h3>
-    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">GitHub Pages 會自動偵測帳號與儲存庫；如用本地檔案開啟，請填入 GitHub 帳號（如 wcybonzi）與儲存庫名稱。</p>
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">GitHub Pages 會自動偵測帳號與儲存庫並透過零快取 API 直連最新 JSON。</p>
     <div class="form-grid">
       <div class="input-group">
         <label>GitHub 帳號名稱 (Username)</label>
@@ -237,13 +237,13 @@
         <input type="text" id="ghRepo" placeholder="例如：hkjc-hilo-app" oninput="buildGithubRawUrl()" />
       </div>
       <div class="input-group full-col">
-        <label>自訂 JSON 網址 (選填，留空則自動搜尋 Raw main / master / Pages)</label>
-        <input type="url" id="cfgJsonUrl" placeholder="https://raw.githubusercontent.com/帳號/儲存庫/main/data/hkjc_hilo.json" />
+        <label>自訂 JSON 網址 (選填，留空則自動零快取直連)</label>
+        <input type="url" id="cfgJsonUrl" placeholder="留空即可自動偵測最新檔案" />
       </div>
       <div class="input-group full-col">
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#e2e8f0;">
           <input type="checkbox" id="cfgHideFinished" checked style="width:17px; height:17px;" />
-          自動隱藏已開賽 / 完場賽事與走地極端盤口
+          自動隱藏已開賽、已完場賽事及異常走地賠率
         </label>
       </div>
     </div>
@@ -272,13 +272,13 @@
     <h3>手動新增足智彩分析賽事</h3>
     <div class="form-grid">
       <div class="input-group"><label>賽事編號</label><input type="text" id="newCode" placeholder="FB9301" /></div>
-      <div class="input-group"><label>聯賽名稱</label><input type="text" id="newLeague" placeholder="日本乙組聯賽" /></div>
-      <div class="input-group"><label>主隊名稱</label><input type="text" id="newHome" placeholder="千葉市原" /></div>
-      <div class="input-group"><label>客隊名稱</label><input type="text" id="newAway" placeholder="大宮松鼠" /></div>
-      <div class="input-group"><label>開賽日期與時間 (HKT)</label><input type="text" id="newTime" placeholder="28/11/2026 18:00" /></div>
+      <div class="input-group"><label>聯賽名稱</label><input type="text" id="newLeague" placeholder="英格蘭超級聯賽" /></div>
+      <div class="input-group"><label>主隊名稱</label><input type="text" id="newHome" placeholder="阿仙奴" /></div>
+      <div class="input-group"><label>客隊名稱</label><input type="text" id="newAway" placeholder="曼城" /></div>
+      <div class="input-group"><label>開賽日期與時間 (HKT)</label><input type="text" id="newTime" placeholder="29/11/2026 00:30" /></div>
       <div class="input-group"><label>自訂預期總入球 (選填)</label><input type="number" step="0.05" id="newCustomXg" placeholder="留空由泊松引擎推算" /></div>
-      <div class="input-group"><label>大 [2.5] 賠率</label><input type="number" step="0.01" id="newHigh" value="1.88" /></div>
-      <div class="input-group"><label>細 [2.5] 賠率</label><input type="number" step="0.01" id="newLow" value="1.82" /></div>
+      <div class="input-group"><label>大 [2.5] 賠率</label><input type="number" step="0.01" id="newHigh" value="1.85" /></div>
+      <div class="input-group"><label>細 [2.5] 賠率</label><input type="number" step="0.01" id="newLow" value="1.85" /></div>
     </div>
     <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
       <button class="btn-outline" onclick="closeAddModal()">取消</button>
@@ -288,8 +288,8 @@
 </div>
 
 <script>
-  const STORAGE_KEY = "hkjc_hilo_matches_v14";
-  const CFG_KEY = "hkjc_hilo_cfg_v14";
+  const STORAGE_KEY = "hkjc_hilo_matches_v15";
+  const CFG_KEY = "hkjc_hilo_cfg_v15";
   const WEEKDAYS_ZH = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
   const LEAGUE_PROFILES = [
@@ -343,26 +343,10 @@
     "國際米蘭":"Internazionale","AC米蘭":"AC Milan","祖雲達斯":"Juventus","拿玻里":"Napoli","羅馬":"Roma","阿特蘭大":"Atalanta","拉素":"Lazio","費倫天拿":"Fiorentina","博洛尼亞":"Bologna",
     "巴黎聖日耳門":"Paris Saint-Germain","里爾":"Lille","摩納哥":"Monaco","馬賽":"Marseille","里昂":"Lyon","尼斯":"Nice","朗斯":"Lens",
     "燕豪芬":"PSV","阿積士":"Ajax","飛燕諾":"Feyenoord","賓菲加":"Benfica","波圖":"Porto","士砵亭":"Sporting","些路迪":"Celtic","格拉斯哥流浪":"Rangers",
-    "哈馬比":"Hammarby","哥登堡":"Goteborg","馬模":"Malmo","艾يك":"AIK","佐加頓斯":"Djurgarden",
+    "哈馬比":"Hammarby","哥登堡":"Goteborg","馬模":"Malmo","佐加頓斯":"Djurgarden",
     "艾阿里":"Al Ahly","金字塔FC":"Pyramids","ZED FC":"ZED","森馬列克":"Zamalek",
     "伊蒂哈德":"Al-Ittihad","希拉爾":"Al-Hilal","艾納斯":"Al-Nassr","柏克塔哥":"Pakhtakor"
   };
-
-  function buildDynamicStarterMatches() {
-    const baseMs = Date.now();
-    return [
-      {
-        id: "demo1", isDemo: true, code: "FB9240", league: "英格蘭超級聯賽", home: "賓福特", away: "愛華頓",
-        enHome: "Brentford", enAway: "Everton", kickoffIso: msToHktIso(baseMs + 5 * 3600000),
-        stage: "T-6h 軍情覆核", openHigh: 1.92, openLow: 1.78, oddsHigh: 1.95, oddsLow: 1.75,
-        hadHome: 2.05, hadDraw: 3.35, hadAway: 3.15,
-        sofaMatched: true, sofaFormLambda: 2.52, sofaOver25Rate: 0.48, sofaMissingHome: 1, sofaMissingAway: 2, sofaLineupConfirmed: false,
-        espnMatched: true, espnCombinedGoals: 2.56,
-        missingDef: false, missingAtt: false, lowBlockTrap: true, congested: false, badWeather: false, highStakesUnder: false,
-        weatherText: "英國待測", lineupText: "待 T-60m 正選", notes: "雲端連線前預載示範。", lastUpdated: "預載示範"
-      }
-    ];
-  }
 
   let matches = [];
   let selectedId = "";
@@ -391,7 +375,6 @@
     return /[A-Za-z]{3,}/.test(zhName) ? zhName.trim() : "";
   }
 
-  // 判斷賠率是否屬於「即場走地」或「[1.5]/[3.5] 錯線異常盤」(正常賽前 [2.5] 正盤必介乎 1.25 至 4.40)
   function isDistortedOrInPlayOdds(h, l) {
     return (h < 1.25 || l < 1.25 || h > 4.40 || l > 4.40);
   }
@@ -412,13 +395,11 @@
 
     let m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})[\s\S]{0,24}?(\d{1,2}):(\d{2})/);
     if (m) {
-      const iso = `${m.at(3)}-${m.at(2).padStart(2,"0")}-${m.at(1).padStart(2,"0")}T${m.at(4).padStart(2,"0")}:${m.at(5)}:00+08:00`;
-      return Date.parse(iso);
+      return Date.parse(`${m.at(3)}-${m.at(2).padStart(2,"0")}-${m.at(1).padStart(2,"0")}T${m.at(4).padStart(2,"0")}:${m.at(5)}:00+08:00`);
     }
     m = s.match(/(\d{4})年(\d{1,2})月(\d{1,2})日[\s\S]{0,20}?(\d{1,2}):(\d{2})/);
     if (m) {
-      const iso = `${m.at(1)}-${m.at(2).padStart(2,"0")}-${m.at(3).padStart(2,"0")}T${m.at(4).padStart(2,"0")}:${m.at(5)}:00+08:00`;
-      return Date.parse(iso);
+      return Date.parse(`${m.at(1)}-${m.at(2).padStart(2,"0")}-${m.at(3).padStart(2,"0")}T${m.at(4).padStart(2,"0")}:${m.at(5)}:00+08:00`);
     }
     m = s.match(/(\d{1,2})月(\d{1,2})日[\s\S]{0,20}?(\d{1,2}):(\d{2})/);
     if (m) {
@@ -426,8 +407,7 @@
       let yyyy = nowHkt.getUTCFullYear();
       const mmNum = parseInt(m.at(1), 10);
       if (nowHkt.getUTCMonth() === 11 && mmNum === 1) yyyy += 1;
-      const iso = `${yyyy}-${String(mmNum).padStart(2,"0")}-${m.at(2).padStart(2,"0")}T${m.at(3).padStart(2,"0")}:${m.at(4)}:00+08:00`;
-      return Date.parse(iso);
+      return Date.parse(`${yyyy}-${String(mmNum).padStart(2,"0")}-${m.at(2).padStart(2,"0")}T${m.at(3).padStart(2,"0")}:${m.at(4)}:00+08:00`);
     }
     m = s.match(/(\d{1,2})\/(\d{1,2})(?![\/\.\d])[\s\S]{0,24}?(\d{1,2}):(\d{2})/);
     if (m) {
@@ -436,8 +416,7 @@
       const mmNum = parseInt(m.at(2), 10);
       if (nowHkt.getUTCMonth() === 11 && mmNum === 1) yyyy += 1;
       if (nowHkt.getUTCMonth() === 0 && mmNum === 12) yyyy -= 1;
-      const iso = `${yyyy}-${String(mmNum).padStart(2,"0")}-${m.at(1).padStart(2,"0")}T${m.at(3).padStart(2,"0")}:${m.at(4)}:00+08:00`;
-      return Date.parse(iso);
+      return Date.parse(`${yyyy}-${String(mmNum).padStart(2,"0")}-${m.at(1).padStart(2,"0")}T${m.at(3).padStart(2,"0")}:${m.at(4)}:00+08:00`);
     }
     m = s.match(/(\d{4})-(\d{2})-(\d{2})[T\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
     if (m) {
@@ -557,54 +536,46 @@
     const evHigh = (modelProbHigh * m.oddsHigh) - 1;
     const evLow = (modelProbLow * m.oddsLow) - 1;
 
-    const hkt = getHktParts(m.kickoffIso);
     const hasExternalVerify = Boolean(m.sofaMatched || m.espnMatched || m.sportsDbMatched || (m.customXg && m.customXg > 0.5) || m.missingDef || m.missingAtt || m.lowBlockTrap);
     const confirmedLineup = Boolean(m.sofaLineupConfirmed || (m.stage && m.stage.includes("T-60m")));
 
-    // 攔截即場走地或舊檔 [1.5] 錯線異常賠率 (例如 1.09 / 5.60)
     if (distorted) {
       return {
-        profile, marketLambda, finalLambda,
-        vigFreeHigh, vigFreeLow, modelProbHigh, modelProbLow,
-        edgeHigh: 0, edgeLow: 0, evHigh: -1, evLow: -1,
-        hasExternalVerify, confirmedLineup,
-        status: "PASS",
-        label: "已開賽走地 / 非2.5正盤 (不投注)",
-        gateReason: `偵測到異常賠率 (${m.oddsHigh.toFixed(2)} / ${m.oddsLow.toFixed(2)})，屬即場走地或舊版非 [2.5] 球盤口，嚴禁套用賽前模型下注。`
+        profile, marketLambda, finalLambda, vigFreeHigh, vigFreeLow, modelProbHigh, modelProbLow,
+        edgeHigh: 0, edgeLow: 0, evHigh: -1, evLow: -1, hasExternalVerify, confirmedLineup,
+        status: "PASS", label: "異常走地盤口 (不投注)",
+        gateReason: `賠率 (${m.oddsHigh.toFixed(2)} / ${m.oddsLow.toFixed(2)}) 屬走地或非 2.5 球正盤，已攔截。`
       };
     }
 
     const reqEdge = hasExternalVerify ? (confirmedLineup ? 0.033 : 0.038) : 0.042;
     const reqEv = hasExternalVerify ? 0.022 : 0.030;
-    const timeNote = hkt ? "" : "（等待新雲端 JSON 同步開賽時間）";
 
     let status = "PASS";
     let label = "放棄投注 (無優勢)";
-    let gateReason = `模型預期 ${finalLambda.toFixed(2)} 球，與馬會去水機率相若，無正期望值優勢。`;
+    let gateReason = `模型預期 ${finalLambda.toFixed(2)} 球，與馬會去水機率接近，無正期望值優勢。`;
 
     if (edgeHigh >= reqEdge && evHigh >= reqEv) {
       status = "BET";
       label = hasExternalVerify ? "建議投注：大 [2.5]" : "建議投注：大 [2.5] (盤口量化)";
-      gateReason = `大球去水優勢 +${(edgeHigh * 100).toFixed(1)}%（期望值 +${(evHigh * 100).toFixed(1)}%），預期總入球 ${finalLambda.toFixed(2)} 球。${timeNote}`;
+      gateReason = `大球去水優勢 +${(edgeHigh * 100).toFixed(1)}%（期望值 +${(evHigh * 100).toFixed(1)}%），預期總入球 ${finalLambda.toFixed(2)} 球。`;
     } else if (edgeLow >= reqEdge && evLow >= reqEv) {
       status = "BET";
       label = hasExternalVerify ? "建議投注：細 [2.5]" : "建議投注：細 [2.5] (盤口量化)";
-      gateReason = `細球去水優勢 +${(edgeLow * 100).toFixed(1)}%（期望值 +${(evLow * 100).toFixed(1)}%），聯賽與盤口結構偏向少入球。${timeNote}`;
+      gateReason = `細球去水優勢 +${(edgeLow * 100).toFixed(1)}%（期望值 +${(evLow * 100).toFixed(1)}%），聯賽與盤口結構偏向少入球。`;
     } else if (edgeHigh >= 0.026 && evHigh > 0) {
       status = "HOLD";
       label = "輕注觀望：傾向大 [2.5]";
-      gateReason = `大球具邊際優勢 (+${(edgeHigh * 100).toFixed(1)}%)，建議待 T-60m 正選確認或賠率回升後考慮。${timeNote}`;
+      gateReason = `大球具邊際優勢 (+${(edgeHigh * 100).toFixed(1)}%)，建議待 T-60m 正選確認或賠率回升後考慮。`;
     } else if (edgeLow >= 0.026 && evLow > 0) {
       status = "HOLD";
       label = "輕注觀望：傾向細 [2.5]";
-      gateReason = `細球具邊際優勢 (+${(edgeLow * 100).toFixed(1)}%)，建議待 T-60m 正選確認後考慮。${timeNote}`;
+      gateReason = `細球具邊際優勢 (+${(edgeLow * 100).toFixed(1)}%)，建議待 T-60m 正選確認後考慮。`;
     }
 
     return {
-      profile, marketLambda, finalLambda,
-      vigFreeHigh, vigFreeLow, modelProbHigh, modelProbLow,
-      edgeHigh, edgeLow, evHigh, evLow,
-      hasExternalVerify, confirmedLineup, status, label, gateReason
+      profile, marketLambda, finalLambda, vigFreeHigh, vigFreeLow, modelProbHigh, modelProbLow,
+      edgeHigh, edgeLow, evHigh, evLow, hasExternalVerify, confirmedLineup, status, label, gateReason
     };
   }
 
@@ -616,193 +587,197 @@
     if (el) el.innerHTML = syncLogs.map(l => `<div>&bull; ${l}</div>`).join("");
   }
 
-  function getCandidateJsonUrls() {
-    const urls = [];
-    if (appConfig.jsonUrl) urls.push(appConfig.jsonUrl);
-
-    let detectedUser = appConfig.ghUser;
-    let detectedRepo = appConfig.ghRepo;
-    if ((!detectedUser || !detectedRepo) && location.hostname.endsWith("github.io")) {
-      detectedUser = location.hostname.split(".").at(0) || "";
-      const pathParts = location.pathname.split("/").filter(Boolean);
-      if (pathParts.length > 0 && !pathParts.at(0).endsWith(".html")) {
-        detectedRepo = pathParts.at(0);
+  function detectGithubRepoInfo() {
+    let user = appConfig.ghUser;
+    let repo = appConfig.ghRepo;
+    if ((!user || !repo) && location.hostname.endsWith("github.io")) {
+      user = location.hostname.split(".").at(0) || "";
+      const parts = location.pathname.split("/").filter(Boolean);
+      if (parts.length > 0 && !parts.at(0).endsWith(".html")) {
+        repo = parts.at(0);
       }
     }
-    if (detectedUser && detectedRepo) {
-      urls.push(`https://raw.githubusercontent.com/${detectedUser}/${detectedRepo}/main/data/hkjc_hilo.json`);
-      urls.push(`https://raw.githubusercontent.com/${detectedUser}/${detectedRepo}/master/data/hkjc_hilo.json`);
-    }
-    if (location.protocol.startsWith("http")) {
-      urls.push("./data/hkjc_hilo.json");
-    }
-    return Array.from(new Set(urls));
+    return { user, repo };
   }
 
-  async function syncCloudHkjcAndSofa() {
-    const candidateUrls = getCandidateJsonUrls();
-    const pill = document.getElementById("pillCloud");
-    const banner = document.getElementById("diagBanner");
-    const bannerTxt = document.getElementById("diagBannerText");
+  // 優先透過零快取 GitHub API 讀取最新 commit 的 JSON，徹底解決 Raw CDN 5 分鐘延遲
+  async function fetchFreshCloudPayload() {
+    const { user, repo } = detectGithubRepoInfo();
+    const candidates = [];
 
-    if (candidateUrls.length === 0) {
-      pill.className = "feed-pill wait";
-      pill.textContent = "馬會雲端：本地檔案模式";
-      bannerTxt.textContent = "你目前以本地檔案開啟網頁；請點右側「設定 GitHub 帳號」填入帳號 (如 wcybonzi) 與儲存庫名稱。";
-      banner.classList.add("show");
-      return 0;
+    if (appConfig.jsonUrl) {
+      candidates.push({ type: "raw", url: appConfig.jsonUrl });
+    }
+    if (user && repo) {
+      candidates.push({ type: "gh_api", url: `https://api.github.com/repos/${user}/${repo}/contents/data/hkjc_hilo.json?ref=main` });
+      candidates.push({ type: "raw", url: `https://raw.githubusercontent.com/${user}/${repo}/main/data/hkjc_hilo.json` });
+      candidates.push({ type: "raw", url: `https://raw.githubusercontent.com/${user}/${repo}/master/data/hkjc_hilo.json` });
+    }
+    if (location.protocol.startsWith("http")) {
+      candidates.push({ type: "raw", url: "./data/hkjc_hilo.json" });
     }
 
-    let loadedPayload = null;
-    let lastErr = "";
+    let bestPayload = null;
+    let lastErr = "未設定儲存庫";
 
-    for (const baseUrl of candidateUrls) {
+    for (const c of candidates) {
       try {
-        const sep = baseUrl.includes("?") ? "&" : "?";
-        const res = await fetch(`${baseUrl}${sep}t=${Date.now()}`, { cache: "no-store" });
+        const sep = c.url.includes("?") ? "&" : "?";
+        const headers = c.type === "gh_api" ? { "Accept": "application/vnd.github.raw+json" } : {};
+        const res = await fetch(`${c.url}${sep}_cb=${Date.now()}`, { cache: "no-store", headers });
         if (!res.ok) {
-          lastErr = `${baseUrl} -> HTTP ${res.status}`;
+          lastErr = `HTTP ${res.status}`;
           continue;
         }
         const json = await res.json();
         const arr = Array.isArray(json) ? json : (json.matches || []);
-        if (arr.length > 0) {
-          loadedPayload = json;
-          break;
-        } else {
-          lastErr = `${baseUrl} -> 0 場賽事`;
+        if (arr.length > 0 || json.updatedAtHkt) {
+          // 優先選擇具有最新 updatedAtHkt 的新檔案
+          if (!bestPayload || (json.updatedAtHkt && (!bestPayload.updatedAtHkt || json.updatedAtHkt > bestPayload.updatedAtHkt))) {
+            bestPayload = json;
+            if (json.updatedAtHkt) break;
+          }
         }
-      } catch (err) {
-        lastErr = `${baseUrl} -> ${err.message || "連線失敗"}`;
+      } catch (e) {
+        lastErr = e.message || "連線錯誤";
       }
     }
+    return { payload: bestPayload, err: lastErr };
+  }
 
-    if (!loadedPayload) {
+  async function syncCloudHkjcAndSofa() {
+    const pill = document.getElementById("pillCloud");
+    const banner = document.getElementById("diagBanner");
+    const bannerTxt = document.getElementById("diagBannerText");
+
+    const { payload, err } = await fetchFreshCloudPayload();
+    if (!payload) {
       pill.className = "feed-pill err";
-      pill.textContent = "馬會雲端：等待產生 JSON";
-      bannerTxt.textContent = `尚未讀取到有效 JSON（${lastErr}）。請確認已更新 Box 3 與 Box 2 讓 GitHub 自動執行最新爬蟲。`;
+      pill.textContent = "馬會雲端：等待 JSON";
+      bannerTxt.textContent = `尚未讀取到雲端 JSON（${err}）。請確認已更新 Box 2 並讓 GitHub Actions 跑完綠勾。`;
       banner.classList.add("show");
-      addLog(`雲端 JSON 尚未就緒：${lastErr}`);
       return 0;
     }
 
-    const feed = Array.isArray(loadedPayload) ? loadedPayload : (loadedPayload.matches || []);
-    const fileGenStr = loadedPayload.updatedAtHkt ? (getHktParts(loadedPayload.updatedAtHkt)?.shortDateTime || loadedPayload.updatedAtHkt) : "舊版 Run #1 檔案";
+    const feed = Array.isArray(payload) ? payload : (payload.matches || []);
+    const isLegacyRun1 = !payload.updatedAtHkt;
+    const fileGenStr = payload.updatedAtHkt ? (getHktParts(payload.updatedAtHkt)?.shortDateTime || payload.updatedAtHkt) : "舊版 Run #1";
 
-    if (feed.length > 0) {
-      matches = matches.filter(m => !m.isDemo);
-    }
+    // 保留使用者手動新增之自訂賽事與手動開關狀態，徹底清除舊雲端殘留完場賽事
+    const prevByCode = new Map();
+    matches.forEach(m => { if (m.code) prevByCode.set(m.code, m); });
+    const manualOnlyMatches = matches.filter(m => m.isManual === true);
 
-    let updated = 0, withTime = 0, withSofa = 0, skippedInPlay = 0;
+    const nowMs = Date.now();
+    const freshCloudMatches = [];
+    let withTime = 0, skippedFinished = 0;
+
     feed.forEach(item => {
       const hOdds = parseFloat(item.oddsHigh);
       const lOdds = parseFloat(item.oddsLow);
       if (!hOdds || !lOdds) return;
 
-      // 若開啟「自動隱藏走地與完場賽事」，直接略過即場走地或 [1.5] 舊錯線盤口
       if (appConfig.hideFinished && (item.isInPlay || isDistortedOrInPlayOdds(hOdds, lOdds))) {
-        skippedInPlay++;
+        skippedFinished++;
         return;
       }
 
       const rawTimeCandidate = item.kickoffIso || item.kickOffTime || item.startTime || item.time || "";
       const parsedMs = parseFlexibleDateMs(rawTimeCandidate, item.matchDate || item.date || "");
       const cleanIso = !isNaN(parsedMs) ? msToHktIso(parsedMs) : "";
-      if (cleanIso) withTime++;
-      if (item.sofaMatched) withSofa++;
 
-      let target = matches.find(m =>
-        (item.code && m.code === item.code) ||
-        (item.home && item.away && m.home === item.home && m.away === item.away)
-      );
-
-      if (target) {
-        target.code = item.code || target.code;
-        target.league = item.league || target.league;
-        target.oddsHigh = hOdds;
-        target.oddsLow = lOdds;
-        if (cleanIso) target.kickoffIso = cleanIso;
-        if (item.enHome) target.enHome = item.enHome;
-        if (item.enAway) target.enAway = item.enAway;
-        if (item.hadHome) { target.hadHome = item.hadHome; target.hadDraw = item.hadDraw; target.hadAway = item.hadAway; }
-        if (item.sofaMatched) {
-          target.sofaMatched = true;
-          target.sofaFormLambda = item.sofaFormLambda || target.sofaFormLambda;
-          target.sofaOver25Rate = item.sofaOver25Rate ?? target.sofaOver25Rate;
-          target.sofaMissingHome = item.sofaMissingHome ?? target.sofaMissingHome;
-          target.sofaMissingAway = item.sofaMissingAway ?? target.sofaMissingAway;
-          target.sofaLineupConfirmed = Boolean(item.sofaLineupConfirmed);
-          if (target.sofaLineupConfirmed) target.stage = "T-60m 正選鎖定";
-        }
-        target.lastUpdated = `JSON: ${fileGenStr}`;
-        updated++;
-      } else if (item.home && item.away) {
-        matches.push({
-          id: "m_" + (item.code || Math.random().toString(36).slice(2, 8)),
-          code: item.code || "FB----",
-          league: item.league || "足智彩賽事",
-          home: item.home, away: item.away,
-          enHome: item.enHome || inferEnglishTeam(item.home),
-          enAway: item.enAway || inferEnglishTeam(item.away),
-          kickoffIso: cleanIso,
-          stage: item.sofaLineupConfirmed ? "T-60m 正選鎖定" : "T-24h 初盤掃描",
-          openHigh: hOdds, openLow: lOdds, oddsHigh: hOdds, oddsLow: lOdds,
-          hadHome: item.hadHome || null, hadDraw: item.hadDraw || null, hadAway: item.hadAway || null,
-          sofaMatched: Boolean(item.sofaMatched),
-          sofaFormLambda: item.sofaFormLambda || null,
-          sofaOver25Rate: item.sofaOver25Rate ?? null,
-          sofaMissingHome: item.sofaMissingHome ?? 0,
-          sofaMissingAway: item.sofaMissingAway ?? 0,
-          sofaLineupConfirmed: Boolean(item.sofaLineupConfirmed),
-          espnMatched: false, sportsDbMatched: false, espnCombinedGoals: null,
-          missingDef: false, missingAtt: false, lowBlockTrap: false, congested: false, badWeather: false, highStakesUnder: false,
-          weatherText: "球場氣象待測",
-          lineupText: item.sofaMatched ? `SofaScore 傷停 主${item.sofaMissingHome||0}/客${item.sofaMissingAway||0}` : "聯賽基準量化中",
-          notes: "已載入賽前 [2.5] 正盤並完成量化評估。",
-          lastUpdated: `JSON: ${fileGenStr}`
-        });
-        updated++;
+      // 若開賽時間已過，直接剔除完場/已開賽賽事
+      if (appConfig.hideFinished && !isNaN(parsedMs) && parsedMs <= (nowMs - 5 * 60000)) {
+        skippedFinished++;
+        return;
       }
+
+      if (cleanIso) withTime++;
+      const prev = prevByCode.get(item.code) || {};
+
+      freshCloudMatches.push({
+        id: prev.id || ("m_" + (item.code || Math.random().toString(36).slice(2, 8))),
+        code: item.code || "FB----",
+        league: item.league || "足智彩賽事",
+        home: item.home,
+        away: item.away,
+        enHome: item.enHome || prev.enHome || inferEnglishTeam(item.home),
+        enAway: item.enAway || prev.enAway || inferEnglishTeam(item.away),
+        kickoffIso: cleanIso || prev.kickoffIso || "",
+        isFinishedExternal: false,
+        stage: item.sofaLineupConfirmed ? "T-60m 正選鎖定" : (prev.stage || "T-24h 初盤掃描"),
+        openHigh: prev.openHigh || hOdds,
+        openLow: prev.openLow || lOdds,
+        oddsHigh: hOdds,
+        oddsLow: lOdds,
+        hadHome: item.hadHome || prev.hadHome || null,
+        hadDraw: item.hadDraw || prev.hadDraw || null,
+        hadAway: item.hadAway || prev.hadAway || null,
+        customXg: prev.customXg || null,
+        sofaMatched: Boolean(item.sofaMatched || prev.sofaMatched),
+        sofaFormLambda: item.sofaFormLambda || prev.sofaFormLambda || null,
+        sofaOver25Rate: item.sofaOver25Rate ?? prev.sofaOver25Rate ?? null,
+        sofaMissingHome: item.sofaMissingHome ?? prev.sofaMissingHome ?? 0,
+        sofaMissingAway: item.sofaMissingAway ?? prev.sofaMissingAway ?? 0,
+        sofaLineupConfirmed: Boolean(item.sofaLineupConfirmed || prev.sofaLineupConfirmed),
+        espnMatched: false,
+        sportsDbMatched: false,
+        espnCombinedGoals: prev.espnCombinedGoals || null,
+        missingDef: Boolean(prev.missingDef),
+        missingAtt: Boolean(prev.missingAtt),
+        lowBlockTrap: Boolean(prev.lowBlockTrap),
+        congested: Boolean(prev.congested),
+        badWeather: Boolean(prev.badWeather),
+        highStakesUnder: Boolean(prev.highStakesUnder),
+        weatherText: prev.weatherText || "球場氣象待測",
+        notes: "賽前 [2.5] 正盤已同步。",
+        lastUpdated: `更新：${fileGenStr}`
+      });
     });
 
-    // 若舊檔案完全無 updatedAtHkt 或開賽時間為 0，主動在頂部橫幅提示原因
-    if (!loadedPayload.updatedAtHkt || (updated > 0 && withTime === 0)) {
-      bannerTxt.textContent = `提示：目前讀取到的仍是舊版 JSON (${fileGenStr})，因此尚未包含馬會開賽時間。請依指南更新 Box 3 與 Box 2（儲存後 GitHub Actions 會自動執行新爬蟲，切勿在舊 Run #2 按 Re-run jobs）。`;
-      banner.classList.add("show");
-    } else {
-      banner.classList.remove("show");
-    }
-
+    matches = [...manualOnlyMatches, ...freshCloudMatches];
     if (!selectedId || !matches.some(m => m.id === selectedId)) {
       selectedId = matches.at(0)?.id || "";
     }
 
-    pill.className = withTime > 0 ? "feed-pill ok" : "feed-pill wait";
-    pill.textContent = `馬會雲端：${updated}場 (時間${withTime} · 檔案 ${fileGenStr})`;
-    addLog(`讀取雲端 JSON (${fileGenStr})：載入賽前正盤 ${updated} 場，開賽時間已鎖定 ${withTime} 場，自動過濾走地/錯線盤 ${skippedInPlay} 場。`);
-    return updated;
+    if (isLegacyRun1) {
+      pill.className = "feed-pill wait";
+      pill.textContent = `馬會雲端：舊檔過渡中 (${matches.length}場)`;
+      bannerTxt.textContent = "目前 GitHub 儲存庫內的 JSON 仍為舊版 Run #1（因 v14 誤判 inPlay 欄位而未覆寫檔案）。請貼上新版 Box 2 並等 Actions 綠勾完成，即可自動覆寫並轉為綠燈！";
+      banner.classList.add("show");
+    } else {
+      banner.classList.remove("show");
+      pill.className = "feed-pill ok";
+      pill.textContent = `馬會雲端：已連線 (${matches.length}場 · ${fileGenStr})`;
+    }
+
+    addLog(`雲端同步完成 (${fileGenStr})：有效未開賽賽事 ${freshCloudMatches.length} 場，開賽時間已鎖定 ${withTime} 場，剔除完場/走地 ${skippedFinished} 場。`);
+    return freshCloudMatches.length;
   }
 
   function normToken(str) {
     return String(str || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(w => w.length >= 3 && !["club","united","utd","city","sporting","real"].includes(w)).at(0) || "";
   }
 
+  // 同時掃描過去 24 小時 (-1 day) 至未來 5 日賽程，自動識別並剔除像 FB9440 等已完場賽事！
   async function syncEspnAndGlobalSchedules() {
     const pill = document.getElementById("pillEspn");
-    let matchedCount = 0;
+    let matchedCount = 0, purgedFinished = 0;
+    const nowMs = Date.now();
     try {
-      const now = new Date();
-      const end = new Date(now.getTime() + 6 * 86400000);
+      const start = new Date(nowMs - 86400000);
+      const end = new Date(nowMs + 5 * 86400000);
       const fmtEspn = d => d.toISOString().slice(0, 10).replace(/-/g, "");
-      const range = `${fmtEspn(now)}-${fmtEspn(end)}`;
+      const range = `${fmtEspn(start)}-${fmtEspn(end)}`;
 
       const espnPromises = ESPN_LEAGUES.map(lg =>
         fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/scoreboard?dates=${range}`)
           .then(r => r.ok ? r.json() : null).catch(() => null)
       );
 
-      const sdbPromises = Array.from({ length: 5 }, (_, offset) => {
-        const dStr = new Date(now.getTime() + offset * 86400000).toISOString().slice(0, 10);
+      const sdbOffsets =;
+      const sdbPromises = sdbOffsets.map(offset => {
+        const dStr = new Date(nowMs + offset * 86400000).toISOString().slice(0, 10);
         return fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=${dStr}&s=Soccer`)
           .then(r => r.ok ? r.json() : null).catch(() => null);
       });
@@ -810,9 +785,9 @@
       const [espnRes, sdbRes] = await Promise.all([Promise.all(espnPromises), Promise.all(sdbPromises)]);
 
       const espnEvents = [];
-      espnRes.forEach((val, idx) => {
+      espnRes.forEach(val => {
         if (val && Array.isArray(val.events)) {
-          val.events.forEach(ev => espnEvents.push({ ev, leagueSlug: ESPN_LEAGUES.at(idx) }));
+          val.events.forEach(ev => espnEvents.push(ev));
         }
       });
 
@@ -830,7 +805,7 @@
         const aTok = normToken(aEn);
         if (!hTok && !aTok) continue;
 
-        const foundEspn = espnEvents.find(({ ev }) => {
+        const foundEspn = espnEvents.find(ev => {
           const nm = (ev.name || "").toLowerCase();
           return hTok && aTok && nm.includes(hTok) && nm.includes(aTok);
         });
@@ -838,11 +813,16 @@
         if (foundEspn) {
           matchedCount++;
           m.espnMatched = true;
-          if (foundEspn.ev.date) {
-            const ms = Date.parse(foundEspn.ev.date);
-            if (!isNaN(ms)) m.kickoffIso = msToHktIso(ms);
+          const stState = String(foundEspn?.status?.type?.state || "").toLowerCase();
+          if (stState === "post" || stState === "in") m.isFinishedExternal = true;
+          if (foundEspn.date) {
+            const ms = Date.parse(foundEspn.date);
+            if (!isNaN(ms)) {
+              m.kickoffIso = msToHktIso(ms);
+              if (ms <= nowMs - 5 * 60000) m.isFinishedExternal = true;
+            }
           }
-          const comp = (foundEspn.ev.competitions || []).at(0);
+          const comp = (foundEspn.competitions || []).at(0);
           if (comp && Array.isArray(comp.competitors)) {
             let sumGpg = 0, cnt = 0;
             comp.competitors.forEach(c => {
@@ -859,15 +839,40 @@
           const sa = String(ev.strAwayTeam || "").toLowerCase();
           return (hTok && sh.includes(hTok)) && (aTok && sa.includes(aTok));
         });
-        if (foundSdb && foundSdb.dateEvent && foundSdb.strTime) {
-          const utcStr = `${foundSdb.dateEvent}T${foundSdb.strTime.slice(0,5)}:00Z`;
-          const ms = Date.parse(utcStr);
+        if (foundSdb && foundSdb.dateEvent) {
+          const stTxt = String(foundSdb.strStatus || "").toUpperCase();
+          if (stTxt.includes("FT") || stTxt.includes("FINISHED") || stTxt.includes("AET")) {
+            m.isFinishedExternal = true;
+          }
+          const timePart = (foundSdb.strTime || "00:00").slice(0, 5);
+          const ms = Date.parse(`${foundSdb.dateEvent}T${timePart}:00Z`);
           if (!isNaN(ms)) {
             if (!m.kickoffIso) m.kickoffIso = msToHktIso(ms);
+            if (ms <= nowMs - 5 * 60000) m.isFinishedExternal = true;
             m.sportsDbMatched = true;
             matchedCount++;
           }
         }
+      }
+
+      if (appConfig.hideFinished) {
+        const beforeLen = matches.length;
+        matches = matches.filter(m => {
+          if (m.isFinishedExternal) return false;
+          const p = getHktParts(m.kickoffIso);
+          if (p && p.ms <= nowMs - 5 * 60000) return false;
+          return true;
+        });
+        purgedFinished = beforeLen - matches.length;
+        if (purgedFinished > 0) addLog(`賽程交叉比對：已自動移除 ${purgedFinished} 場已完場/已開賽舊賽事。`);
+      }
+
+      // 若補齊時間後全部有效賽事皆有時間，同步將馬會雲端燈號轉為綠燈
+      const withTimeNow = matches.filter(m => Boolean(getHktParts(m.kickoffIso))).length;
+      if (matches.length > 0 && withTimeNow > 0) {
+        const cloudPill = document.getElementById("pillCloud");
+        cloudPill.className = "feed-pill ok";
+        cloudPill.textContent = `馬會雲端：已就緒 (${matches.length}場 · 時間${withTimeNow}場)`;
       }
 
       pill.className = "feed-pill ok";
@@ -915,7 +920,7 @@
   }
 
   async function syncNow(manual = false) {
-    document.getElementById("syncStatusText").textContent = "正在同步馬會時間、賠率與全球數據...";
+    document.getElementById("syncStatusText").textContent = "正在直連雲端更新未開賽賽事與時間...";
     await syncCloudHkjcAndSofa();
     await Promise.allSettled([syncEspnAndGlobalSchedules(), syncStadiumWeather()]);
     saveState();
@@ -923,23 +928,18 @@
     const ts = nowHktClockStr();
     document.getElementById("lastSyncLabel").textContent = `上次同步：${ts}`;
     document.getElementById("syncStatusText").textContent = "多源自動更新中";
-    if (manual) addLog("已完成手動全線同步。");
+    if (manual) addLog("已完成手動零快取全線同步。");
     countdownSec = syncIntervalSec || 120;
   }
 
   function getVisibleMatches() {
     const now = Date.now();
-    let basePool = matches.filter(m => {
-      if (appConfig.hideFinished && isDistortedOrInPlayOdds(m.oddsHigh, m.oddsLow)) return false;
-      const p = getHktParts(m.kickoffIso);
-      if (appConfig.hideFinished && p && (now - p.ms) > 15 * 60000) return false;
-      return true;
-    });
-    if (basePool.length === 0 && matches.length > 0) {
-      basePool = matches.slice();
-    }
-
-    const list = basePool.filter(m => {
+    const list = matches.filter(m => {
+      if (appConfig.hideFinished) {
+        if (m.isFinishedExternal || isDistortedOrInPlayOdds(m.oddsHigh, m.oddsLow)) return false;
+        const pCheck = getHktParts(m.kickoffIso);
+        if (pCheck && pCheck.ms <= now - 5 * 60000) return false;
+      }
       const p = getHktParts(m.kickoffIso);
       const ev = evaluateMatch(m);
       if (currentFilter === "BET" && ev.status !== "BET") return false;
@@ -950,7 +950,7 @@
       if (currentTimeWindow !== "ALL") {
         if (!p) return false;
         const diffH = (p.ms - now) / 3600000;
-        if (diffH < -0.25) return false;
+        if (diffH < -0.1) return false;
         if (currentTimeWindow === "12H" && diffH > 12) return false;
         if (currentTimeWindow === "24H" && diffH > 24) return false;
         if (currentTimeWindow === "48H" && diffH > 48) return false;
@@ -985,7 +985,7 @@
 
     const listEl = document.getElementById("matchList");
     if (visible.length === 0) {
-      listEl.innerHTML = `<div class="match-card" style="text-align:center; color:var(--text-muted); padding:28px;">目前篩選條件下沒有符合之賽前正盤賽事，請切回「全部賽事」或等待 GitHub Actions 完成更新。</div>`;
+      listEl.innerHTML = `<div class="match-card" style="text-align:center; color:var(--text-muted); padding:28px;">目前沒有符合篩選條件之未開賽賽事。如剛更新 Box 2，請等 GitHub Actions 綠勾完成後按「立即全線同步」。</div>`;
     } else {
       let html = "", lastDateKey = "";
       visible.forEach(m => {
@@ -993,7 +993,7 @@
         const dKey = p ? p.dateKey : "UNSCHEDULED";
         if (currentSortMode === "TIME_ASC" && dKey !== lastDateKey) {
           lastDateKey = dKey;
-          const title = p ? p.dateHeader : "等待 GitHub 新一輪爬蟲寫入馬會開賽時間（儲存 Box 2 即自動執行）";
+          const title = p ? p.dateHeader : "待寫入開賽日期（請確認新版 Box 2 已執行完成）";
           html += `<div class="date-group-header"><span>&#128197; ${title}</span><span class="date-group-sub">香港時間 HKT (UTC+8)</span></div>`;
         }
         const ev = evaluateMatch(m);
@@ -1007,7 +1007,7 @@
           <div class="match-card ${m.id === selectedId ? "selected" : ""}" onclick="selectMatch('${m.id}')">
             <div class="card-top">
               <div>
-                <span class="ko-badge">&#128338; ${p ? p.shortDateTime : "等待新 JSON 時間"}</span>
+                <span class="ko-badge">&#128338; ${p ? p.shortDateTime : "同步時間中"}</span>
                 <span class="fb-code">${m.code}</span>
                 <span>${m.league}</span>
               </div>
@@ -1041,8 +1041,9 @@
 
   function renderInspector() {
     const panel = document.getElementById("inspectorPanel");
-    const m = matches.find(x => x.id === selectedId) || matches.at(0);
-    if (!m) { panel.innerHTML = `<p style="color:var(--text-muted);">請點選左側賽事檢視詳情。</p>`; return; }
+    const visible = getVisibleMatches();
+    const m = visible.find(x => x.id === selectedId) || visible.at(0);
+    if (!m) { panel.innerHTML = `<p style="color:var(--text-muted);">目前無顯示中之賽事。</p>`; return; }
     const ev = evaluateMatch(m);
     const p = getHktParts(m.kickoffIso);
     const vCls = ev.status === "BET" ? "v-bet" : (ev.status === "HOLD" ? "v-hold" : "v-pass");
@@ -1050,7 +1051,7 @@
     panel.innerHTML = `
       <button class="mobile-close-btn" onclick="closeDrawer()">&#10005; 關閉</button>
       <h2>${m.code} ${m.home} 對 ${m.away}</h2>
-      <div class="sub-meta">${m.league} &bull; 開賽：${p ? p.shortDateTime + " HKT" : "等待新 JSON"} &bull; <span class="verdict-badge ${vCls}" style="padding:2px 8px;">${ev.label}</span></div>
+      <div class="sub-meta">${m.league} &bull; 開賽：${p ? p.shortDateTime + " HKT" : "同步中"} &bull; <span class="verdict-badge ${vCls}" style="padding:2px 8px;">${ev.label}</span></div>
 
       <div class="stage-tabs">
         ${["T-24h 初盤掃描", "T-6h 軍情覆核", "T-60m 正選鎖定"].map(st =>
@@ -1157,7 +1158,7 @@
   function buildGithubRawUrl() {
     const u = document.getElementById("ghUser").value.trim();
     const r = document.getElementById("ghRepo").value.trim();
-    if (u && r) document.getElementById("cfgJsonUrl").value = `https://raw.githubusercontent.com/${u}/${r}/main/data/hkjc_hilo.json`;
+    if (u && r) document.getElementById("cfgJsonUrl").value = "";
   }
   function saveSettings() {
     appConfig.ghUser = document.getElementById("ghUser").value.trim();
@@ -1175,7 +1176,6 @@
     const raw = document.getElementById("rawOddsText").value;
     const lines = raw.split(/\n+/);
     let cnt = 0;
-    matches = matches.filter(m => !m.isDemo);
     lines.forEach(line => {
       const codeM = line.match(/(FB\d{4})/);
       const teamM = line.match(/([^\s\d]+)\s*對\s*([^\s\[]+)/);
@@ -1183,7 +1183,8 @@
       if (teamM && oddsM) {
         const ms = parseFlexibleDateMs(line);
         matches.push({
-          id: "m_" + Date.now() + "_" + cnt,
+          id: "m_manual_" + Date.now() + "_" + cnt,
+          isManual: true,
           code: codeM ? codeM.at(1) : "FB----",
           league: "手動貼上賽事",
           home: teamM.at(1), away: teamM.at(2),
@@ -1192,7 +1193,7 @@
           stage: "T-6h 軍情覆核",
           openHigh: parseFloat(oddsM.at(1)), openLow: parseFloat(oddsM.at(2)),
           oddsHigh: parseFloat(oddsM.at(1)), oddsLow: parseFloat(oddsM.at(2)),
-          sofaMatched: false, espnMatched: false, weatherText: "待同步", notes: "由手動貼上馬會文字建立。", lastUpdated: "剛剛"
+          sofaMatched: false, espnMatched: false, weatherText: "待同步", notes: "手動貼上賽事。", lastUpdated: "剛剛"
         });
         cnt++;
       }
@@ -1208,13 +1209,13 @@
     const home = document.getElementById("newHome").value.trim();
     const away = document.getElementById("newAway").value.trim();
     if (!home || !away) return;
-    matches = matches.filter(m => !m.isDemo);
     const ms = parseFlexibleDateMs(document.getElementById("newTime").value.trim());
     const cXg = parseFloat(document.getElementById("newCustomXg").value);
     const h = parseFloat(document.getElementById("newHigh").value) || 1.85;
     const l = parseFloat(document.getElementById("newLow").value) || 1.85;
     matches.push({
-      id: "m_" + Date.now(),
+      id: "m_manual_" + Date.now(),
+      isManual: true,
       code: document.getElementById("newCode").value.trim() || "FB----",
       league: document.getElementById("newLeague").value.trim() || "自訂聯賽",
       home, away, enHome: inferEnglishTeam(home), enAway: inferEnglishTeam(away),
@@ -1232,25 +1233,28 @@
   function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(matches)); }
   function resetDefaults() {
     localStorage.removeItem(STORAGE_KEY);
-    matches = buildDynamicStarterMatches();
-    selectedId = matches.at(0)?.id || "";
-    addLog("已清除舊快取並重新拉取最新馬會雲端檔案。");
+    localStorage.removeItem("hkjc_hilo_matches_v14");
+    localStorage.removeItem("hkjc_hilo_matches_v13");
+    matches = [];
+    selectedId = "";
+    addLog("已清除所有舊快取，正在直連 GitHub API 取得最新未開賽賽事...");
     syncNow(true);
   }
 
   function init() {
     document.getElementById("pillHktClock").textContent = `香港時間：${nowHktClockStr()}`;
+    localStorage.removeItem("hkjc_hilo_matches_v14");
     try {
       const savedCfg = JSON.parse(localStorage.getItem(CFG_KEY) || "null");
       if (savedCfg) appConfig = { ...appConfig, ...savedCfg };
       const savedMatches = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-      matches = Array.isArray(savedMatches) && savedMatches.length > 0 ? savedMatches : buildDynamicStarterMatches();
+      matches = Array.isArray(savedMatches) ? savedMatches : [];
     } catch (_) {
-      matches = buildDynamicStarterMatches();
+      matches = [];
     }
     selectedId = matches.at(0)?.id || "";
     renderAll();
-    addLog("系統啟動：v14 賽前正盤引擎運作中（自動攔截走地極端賠率並檢查 JSON 更新時間）。");
+    addLog("系統啟動：v15 零快取直連引擎運作中（自動過濾已完場賽事並直連 GitHub 最新檔案）。");
     syncNow(false);
 
     countdownTimer = setInterval(() => {
