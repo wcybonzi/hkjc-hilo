@@ -2,36 +2,36 @@ name: HKJC HiLo 2.5 Auto Sync
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: '0,20,40 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  sync-hkjc-odds:
+  scrape-hkjc-and-sofascore:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Install Playwright & Chromium
+      - name: Install Playwright Chromium
         run: |
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Scrape Latest HKJC HiLo 2.5 Odds & Official Kickoff Times
+      - name: Run HKJC + SofaScore multi-source collector
         run: python hkjc_scraper.py
 
-      - name: Commit Updated JSON Feed
+      - name: Commit updated JSON feed
         run: |
-          git config user.name "hkjc-auto-sync-bot"
-          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/hkjc_hilo.json
-          git diff --staged --quiet || git commit -m "chore: auto-sync HKJC HiLo [2.5] odds & kickoff times"
+          git diff --staged --quiet || git commit -m "chore: auto-sync HKJC and SofaScore 2.5 data"
           git push
