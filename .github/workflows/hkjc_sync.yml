@@ -2,7 +2,7 @@ name: HKJC HiLo 2.5 Auto Sync
 
 on:
   schedule:
-    - cron: '0,20,40 0-23 1-31 1-12 0-6'
+    - cron: '0,15,30,45 0-23 1-31 1-12 0-6'
   workflow_dispatch:
   push:
     paths:
@@ -32,7 +32,7 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Run HKJC and SofaScore collector
+      - name: Run HKJC full-slate and dropping-odds collector
         run: python hkjc_scraper.py
 
       - name: Pull latest changes and commit JSON feed
@@ -41,7 +41,7 @@ jobs:
           git config user.email "hkjc-sync-bot@users.noreply.github.com"
           git add data/hkjc_hilo.json
           if ! git diff --staged --quiet; then
-            git commit -m "chore: auto-sync HKJC pre-match HiLo 2.5 odds and kickoff times"
+            git commit -m "chore: auto-sync full HKJC HiLo slate and live odds drops"
             git pull --rebase origin main || git pull --rebase || true
             git push
           fi
