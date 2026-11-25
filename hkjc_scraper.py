@@ -1,7 +1,8 @@
+import argparse
 import asyncio
 import json
 import os
-import re
+import subprocess
 from datetime import datetime, timezone, timedelta
 from playwright.async_api import async_playwright
 
@@ -15,6 +16,11 @@ LIVE_OR_DONE_STATUSES = {
 }
 
 PREFERRED_LINES = ("2.5", "2.0/2.5", "2.5/3.0", "2.0", "3.0", "3.0/3.5", "1.5/2.0", "3.5")
+LINE_PRIORITY = {ln: idx for idx, ln in enumerate(PREFERRED_LINES)}
+
+
+def line_rank(line_str):
+    return LINE_PRIORITY.get(str(line_str or "").strip(), 999)
 
 
 def load_previous_memory():
@@ -36,8 +42,17 @@ def load_previous_memory():
 
 def normalize_line(raw_line):
     s = str(raw_line or "").strip().replace(" ", "")
-    s = s.replace("[", "").replace("]", "")
-    return s
+    return s.replace("[", "").replace("]", "")
+
+
+def parse_odd_float(raw_val):
+    if raw_val is None:
+        return 0.0
+    s = str(raw_val).strip().replace("@", "").replace(",", "")
+    try:
+        return float(s)
+    except Exception:
+        return 0.0
 
 
 def parse_iso_to_ms(val):
@@ -84,7 +99,7 @@ def extract_pools_from_match(node):
             for ln in lines:
                 for comb in (ln.get("combinations") or ln.get("selections") or []):
                     sel = str(comb.get("str") or comb.get("selection") or comb.get("code") or "").upper()
-                    odd = float(comb.get("currentOdds") or comb.get("odds") or 0)
+                    odd = parse_odd_float(comb.get("currentOdds") or comb.get("odds"))
                     if sel in ("H", "HOME", "1") and odd > 1.0:
                         had["H"] = odd
                     elif sel in ("D", "DRAW", "X") and odd > 1.0:
@@ -104,12 +119,12 @@ def extract_pools_from_match(node):
                     if c_cond:
                         cond = c_cond
                     sel = str(comb.get("str") or comb.get("selection") or comb.get("name_ch") or "").upper()
-                    odd = float(comb.get("currentOdds") or comb.get("odds") or 0)
+                    odd = parse_odd_float(comb.get("currentOdds") or comb.get("odds"))
                     if sel in ("H", "HIGH", "OVER", "大") and odd > 1.01:
                         high_odd = odd
                     elif sel in ("L", "LOW", "UNDER", "細") and odd > 1.01:
                         low_odd = odd
-                if cond and 1.16 <= high_odd <= 5.20 and 1.16 <= low_odd <= 5.20:
+                if cond and 1.14 <= high_odd <= 5.50 and 1.14 <= low_odd <= 5.50:
                     hilo_candidates[cond] = (high_odd, low_odd)
 
     for pref in PREFERRED_LINES:
@@ -138,6 +153,7 @@ def walk_graphql_matches(obj, collected, now_ms):
     if front_id.upper().startswith("FB") and (obj.get("homeTeam") or obj.get("foPools") or obj.get("pools")):
         status_raw = str(obj.get("status") or obj.get("matchStatus") or "").upper()
         if status_raw in LIVE_OR_DONE_STATUSES:
+            collected.pop(front_id, None)
             return
 
         ko_ms = (
@@ -146,6 +162,7 @@ def walk_graphql_matches(obj, collected, now_ms):
             or parse_iso_to_ms(obj.get("matchDate"))
         )
         if ko_ms > 0 and ko_ms < (now_ms - 60_000):
+            collected.pop(front_id, None)
             return
 
         home_ch, home_en = extract_team_names(obj, "homeTeam")
@@ -157,26 +174,55 @@ def walk_graphql_matches(obj, collected, now_ms):
         )
 
         best_hilo, had = extract_pools_from_match(obj)
+        existing = collected.get(front_id)
+
+        # Case A: Packet has HAD odds only (e.g. from /ch/football/home) -> enrich HAD without overwriting HIL!
+        if existing and not best_hilo:
+            if had["H"] > 1.0:
+                existing["hadHome"] = round(had["H"], 2)
+            if had["D"] > 1.0:
+                existing["hadDraw"] = round(had["D"], 2)
+            if had["A"] > 1.0:
+                existing["hadAway"] = round(had["A"], 2)
+            return
+
+        # Case B: Packet has live HIL odds -> update whenever line is higher/equal priority!
         if home_ch and away_ch and best_hilo:
             line_str, h_odd, l_odd = best_hilo
-            existing = collected.get(front_id)
-            # Prefer exact 2.5 line if multiple packets arrive for same match
-            if not existing or (line_str == "2.5" and existing["line"] != "2.5") or h_odd != existing["oddsHigh"]:
+            if not existing:
                 collected[front_id] = {
                     "id": front_id,
                     "league": str(league).strip(),
                     "home": home_ch,
                     "away": away_ch,
-                    "homeEn": home_en or (existing or {}).get("homeEn", ""),
-                    "awayEn": away_en or (existing or {}).get("awayEn", ""),
-                    "kickoffMs": ko_ms or (existing or {}).get("kickoffMs", 0),
+                    "homeEn": home_en,
+                    "awayEn": away_en,
+                    "kickoffMs": ko_ms,
                     "line": line_str,
                     "oddsHigh": round(h_odd, 2),
                     "oddsLow": round(l_odd, 2),
-                    "hadHome": round(had["H"], 2) if had["H"] > 1 else (existing or {}).get("hadHome", 0),
-                    "hadDraw": round(had["D"], 2) if had["D"] > 1 else (existing or {}).get("hadDraw", 0),
-                    "hadAway": round(had["A"], 2) if had["A"] > 1 else (existing or {}).get("hadAway", 0),
+                    "hadHome": round(had["H"], 2) if had["H"] > 1 else 0,
+                    "hadDraw": round(had["D"], 2) if had["D"] > 1 else 0,
+                    "hadAway": round(had["A"], 2) if had["A"] > 1 else 0,
                 }
+            else:
+                # Never overwrite a pure 2.5 line with an inferior secondary line from /home
+                if line_rank(line_str) <= line_rank(existing["line"]):
+                    existing["line"] = line_str
+                    existing["oddsHigh"] = round(h_odd, 2)
+                    existing["oddsLow"] = round(l_odd, 2)
+                if home_en and not existing.get("homeEn"):
+                    existing["homeEn"] = home_en
+                if away_en and not existing.get("awayEn"):
+                    existing["awayEn"] = away_en
+                if ko_ms > 0:
+                    existing["kickoffMs"] = ko_ms
+                if had["H"] > 1.0:
+                    existing["hadHome"] = round(had["H"], 2)
+                if had["D"] > 1.0:
+                    existing["hadDraw"] = round(had["D"], 2)
+                if had["A"] > 1.0:
+                    existing["hadAway"] = round(had["A"], 2)
             return
 
     for v in obj.values():
@@ -184,7 +230,7 @@ def walk_graphql_matches(obj, collected, now_ms):
             walk_graphql_matches(v, collected, now_ms)
 
 
-async def scrape_hkjc():
+async def run_single_scrape_cycle(browser):
     prev_mem = load_previous_memory()
     now_dt = datetime.now(HKT)
     now_ms = int(now_dt.timestamp() * 1000)
@@ -193,72 +239,83 @@ async def scrape_hkjc():
     collected = {}
     captured_gql_requests = []
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
-        context = await browser.new_context(
-            locale="zh-HK",
-            timezone_id="Asia/Hong_Kong",
-            viewport={"width": 1440, "height": 2400},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        )
-        page = await context.new_page()
+    context = await browser.new_context(
+        locale="zh-HK",
+        timezone_id="Asia/Hong_Kong",
+        viewport={"width": 1440, "height": 2400},
+        extra_http_headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        },
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    )
+    page = await context.new_page()
 
-        async def handle_response(resp):
-            url = resp.url.lower()
-            if "graphql" not in url and "info.cld.hkjc.com" not in url:
-                return
-            try:
-                req = resp.request
-                if req.method == "POST" and req.post_data:
-                    captured_gql_requests.append((resp.url, dict(req.headers), req.post_data))
-                payload = await resp.json()
-                walk_graphql_matches(payload, collected, now_ms)
-            except Exception:
-                pass
+    async def handle_response(resp):
+        url = resp.url.lower()
+        if "graphql" not in url and "info.cld.hkjc.com" not in url:
+            return
+        try:
+            req = resp.request
+            if req.method == "POST" and req.post_data:
+                captured_gql_requests.append((resp.url, req.post_data))
+            payload = await resp.json()
+            walk_graphql_matches(payload, collected, now_ms)
+        except Exception:
+            pass
 
-        page.on("response", handle_response)
+    page.on("response", handle_response)
 
-        for target_url in ("https://bet.hkjc.com/ch/football/hil", "https://bet.hkjc.com/ch/football/home"):
-            try:
-                await page.goto(target_url, wait_until="domcontentloaded", timeout=45000)
-                await page.wait_for_timeout(4500)
-                for step in range(26):
-                    await page.mouse.wheel(0, 1400)
-                    await page.wait_for_timeout(420)
-            except Exception as e:
-                print(f"Navigation note ({target_url}): {e}")
+    # Visit /home FIRST for HAD odds, then /hil LAST so latest live HIL 2.5 odds always win!
+    cb_ts = int(now_ms)
+    for target_url in (
+        f"https://bet.hkjc.com/ch/football/home?_={cb_ts}",
+        f"https://bet.hkjc.com/ch/football/hil?_={cb_ts + 1}"
+    ):
+        try:
+            await page.goto(target_url, wait_until="domcontentloaded", timeout=45000)
+            await page.wait_for_timeout(4200)
+            for _ in range(26):
+                await page.mouse.wheel(0, 1450)
+                await page.wait_for_timeout(360)
+        except Exception as e:
+            print(f"Navigation note ({target_url}): {e}")
 
-        # Replay intercepted HKJC GraphQL queries across wider pagination ranges (1..300)
-        for gql_url, hdrs, post_raw in list(captured_gql_requests):
-            try:
-                body = json.loads(post_raw)
-                if not isinstance(body, dict) or "variables" not in body:
-                    continue
-                vars_dict = body.get("variables") or {}
-                if "startIndex" in vars_dict or "endIndex" in vars_dict:
-                    for start_idx in (1, 51, 101, 151, 201):
-                        patched = json.loads(post_raw)
-                        patched["variables"]["startIndex"] = start_idx
-                        patched["variables"]["endIndex"] = start_idx + 99
-                        res_json = await page.evaluate(
-                            """async ({url, bodyStr}) => {
-                                const r = await fetch(url, {
-                                    method: 'POST',
-                                    headers: {'content-type': 'application/json'},
-                                    body: bodyStr
-                                });
-                                return r.ok ? await r.json() : null;
-                            }""",
-                            {"url": gql_url, "bodyStr": json.dumps(patched)}
-                        )
-                        if res_json:
-                            walk_graphql_matches(res_json, collected, now_ms)
-            except Exception:
-                pass
+    # Replay intercepted GraphQL queries across paginated windows with cache: 'no-store'
+    for gql_url, post_raw in list(captured_gql_requests):
+        try:
+            body = json.loads(post_raw)
+            if not isinstance(body, dict) or "variables" not in body:
+                continue
+            vars_dict = body.get("variables") or {}
+            if "startIndex" in vars_dict or "endIndex" in vars_dict:
+                for start_idx in (1, 51, 101, 151, 201):
+                    patched = json.loads(post_raw)
+                    patched["variables"]["startIndex"] = start_idx
+                    patched["variables"]["endIndex"] = start_idx + 99
+                    res_json = await page.evaluate(
+                        """async ({url, bodyStr}) => {
+                            const r = await fetch(url, {
+                                method: 'POST',
+                                cache: 'no-store',
+                                headers: {
+                                    'content-type': 'application/json',
+                                    'cache-control': 'no-cache, no-store'
+                                },
+                                body: bodyStr
+                            });
+                            return r.ok ? await r.json() : null;
+                        }""",
+                        {"url": gql_url, "bodyStr": json.dumps(patched)}
+                    )
+                    if res_json:
+                        walk_graphql_matches(res_json, collected, now_ms)
+        except Exception:
+            pass
 
-        await browser.close()
+    await context.close()
 
-    # Merge with persistent opening odds & odds history
     final_matches = []
     changed_count = 0
 
@@ -276,13 +333,13 @@ async def scrape_hkjc():
 
         history = list(old.get("oddsHistory") or []) if same_line else []
         if not history:
-            history.append({"t": now_label + " (初盤)", "h": open_h, "l": open_l})
+            history.append({"t": now_label + " (初盤)", "h": round(open_h, 2), "l": round(open_l, 2)})
 
         moved = abs(cur["oddsHigh"] - last_h) >= 0.01 or abs(cur["oddsLow"] - last_l) >= 0.01
         if moved:
             changed_count += 1
             history.append({"t": now_label, "h": cur["oddsHigh"], "l": cur["oddsLow"]})
-            history = history[-12:]
+            history = history[-14:]
 
         prev_h = last_h if moved else float(old.get("prevHigh") or open_h)
         prev_l = last_l if moved else float(old.get("prevLow") or open_l)
@@ -306,17 +363,21 @@ async def scrape_hkjc():
 
     os.makedirs("data", exist_ok=True)
     if len(final_matches) == 0 and prev_mem:
-        print("Warning: 0 matches scraped on this run; pruning expired matches from previous cache.")
-        kept = [
+        print("Warning: 0 matches scraped on this cycle; pruning started matches from previous cache.")
+        final_matches = [
             m for m in prev_mem.values()
             if not m.get("kickoffMs") or int(m.get("kickoffMs", 0)) > now_ms
         ]
-        final_matches = kept
+
+    # Check if match list or any odds changed vs previous file
+    prev_ids = set(prev_mem.keys())
+    cur_ids = {m["id"] for m in final_matches}
+    list_changed = prev_ids != cur_ids or changed_count > 0 or not os.path.exists(OUT_PATH)
 
     output_payload = {
-        "version": "v18",
+        "version": "v19",
         "updatedAtIso": now_dt.isoformat(),
-        "updatedAtHkt": now_dt.strftime("%d/%m (%a) %H:%M HKT"),
+        "updatedAtHkt": now_dt.strftime("%d/%m (%a) %H:%M:%S HKT"),
         "matchCount": len(final_matches),
         "oddsChangedCount": changed_count,
         "matches": final_matches
@@ -325,8 +386,48 @@ async def scrape_hkjc():
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"Saved {len(final_matches)} upcoming HKJC matches ({changed_count} odds updates) at {now_label} HKT.")
+    print(f"[{now_label} HKT] Scraped {len(final_matches)} matches ({changed_count} odds changed).")
+    return list_changed, changed_count
+
+
+def git_commit_and_push_if_needed(push_enabled):
+    if not push_enabled:
+        return
+    try:
+        subprocess.run(["git", "config", "user.name", "hkjc-sync-bot"], check=False)
+        subprocess.run(["git", "config", "user.email", "actions@github.com"], check=False)
+        subprocess.run(["git", "add", OUT_PATH], check=False)
+        diff_res = subprocess.run(["git", "diff", "--staged", "--quiet"])
+        if diff_res.returncode == 0:
+            print("Git: No file changes to push.")
+            return
+        stamp = datetime.now(HKT).strftime("%H:%M:%S HKT")
+        subprocess.run(["git", "commit", "-m", f"Live HKJC odds sync ({stamp})"], check=False)
+        subprocess.run(["git", "pull", "--rebase", "origin", "HEAD"], check=False)
+        subprocess.run(["git", "push", "origin", "HEAD"], check=False)
+        print(f"Git: Pushed fresh HKJC odds at {stamp}.")
+    except Exception as e:
+        print(f"Git push note: {e}")
+
+
+async def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cycles", type=int, default=1, help="Number of scrape cycles in this job")
+    parser.add_argument("--interval", type=int, default=180, help="Seconds between cycles")
+    parser.add_argument("--git-push", action="store_true", help="Commit and push immediately after each cycle")
+    args = parser.parse_args()
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+        for idx in range(args.cycles):
+            print(f"--- Starting HKJC Live Odds Cycle {idx + 1}/{args.cycles} ---")
+            changed, _ = await run_single_scrape_cycle(browser)
+            if changed or idx == 0:
+                git_commit_and_push_if_needed(args.git_push)
+            if idx + 1 < args.cycles:
+                await asyncio.sleep(args.interval)
+        await browser.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(scrape_hkjc())
+    asyncio.run(main())
