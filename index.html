@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>足智彩「入球大細」跨彩池精算與落飛實戰系統 v18</title>
+  <title>足智彩「入球大細」秒級跟盤與跨彩池落飛系統 v19</title>
   <style>
     :root {
       --bg-dark: #09101d; --bg-card: #121c30; --bg-panel: #1a2742; --border: #293a5a;
@@ -64,6 +64,7 @@
     .match-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 15px; cursor: pointer; transition: border-color 0.15s ease; }
     .match-card:hover { border-color: #4b5e82; }
     .match-card.selected { border-color: var(--accent-blue); box-shadow: 0 0 0 1px var(--accent-blue); }
+    .match-card.just-moved { border-left: 4px solid #34d399; }
     .card-top { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 9px; gap: 8px; flex-wrap: wrap; }
     .ko-badge { background: rgba(251,191,36,0.16); border: 1px solid rgba(251,191,36,0.45); color: var(--hkjc-gold); font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 0.77rem; margin-right: 6px; }
     .fb-code { color: #e2e8f0; font-weight: 800; margin-right: 6px; }
@@ -81,7 +82,7 @@
     .odd-up { color: #f87171; font-weight: 700; }
     .live-telemetry { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; font-size: 0.71rem; }
     .tele-tag { background: rgba(26,39,66,0.85); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; color: #cbd5e1; }
-    .tele-tag.good { border-color: rgba(16,185,129,0.5); color: #6ee7b7; }
+    .tele-tag.good { border-color: rgba(16,185,129,0.65); background: rgba(16,185,129,0.15); color: #6ee7b7; font-weight: 800; }
     .tele-tag.sofa { border-color: rgba(56,189,248,0.5); color: #7dd3fc; }
     .tele-tag.drop { border-color: rgba(251,113,133,0.65); background: var(--drop-fire-bg); color: #fda4af; font-weight: 800; }
     .inspector { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 17px; position: sticky; top: 82px; }
@@ -94,8 +95,8 @@
     .odds-cell label { display: block; font-size: 0.69rem; color: var(--text-muted); margin-bottom: 2px; }
     .odds-cell input { width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); border-radius: 6px; padding: 5px 8px; font-size: 0.84rem; font-weight: 700; }
     .check-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.78rem; cursor: pointer; }
-    .history-list { max-height: 115px; overflow-y: auto; font-size: 0.73rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 4px; }
-    .log-box { background: #070d19; border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; margin-top: 16px; font-size: 0.73rem; color: var(--text-muted); max-height: 145px; overflow-y: auto; }
+    .history-list { max-height: 125px; overflow-y: auto; font-size: 0.73rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 4px; }
+    .log-box { background: #070d19; border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; margin-top: 16px; font-size: 0.73rem; color: var(--text-muted); max-height: 155px; overflow-y: auto; }
     .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(4,8,18,0.82); z-index: 90; align-items: center; justify-content: center; padding: 16px; }
     .modal-backdrop.show { display: flex; }
     .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; max-width: 560px; width: 100%; padding: 18px; }
@@ -107,15 +108,15 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <span class="brand-badge">足智彩 v18 跨彩池精算＋落飛實戰版</span>
+        <span class="brand-badge">足智彩 v19 秒級跟盤＋落飛實戰版</span>
         <div>
-          <h1>入球大細全自動量化系統（HAD×HIL 跨彩池精算・即時賠率落飛取代正選核對）</h1>
-          <p>30% 跨彩池主客和×大細精算 + 25% 馬會賠率落飛動能 + 20% 聯賽入球基準 + 20% 球隊近況趨勢 + 5% 臨場情境</p>
+          <h1>入球大細全自動量化系統（ETag零配額直連最新賠率・3分鐘高頻抓盤・落飛取代正選）</h1>
+          <p>30% 跨彩池主客和×大細精算 + 25% 馬會即時賠率落飛動能 + 20% 聯賽基準 + 20% 球隊近況 + 5% 臨場情境</p>
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn-gold" onclick="syncNow(true)">↻ 立即全線同步</button>
-        <button class="btn-outline" onclick="openCloudModal()">雲端設定</button>
+        <button class="btn-gold" onclick="syncNow(true)">↻ 立即抓取最新賠率</button>
+        <button class="btn-outline" onclick="openCloudModal()">雲端倉庫與即時觸發設定</button>
         <button class="btn-outline" onclick="openPasteModal()">貼上馬會賠率</button>
         <button class="btn-primary" onclick="openAddModal()">+ 新增賽事</button>
       </div>
@@ -126,18 +127,18 @@
     <div class="sync-inner">
       <div class="sync-status">
         <span class="pulse-dot" id="pulseDot"></span>
-        <strong>自動更新中</strong>
+        <strong>零快取跟盤中</strong>
         <span class="feed-pill ok" id="hktClockPill">香港時間：計算中</span>
         <span class="feed-pill wait" id="hkjcPill">馬會雲端：連線中</span>
-        <span class="feed-pill wait" id="espnPill">全球賽程對齊：待命</span>
-        <span style="color:var(--hkjc-gold);font-weight:700;" id="nextSyncLabel">下次同步：90秒</span>
+        <span class="feed-pill wait" id="cloudTimePill">馬會抓盤時間：讀取中</span>
+        <span class="feed-pill wait" id="espnPill">賽程校準：待命</span>
+        <span style="color:var(--hkjc-gold);font-weight:700;" id="nextSyncLabel">下次同步：45秒</span>
       </div>
       <div class="sync-controls">
-        <span id="lastSyncLabel" style="color:var(--text-muted);">上次同步：尚未執行</span>
         <select class="sync-select" id="intervalSelect" onchange="changeInterval(this.value)">
-          <option value="60">每 1 分鐘更新</option>
-          <option value="90" selected>每 90 秒更新</option>
-          <option value="180">每 3 分鐘更新</option>
+          <option value="30">每 30 秒檢查變盤</option>
+          <option value="45" selected>每 45 秒檢查變盤</option>
+          <option value="90">每 90 秒檢查變盤</option>
         </select>
         <button class="btn-outline" style="padding:5px 10px;font-size:0.74rem;" onclick="hardResetCache()">清除快取並重整</button>
       </div>
@@ -169,7 +170,7 @@
       <div class="kpi-card"><div class="kpi-label">顯示中未開賽正盤</div><div class="kpi-value" id="kpiTotal">0</div></div>
       <div class="kpi-card"><div class="kpi-label">建議投注 (核心推薦)</div><div class="kpi-value" style="color:var(--bet-green);" id="kpiBet">0</div></div>
       <div class="kpi-card"><div class="kpi-label">輕注考慮 (次選傾向)</div><div class="kpi-value" style="color:var(--bet-amber);" id="kpiHold">0</div></div>
-      <div class="kpi-card"><div class="kpi-label">🔥 顯著賠率落飛異動</div><div class="kpi-value" style="color:var(--drop-fire);" id="kpiDrop">0</div></div>
+      <div class="kpi-card"><div class="kpi-label">🔥 顯著落飛 / 本輪變盤</div><div class="kpi-value" style="color:var(--drop-fire);" id="kpiDrop">0</div></div>
       <div class="kpi-card"><div class="kpi-label">嚴守紀律放棄 (無優勢)</div><div class="kpi-value" style="color:var(--pass-red);" id="kpiPass">0</div></div>
     </div>
 
@@ -179,7 +180,8 @@
           <button class="chip active" data-filter="all" onclick="setFilter('all', this)">全部未開賽賽事</button>
           <button class="chip" data-filter="bet" onclick="setFilter('bet', this)">✅ 建議投注 (大/細)</button>
           <button class="chip" data-filter="hold" onclick="setFilter('hold', this)">⚡ 輕注考慮 (次選)</button>
-          <button class="chip" data-filter="drop" onclick="setFilter('drop', this)">🔥 賠率落飛異動</button>
+          <button class="chip" data-filter="moved" onclick="setFilter('moved', this)">🔄 賠率已有變動</button>
+          <button class="chip" data-filter="drop" onclick="setFilter('drop', this)">🔥 顯著落飛達標</button>
           <button class="chip" data-filter="over" onclick="setFilter('over', this)">專看傾向「大」</button>
           <button class="chip" data-filter="under" onclick="setFilter('under', this)">專看傾向「細」</button>
           <button class="chip" data-filter="pass" onclick="setFilter('pass', this)">放棄投注</button>
@@ -204,13 +206,13 @@
     <div class="workspace">
       <div class="match-list" id="matchList"></div>
       <div class="inspector" id="inspectorPanel">
-        <div style="color:var(--text-muted);font-size:0.84rem;">請點選左側任何一場賽事，檢視跨彩池精算與即時落飛詳情。</div>
+        <div style="color:var(--text-muted);font-size:0.84rem;">請點選左側任何一場賽事，檢視跨彩池精算與即時賠率變動時間軸。</div>
       </div>
     </div>
 
     <div class="log-box">
       <div style="display:flex;justify-content:space-between;margin-bottom:5px;color:#7dd3fc;font-weight:800;">
-        <span>即時雲端直連與賠率變動日誌 (v18 零快取 SHA 直連)</span>
+        <span>即時雲端跟盤與賠率異動診斷日誌 (v19 ETag + 雙CDN SHA 零快取直連)</span>
         <span>香港時間 HKT (UTC+8)</span>
       </div>
       <div id="syncLogs"></div>
@@ -220,12 +222,14 @@
   <!-- Cloud Modal -->
   <div class="modal-backdrop" id="cloudModal">
     <div class="modal">
-      <h3>雲端 GitHub 零延遲連線設定</h3>
-      <p style="font-size:0.77rem;color:var(--text-muted);margin-bottom:10px;">自動偵測 GitHub Pages 帳號與倉庫，透過最新 Commit SHA 直接讀取馬會賠率與初盤歷史。</p>
+      <h3>雲端 GitHub 零快取連線設定</h3>
+      <p style="font-size:0.76rem;color:var(--text-muted);margin-bottom:10px;">系統會自動偵測您的 GitHub Pages 帳號、倉庫及分支 (main / master)，繞過 GitHub Pages 靜態快取直讀最新 Commit SHA。如使用自訂網域可在此手動填寫：</p>
       <label style="font-size:0.76rem;">GitHub 用戶名 (Owner)</label>
       <input id="cfgOwner" placeholder="例如 yourname" />
       <label style="font-size:0.76rem;">倉庫名稱 (Repo)</label>
-      <input id="cfgRepo" placeholder="例如 hkjc-hilo" />
+      <input id="cfgRepo" placeholder="例如 hkjc-hilo 或 yourname.github.io" />
+      <label style="font-size:0.76rem;">分支名稱 (預設自動偵測 main / master)</label>
+      <input id="cfgBranch" placeholder="main" />
       <div style="display:flex;justify-content:flex-end;gap:8px;">
         <button class="btn-outline" onclick="closeModals()">取消</button>
         <button class="btn-gold" onclick="saveCloudConfig()">儲存並立即同步</button>
@@ -237,10 +241,10 @@
   <div class="modal-backdrop" id="pasteModal">
     <div class="modal">
       <h3>快速貼上馬會文字賠率更新</h3>
-      <textarea id="pasteArea" rows="6" placeholder="格式範例：FB9452 美國職業聯賽 聖荷西地震 對 侯斯頓戴拿模 2.5 1.64 2.12"></textarea>
+      <textarea id="pasteArea" rows="6" placeholder="直接從足智彩網頁複製貼上，或輸入：FB9452 1.60 2.18"></textarea>
       <div style="display:flex;justify-content:flex-end;gap:8px;">
         <button class="btn-outline" onclick="closeModals()">關閉</button>
-        <button class="btn-primary" onclick="parsePastedText()">匯入更新</button>
+        <button class="btn-primary" onclick="parsePastedText()">匯入即時賠率</button>
       </div>
     </div>
   </div>
@@ -264,22 +268,28 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "hkjc_v18_matches";
-    const ODDS_MEM_KEY = "hkjc_v18_odds_memory";
-    const CFG_KEY = "hkjc_v18_cfg";
+    const STORAGE_KEY = "hkjc_v19_matches";
+    const ODDS_MEM_KEY = "hkjc_v19_odds_memory";
+    const CFG_KEY = "hkjc_v19_cfg";
 
     let matches = [];
     let selectedId = null;
     let activeFilter = "all";
     let activeTimeFilter = "all";
-    let strategyMode = localStorage.getItem("hkjc_v18_mode") || "standard";
-    let dropThreshold = parseFloat(localStorage.getItem("hkjc_v18_drop") || "3.0");
-    let syncIntervalSec = 90;
-    let countdown = 90;
+    let strategyMode = localStorage.getItem("hkjc_v19_mode") || localStorage.getItem("hkjc_v18_mode") || "standard";
+    let dropThreshold = parseFloat(localStorage.getItem("hkjc_v19_drop") || localStorage.getItem("hkjc_v18_drop") || "3.0");
+    let syncIntervalSec = 45;
+    let countdown = 45;
 
-    // 50+ Global League Empirical Goal Profiles (Goals per 90 mins)
+    // Zero-Quota ETag & Commit SHA State (prevents GitHub API 60/hr IP rate limit!)
+    let cachedCommitEtag = "";
+    let cachedCommitSha = "";
+    let cachedCloudPayload = null;
+    let detectedBranch = "";
+    let lastCloudUpdatedIso = "";
+
     const LEAGUE_PROFILES = [
-      { keys: "德甲,德國甲組,德乙,德國乙組,荷甲,荷乙,瑞士超,挪超,挪威超,瑞典超", avg: 3.06, tag: "高入球聯賽" },
+      { keys: "德甲,德國甲組,德乙,德國乙組,荷甲,荷乙,瑞士超,挪超,挪威超,瑞典超,冰島", avg: 3.06, tag: "高入球聯賽" },
       { keys: "美國職業,美職,MLS,澳洲職業,澳職,亞冠,亞冠2,亞洲聯賽冠軍,日職,日本職業,J1", avg: 2.94, tag: "開放進攻聯賽" },
       { keys: "英超,英格蘭超級,英冠,丹超,比甲,奧甲,蘇超,歐聯,歐洲聯賽冠軍,歐霸,歐協聯,自由盃", avg: 2.86, tag: "中高入球聯賽" },
       { keys: "意甲,意大利甲組,法甲,法國甲組,葡超,土超,沙特職,韓職,南韓職業,墨西哥,墨超,智利", avg: 2.72, tag: "標準均衡聯賽" },
@@ -307,11 +317,10 @@
     function addLog(msg) {
       const box = document.getElementById("syncLogs");
       if (!box) return;
-      const nowStr = formatHktNow();
       const div = document.createElement("div");
-      div.textContent = nowStr + " | " + msg;
+      div.textContent = formatHktNow() + " | " + msg;
       box.prepend(div);
-      while (box.children.length > 35) box.removeChild(box.lastChild);
+      while (box.children.length > 45) box.removeChild(box.lastChild);
     }
 
     function formatHktNow() {
@@ -323,11 +332,10 @@
 
     function formatKickoffHkt(tsMs) {
       if (!tsMs || tsMs <= 0) return "時間待定";
-      const d = new Date(tsMs);
       const parts = new Intl.DateTimeFormat("zh-HK", {
         timeZone: "Asia/Hong_Kong", month: "2-digit", day: "2-digit",
         weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false
-      }).formatToParts(d);
+      }).formatToParts(new Date(tsMs));
       const getP = (t) => (parts.find(x => x.type === t) || {}).value || "";
       return getP("day") + "/" + getP("month") + " (" + getP("weekday") + ") " + getP("hour") + ":" + getP("minute");
     }
@@ -342,15 +350,13 @@
     function getLeagueProfile(leagueName) {
       const ln = String(leagueName || "");
       for (const p of LEAGUE_PROFILES) {
-        const arr = p.keys.split(",");
-        for (const k of arr) {
+        for (const k of p.keys.split(",")) {
           if (k && ln.includes(k)) return { avg: p.avg, tag: k + "基準 (" + p.avg.toFixed(2) + "球)" };
         }
       }
       return { avg: 2.66, tag: "全球聯賽基準 (2.66球)" };
     }
 
-    // Exact Poisson CDF & Split Asian Line Probability
     function poissonPmf(k, lambda) {
       if (lambda <= 0) return k === 0 ? 1 : 0;
       let logP = -lambda + k * Math.log(lambda);
@@ -378,8 +384,7 @@
           return 0.5 * probSingleLineOver(segs.at(0), lambda) + 0.5 * probSingleLineOver(segs.at(1), lambda);
         }
       }
-      const num = parseFloat(clean) || 2.5;
-      return probSingleLineOver(num, lambda);
+      return probSingleLineOver(parseFloat(clean) || 2.5, lambda);
     }
 
     function solveImpliedLambda(lineStr, targetOverProb) {
@@ -392,29 +397,25 @@
       return 0.5 * (lo + hi);
     }
 
-    // Cross-Pool HAD -> Implied Total Goals (Dixon-Coles Supremacy & Draw Compression)
     function computeHadCrossPoolLambda(m, leagueAvg) {
       const h = parseFloat(m.hadHome) || 0;
       const d = parseFloat(m.hadDraw) || 0;
       const a = parseFloat(m.hadAway) || 0;
       if (h <= 1.01 || a <= 1.01) return { lambda: leagueAvg, note: "無主客和盤・採用聯賽基準", active: false };
 
-      let invH = 1 / h, invA = 1 / a;
-      let invD = d > 1.05 ? (1 / d) : Math.max(0.18, 1.115 - invH - invA);
+      const invH = 1 / h, invA = 1 / a;
+      const invD = d > 1.05 ? (1 / d) : Math.max(0.18, 1.115 - invH - invA);
       const sum = invH + invD + invA;
       const pH = invH / sum, pD = invD / sum, pA = invA / sum;
       const favProb = Math.max(pH, pA);
       const supremacy = Math.abs(pH - pA);
 
-      // Empirical bivariate football calibration:
-      // Lower draw prob (pD < 0.24) + clear favorite (favProb > 0.58) boosts total goals significantly;
-      // High draw prob (pD > 0.29) + tight matchup compresses goals toward 0-0 / 1-1.
       const drawEffect = (0.262 - pD) * 4.85;
       const supEffect = (supremacy - 0.20) * 0.72;
       const heavyFavBonus = favProb >= 0.66 ? 0.16 : (favProb <= 0.40 ? -0.10 : 0);
       const hadLambda = Math.min(4.15, Math.max(1.65, leagueAvg + drawEffect + supEffect + heavyFavBonus));
       const note = "主 " + h.toFixed(2) + (d > 1 ? " / 和 " + d.toFixed(2) : "") + " / 客 " + a.toFixed(2) + " → 跨彩池預期 " + hadLambda.toFixed(2) + "球";
-      return { lambda: hadLambda, note, active: true, pD, supremacy };
+      return { lambda: hadLambda, note, active: true };
     }
 
     function evaluateMatch(m) {
@@ -428,39 +429,33 @@
 
       const marketLambda = solveImpliedLambda(lineStr, vigFreeOver);
       const profile = getLeagueProfile(m.league);
-
-      // Pillar 1 (30%): Cross-Pool HAD x League Structure
       const hadInfo = computeHadCrossPoolLambda(m, profile.avg);
 
-      // Pillar 2 (25%): HKJC Dropping Odds Momentum (replaces manual starting-lineup checks)
       const openH = parseFloat(m.openHigh) || oddsH;
       const openL = parseFloat(m.openLow) || oddsL;
+      const prevH = parseFloat(m.prevHigh) || openH;
+      const prevL = parseFloat(m.prevLow) || openL;
+
       const dropPctH = openH > 1.01 ? ((openH - oddsH) / openH) * 100 : 0;
       const dropPctL = openL > 1.01 ? ((openL - oddsL) / openL) * 100 : 0;
+      const hasAnyMove = Math.abs(openH - oddsH) >= 0.01 || Math.abs(openL - oddsL) >= 0.01 || Math.abs(prevH - oddsH) >= 0.01 || Math.abs(prevL - oddsL) >= 0.01;
       const maxAbsDrop = Math.max(dropPctH, dropPctL);
       const hasSignificantDrop = maxAbsDrop >= dropThreshold;
 
-      // Net dropping-odds goal adjustment: Over drop pushes lambda up; Under drop pulls lambda down
       const netDropDiff = dropPctH - dropPctL;
-      let dropGoalShift = Math.max(-0.38, Math.min(0.38, netDropDiff * 0.036));
-      if (dropPctH >= dropThreshold && dropPctH > dropPctL) dropGoalShift += 0.08;
-      if (dropPctL >= dropThreshold && dropPctL > dropPctH) dropGoalShift -= 0.08;
+      let dropGoalShift = Math.max(-0.42, Math.min(0.42, netDropDiff * 0.038));
+      if (dropPctH >= dropThreshold && dropPctH > dropPctL) dropGoalShift += 0.09;
+      if (dropPctL >= dropThreshold && dropPctL > dropPctH) dropGoalShift -= 0.09;
 
-      // Also detect HKJC Asymmetric Pricing Shade when opening odds aren't moved yet:
-      // HKJC standard single-line vig has symmetric 1.85/1.85 -> 2.67 goals; if marketLambda diverges sharply from HAD+League, capture cross-pool gap
       const crossPoolAnchor = 0.56 * hadInfo.lambda + 0.44 * profile.avg;
-
-      // Pillar 3 (20%): Team Form / SofaScore / ESPN Recent Goals
       const hasForm = typeof m.formGoalsAvg === "number" && m.formGoalsAvg > 0.5;
       const formLambda = hasForm ? m.formGoalsAvg : (0.55 * crossPoolAnchor + 0.45 * profile.avg);
 
-      // Pillar 4 (5%): Optional Matchday Context Toggles
       let contextShift = 0;
       if (m.ctxOpenTactics) contextShift += 0.18;
       if (m.ctxParkBus) contextShift -= 0.20;
       if (m.ctxHeavyRain) contextShift -= 0.24;
 
-      // Final 5-Pillar Synthesis (Only 30% anchored to static HIL price -> allows real mispricings to surface!)
       let lambdaFinal =
         0.30 * marketLambda +
         0.30 * hadInfo.lambda +
@@ -485,18 +480,16 @@
       const opposeDropPct = pickOver ? dropPctL : dropPctH;
       const rawEvPct = ((pickOver ? modelOver : modelUnder) * pickedOdds - 1) * 100;
 
-      // Strategy Mode Thresholds (Calibrated to HKJC's margin so daily slates yield practical picks)
       const modeCfg = {
-        strict:   { betEdge: 2.6, holdEdge: 1.5, dropBoostEdge: 1.2 },
-        standard: { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.5 },
-        active:   { betEdge: 0.9, holdEdge: 0.45, dropBoostEdge: 0.15 }
-      }[strategyMode] || { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.5 };
+        strict:   { betEdge: 2.6, holdEdge: 1.5, dropBoostEdge: 1.1 },
+        standard: { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.45 },
+        active:   { betEdge: 0.9, holdEdge: 0.45, dropBoostEdge: 0.10 }
+      }[strategyMode] || { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.45 };
 
       let tier = "pass";
       let verdictText = "放棄投注 (無優勢)";
       let reason = "";
 
-      // Reverse steam protection: if opposite side dropped heavily (>= dropThreshold + 1%), downgrade
       const reverseSteamBlocked = opposeDropPct >= (dropThreshold + 1.0);
 
       if (!reverseSteamBlocked && pickedOdds >= 1.48 && (
@@ -513,7 +506,7 @@
       )) {
         tier = "hold";
         verdictText = "輕注考慮：傾向" + bestSideLabel;
-        reason = "具備邊際去水優勢 (+" + bestEdge.toFixed(1) + "%)，可作串關配腳或觀察臨場落飛。";
+        reason = "具備邊際去水優勢 (+" + bestEdge.toFixed(1) + "%)，可留意臨場賠率會否進一步落飛。";
       } else {
         tier = "pass";
         verdictText = reverseSteamBlocked ? "放棄 (逆向落飛警示)" : "放棄投注 (盤口貼近)";
@@ -523,108 +516,211 @@
       }
 
       return {
-        lineStr, oddsH, oddsL, openH, openL, dropPctH, dropPctL, maxAbsDrop, hasSignificantDrop,
-        vigFreeOver, vigFreeUnder, marketLambda, profile, hadInfo, formLambda, hasForm,
-        lambdaFinal, modelOver, modelUnder, edgeOver, edgeUnder, bestSide, bestSideLabel,
-        bestEdge, pickedOdds, rawEvPct, tier, verdictText, reason
+        lineStr, oddsH, oddsL, openH, openL, prevH, prevL, dropPctH, dropPctL,
+        hasAnyMove, maxAbsDrop, hasSignificantDrop, vigFreeOver, vigFreeUnder,
+        marketLambda, profile, hadInfo, formLambda, hasForm, lambdaFinal,
+        modelOver, modelUnder, bestSide, bestSideLabel, bestEdge, pickedOdds,
+        rawEvPct, tier, verdictText, reason
       };
     }
 
+    // Supports BOTH project sites (owner.github.io/repo/) AND root sites (owner.github.io/)
     function detectGithubRepo() {
       const saved = JSON.parse(localStorage.getItem(CFG_KEY) || "{}");
-      if (saved.owner && saved.repo) return saved;
+      if (saved.owner && saved.repo) return { owner: saved.owner, repo: saved.repo, branch: saved.branch || "" };
       const host = location.hostname;
       const pathSegs = location.pathname.split("/").filter(Boolean);
       if (host.endsWith(".github.io")) {
         const owner = host.replace(".github.io", "");
-        const repo = pathSegs.at(0) || "";
-        if (owner && repo) return { owner, repo };
+        const firstSeg = pathSegs.at(0) || "";
+        const isRootRepo = !firstSeg || firstSeg.endsWith(".html");
+        const repo = isRootRepo ? (owner + ".github.io") : firstSeg;
+        if (owner && repo) return { owner, repo, branch: saved.branch || "" };
       }
-      return { owner: saved.owner || "", repo: saved.repo || "" };
+      return { owner: saved.owner || "", repo: saved.repo || "", branch: saved.branch || "" };
     }
 
-    async function fetchZeroCacheCloudJson() {
-      const { owner, repo } = detectGithubRepo();
-      const cb = Date.now();
+    async function fetchImmutableJsonBySha(owner, repo, sha) {
+      // Try GitHub Raw @sha first (immutable commit hash = 0-second Fastly cache), then jsDelivr @sha fallback
+      const urls = [
+        "https://raw.githubusercontent.com/" + owner + "/" + repo + "/" + sha + "/data/hkjc_hilo.json",
+        "https://cdn.jsdelivr.net/gh/" + owner + "/" + repo + "@" + sha + "/data/hkjc_hilo.json"
+      ];
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (r.ok) return await r.json();
+        } catch (e) {}
+      }
+      return null;
+    }
+
+    async function fetchZeroCacheCloudJson(forceBust = false) {
+      const { owner, repo, branch } = detectGithubRepo();
+      const branchesToTry = branch ? [branch] : (detectedBranch ? [detectedBranch] : ["main", "master"]);
+
       if (owner && repo) {
-        try {
-          // Step A: Get latest commit SHA on main -> fetch immutable raw URL (0-second CDN cache!)
-          const shaRes = await fetch("https://api.github.com/repos/" + owner + "/" + repo + "/commits/main?per_page=1&_=" + cb, { cache: "no-store" });
-          if (shaRes.ok) {
-            const shaData = await shaRes.json();
-            if (shaData && shaData.sha) {
-              const rawShaUrl = "https://raw.githubusercontent.com/" + owner + "/" + repo + "/" + shaData.sha + "/data/hkjc_hilo.json";
-              const rawRes = await fetch(rawShaUrl, { cache: "no-store" });
-              if (rawRes.ok) return { data: await rawRes.json(), mode: "SHA零快取直連 (" + shaData.sha.slice(0, 7) + ")" };
+        // Path 1: Conditional ETag check on GitHub Commits API (304 Not Modified = 0 rate-limit cost!)
+        for (const br of branchesToTry) {
+          try {
+            const headers = { "Accept": "application/vnd.github+json" };
+            if (cachedCommitEtag && !forceBust && detectedBranch === br) {
+              headers["If-None-Match"] = cachedCommitEtag;
             }
-          }
-        } catch (e) {}
-        try {
-          const rawUrl = "https://raw.githubusercontent.com/" + owner + "/" + repo + "/main/data/hkjc_hilo.json?_=" + cb;
-          const r2 = await fetch(rawUrl, { cache: "no-store" });
-          if (r2.ok) return { data: await r2.json(), mode: "GitHub雲端直連" };
-        } catch (e) {}
+            const shaUrl = "https://api.github.com/repos/" + owner + "/" + repo + "/commits/" + br;
+            const shaRes = await fetch(shaUrl, { headers, cache: "no-store" });
+
+            if (shaRes.status === 304 && cachedCloudPayload && cachedCommitSha) {
+              return {
+                data: cachedCloudPayload,
+                mode: "ETag零配額直連 (" + cachedCommitSha.slice(0, 7) + ")",
+                sha: cachedCommitSha
+              };
+            }
+
+            if (shaRes.ok) {
+              detectedBranch = br;
+              const newEtag = shaRes.headers.get("etag") || "";
+              const shaObj = await shaRes.json();
+              const sha = shaObj && shaObj.sha ? String(shaObj.sha) : "";
+              if (sha) {
+                if (sha === cachedCommitSha && cachedCloudPayload && !forceBust) {
+                  if (newEtag) cachedCommitEtag = newEtag;
+                  return { data: cachedCloudPayload, mode: "SHA零快取同步 (" + sha.slice(0, 7) + ")", sha };
+                }
+                const freshJson = await fetchImmutableJsonBySha(owner, repo, sha);
+                if (freshJson) {
+                  cachedCommitEtag = newEtag;
+                  cachedCommitSha = sha;
+                  cachedCloudPayload = freshJson;
+                  return { data: freshJson, mode: "SHA秒級更新 (" + sha.slice(0, 7) + ")", sha };
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        // Path 2: GitHub Contents Raw API (reads directly from Git storage without Fastly 5-min CDN)
+        for (const br of branchesToTry) {
+          try {
+            const apiRaw = await fetch(
+              "https://api.github.com/repos/" + owner + "/" + repo + "/contents/data/hkjc_hilo.json?ref=" + br,
+              { headers: { "Accept": "application/vnd.github.raw+json" }, cache: "no-store" }
+            );
+            if (apiRaw.ok) {
+              const j = await apiRaw.json();
+              cachedCloudPayload = j;
+              return { data: j, mode: "Git直讀API (" + br + ")", sha: "" };
+            }
+          } catch (e) {}
+        }
+
+        // Path 3: Raw GitHub fallback
+        for (const br of branchesToTry) {
+          try {
+            const rawRes = await fetch(
+              "https://raw.githubusercontent.com/" + owner + "/" + repo + "/" + br + "/data/hkjc_hilo.json?t=" + Date.now(),
+              { cache: "no-store" }
+            );
+            if (rawRes.ok) {
+              const j = await rawRes.json();
+              cachedCloudPayload = j;
+              return { data: j, mode: "雲端Raw讀取 (" + br + ")", sha: "" };
+            }
+          } catch (e) {}
+        }
       }
-      const localRes = await fetch("./data/hkjc_hilo.json?_=" + cb, { cache: "no-store" });
-      if (localRes.ok) return { data: await localRes.json(), mode: "同源雲端檔案" };
-      throw new Error("無法讀取 data/hkjc_hilo.json");
+
+      // Path 4: Same-origin fallback (for local file testing)
+      const localRes = await fetch("./data/hkjc_hilo.json?t=" + Date.now(), { cache: "no-store" });
+      if (localRes.ok) return { data: await localRes.json(), mode: "同源檔案模式", sha: "" };
+      throw new Error("無法讀取雲端 data/hkjc_hilo.json，請點選右上角「雲端設定」確認用戶名與倉庫名。");
     }
 
-    function mergeMatchWithOddsMemory(incomingList) {
+    function mergeMatchWithOddsMemory(incomingList, cloudStamp) {
       const mem = JSON.parse(localStorage.getItem(ODDS_MEM_KEY) || "{}");
       const prevMap = new Map(matches.map(x => [x.id, x]));
       const nowMs = Date.now();
       const cutoffMs = nowMs - 2 * 60 * 1000;
-      let changedCount = 0;
+      let changedThisSync = 0;
 
       const merged = [];
       for (const item of incomingList) {
-        const id = String(item.id || item.code || "");
+        const id = String(item.id || item.code || "").trim();
         if (!id) continue;
         const koMs = Number(item.kickoffMs || item.kickoffTs || 0);
         if (koMs > 0 && koMs < cutoffMs) continue;
 
+        const curLine = String(item.line || "2.5").trim();
         const curH = parseFloat(item.oddsHigh);
         const curL = parseFloat(item.oddsLow);
-        if (isNaN(curH) || isNaN(curL) || curH < 1.15 || curL < 1.15) continue;
+        if (isNaN(curH) || isNaN(curL) || curH < 1.12 || curL < 1.12) continue;
 
-        const localEntry = mem[id] || {};
         const prevObj = prevMap.get(id) || {};
+        const localEntry = mem[id] || {};
+        const sameLocalLine = !localEntry.line || localEntry.line === curLine;
 
-        const openHigh = parseFloat(item.openHigh) || localEntry.openHigh || curH;
-        const openLow = parseFloat(item.openLow) || localEntry.openLow || curL;
-        const lastHigh = localEntry.lastHigh || curH;
-        const lastLow = localEntry.lastLow || curL;
+        // Always respect manual override ONLY if user explicitly locked it; otherwise follow live HKJC cloud odds!
+        const finalH = prevObj.manualLock ? prevObj.oddsHigh : curH;
+        const finalL = prevObj.manualLock ? prevObj.oddsLow : curL;
 
-        let history = Array.isArray(item.oddsHistory) && item.oddsHistory.length
-          ? item.oddsHistory.slice(-10)
-          : (localEntry.oddsHistory || [{ t: formatHktNow(), h: openHigh, l: openLow }]);
+        // Opening odds: prefer cloud scraper's persistent opening odds for the same line, else browser first-seen odds
+        const openHigh = parseFloat(item.openHigh) || (sameLocalLine ? localEntry.openHigh : 0) || finalH;
+        const openLow = parseFloat(item.openLow) || (sameLocalLine ? localEntry.openLow : 0) || finalL;
 
-        if (Math.abs(curH - lastHigh) >= 0.01 || Math.abs(curL - lastLow) >= 0.01) {
-          changedCount++;
-          history.push({ t: formatHktNow(), h: curH, l: curL });
-          if (history.length > 12) history = history.slice(-12);
+        const refLastH = sameLocalLine && localEntry.lastHigh ? localEntry.lastHigh : openHigh;
+        const refLastL = sameLocalLine && localEntry.lastLow ? localEntry.lastLow : openLow;
+
+        const movedNow = Math.abs(finalH - refLastH) >= 0.01 || Math.abs(finalL - refLastL) >= 0.01;
+        if (movedNow) changedThisSync++;
+
+        let history = [];
+        if (Array.isArray(item.oddsHistory) && item.oddsHistory.length) {
+          history = item.oddsHistory.slice(-14);
+        } else if (sameLocalLine && Array.isArray(localEntry.oddsHistory) && localEntry.oddsHistory.length) {
+          history = localEntry.oddsHistory.slice(-14);
+        } else {
+          history = [{ t: (cloudStamp || formatHktNow()) + " (初盤)", h: openHigh, l: openLow }];
         }
 
+        const lastHist = history.at(-1);
+        if (!lastHist || Math.abs(Number(lastHist.h) - finalH) >= 0.01 || Math.abs(Number(lastHist.l) - finalL) >= 0.01) {
+          history.push({ t: cloudStamp || formatHktNow(), h: finalH, l: finalL });
+          if (history.length > 14) history = history.slice(-14);
+        }
+
+        const prevHigh = movedNow
+          ? refLastH
+          : (parseFloat(item.prevHigh) || (sameLocalLine ? localEntry.prevHigh : 0) || openHigh);
+        const prevLow = movedNow
+          ? refLastL
+          : (parseFloat(item.prevLow) || (sameLocalLine ? localEntry.prevLow : 0) || openLow);
+
         mem[id] = {
-          openHigh, openLow,
-          prevHigh: Math.abs(curH - lastHigh) >= 0.01 ? lastHigh : (parseFloat(item.prevHigh) || localEntry.prevHigh || openHigh),
-          prevLow: Math.abs(curL - lastLow) >= 0.01 ? lastLow : (parseFloat(item.prevLow) || localEntry.prevLow || openLow),
-          lastHigh: curH, lastLow: curL,
-          oddsHistory: history, updatedAt: nowMs
+          line: curLine,
+          openHigh,
+          openLow,
+          prevHigh,
+          prevLow,
+          lastHigh: finalH,
+          lastLow: finalL,
+          justMovedAt: movedNow ? nowMs : (localEntry.justMovedAt || 0),
+          oddsHistory: history,
+          updatedAt: nowMs
         };
 
         merged.push({
           ...prevObj,
           ...item,
           id,
-          line: String(item.line || "2.5"),
-          oddsHigh: curH,
-          oddsLow: curL,
+          line: curLine,
+          oddsHigh: finalH,
+          oddsLow: finalL,
           openHigh,
           openLow,
-          prevHigh: mem[id].prevHigh,
-          prevLow: mem[id].prevLow,
+          prevHigh,
+          prevLow,
+          justMoved: movedNow || (nowMs - (mem[id].justMovedAt || 0) < 15 * 60 * 1000 && (Math.abs(finalH - prevHigh) >= 0.01 || Math.abs(finalL - prevLow) >= 0.01)),
           oddsHistory: history,
           kickoffMs: koMs,
           formGoalsAvg: typeof item.formGoalsAvg === "number" ? item.formGoalsAvg : prevObj.formGoalsAvg,
@@ -634,10 +730,9 @@
 
       localStorage.setItem(ODDS_MEM_KEY, JSON.stringify(mem));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-      return { merged, changedCount };
+      return { merged, changedThisSync };
     }
 
-    // Align ESPN Global Leagues (MLS, UCL, Top 5, Liga MX, Brazil, Argentina, J1, A-League)
     async function syncGlobalTeamForm() {
       const pill = document.getElementById("espnPill");
       const leagues = "eng.1,esp.1,ger.1,ita.1,fra.1,usa.1,mex.1,bra.1,arg.1,jpn.1,aus.1,ned.1,por.1,sco.1,tur.1,uefa.champions,uefa.europa,afc.champions".split(",");
@@ -686,32 +781,43 @@
       }
       if (pill) {
         pill.className = "feed-pill ok";
-        pill.textContent = "跨彩池+賽程校準：全場次就緒 (外源對齊 " + aligned + " 場)";
+        pill.textContent = "跨彩池+賽程：已對齊 " + aligned + " 場";
       }
       renderAll();
     }
 
     async function syncNow(manual = false) {
       const hkjcPill = document.getElementById("hkjcPill");
+      const cloudTimePill = document.getElementById("cloudTimePill");
       try {
-        if (manual) addLog("正在透過 GitHub Commit SHA 零快取直連最新馬會賠率...");
-        const { data, mode } = await fetchZeroCacheCloudJson();
+        if (manual) addLog("手動強制刷新：正在繞過快取讀取最新 GitHub Commit SHA 賠率...");
+        const { data, mode } = await fetchZeroCacheCloudJson(manual);
         const rawList = Array.isArray(data) ? data : (data.matches || []);
-        const { merged, changedCount } = mergeMatchWithOddsMemory(rawList);
+        const cloudHkt = data.updatedAtHkt || formatHktNow();
+        const cloudIso = data.updatedAtIso || "";
+        const cloudChanged = Number(data.oddsChangedCount || 0);
+
+        const { merged, changedThisSync } = mergeMatchWithOddsMemory(rawList, cloudHkt);
         matches = merged;
 
         if (!selectedId && matches.length > 0) selectedId = matches.at(0).id;
-        const updStr = data.updatedAtHkt || formatHktNow();
+
         hkjcPill.className = "feed-pill ok";
-        hkjcPill.textContent = "馬會雲端：" + matches.length + " 場正盤 (" + mode + ")";
-        document.getElementById("lastSyncLabel").textContent = "雲端數據時間：" + updStr;
-        addLog("同步完成：載入 " + matches.length + " 場未開賽正盤，本輪偵測賠率變動 " + changedCount + " 場 (" + mode + ")");
+        hkjcPill.textContent = "馬會雲端：" + matches.length + " 場 (" + mode + ")";
+
+        cloudTimePill.className = "feed-pill ok";
+        cloudTimePill.textContent = "馬會抓盤：" + cloudHkt + (cloudChanged > 0 ? " (雲端變盤" + cloudChanged + "場)" : "");
+
+        if (manual || cloudIso !== lastCloudUpdatedIso || changedThisSync > 0) {
+          lastCloudUpdatedIso = cloudIso;
+          addLog("跟盤成功 [" + mode + "]：馬會抓盤時間 " + cloudHkt + "，共 " + matches.length + " 場正盤，本頁偵測新變盤 " + changedThisSync + " 場（雲端本輪變盤 " + cloudChanged + " 場）。");
+          syncGlobalTeamForm();
+        }
         renderAll();
-        syncGlobalTeamForm();
       } catch (err) {
         hkjcPill.className = "feed-pill err";
-        hkjcPill.textContent = "馬會雲端：讀取失敗 (使用本地快取)";
-        addLog("雲端讀取提示：" + err.message);
+        hkjcPill.textContent = "馬會雲端：連線異常";
+        addLog("雲端讀取錯誤：" + err.message);
         renderAll();
       }
       countdown = syncIntervalSec;
@@ -719,7 +825,7 @@
 
     function setStrategyMode(mode) {
       strategyMode = mode;
-      localStorage.setItem("hkjc_v18_mode", mode);
+      localStorage.setItem("hkjc_v19_mode", mode);
       "strict,standard,active".split(",").forEach(k => {
         const el = document.getElementById("modeBtn_" + k);
         if (el) el.classList.toggle("active", k === mode);
@@ -729,7 +835,7 @@
 
     function setDropThreshold(val) {
       dropThreshold = parseFloat(val) || 3.0;
-      localStorage.setItem("hkjc_v18_drop", String(dropThreshold));
+      localStorage.setItem("hkjc_v19_drop", String(dropThreshold));
       renderAll();
     }
 
@@ -748,9 +854,10 @@
     }
 
     function formatOddMove(openVal, curVal) {
-      const diffPct = openVal > 1.01 ? ((openVal - curVal) / openVal) * 100 : 0;
-      if (diffPct >= 0.8) return '<span class="odd-down">▼' + diffPct.toFixed(1) + '%</span>';
-      if (diffPct <= -0.8) return '<span class="odd-up">▲' + Math.abs(diffPct).toFixed(1) + '%</span>';
+      const diff = openVal - curVal;
+      const diffPct = openVal > 1.01 ? (diff / openVal) * 100 : 0;
+      if (diff >= 0.01) return '<span class="odd-down">▼' + diffPct.toFixed(1) + '%</span>';
+      if (diff <= -0.01) return '<span class="odd-up">▲' + Math.abs(diffPct).toFixed(1) + '%</span>';
       return '<span style="color:var(--text-muted);font-size:0.68rem;">持平</span>';
     }
 
@@ -759,10 +866,12 @@
       matches = matches.filter(m => !m.kickoffMs || m.kickoffMs > nowMs - 120000);
 
       const evaluated = matches.map(m => ({ m, ev: evaluateMatch(m) }));
+      const dropOrMovedCount = evaluated.filter(x => x.ev.hasSignificantDrop || x.ev.hasAnyMove).length;
+
       document.getElementById("kpiTotal").textContent = evaluated.length;
       document.getElementById("kpiBet").textContent = evaluated.filter(x => x.ev.tier === "bet").length;
       document.getElementById("kpiHold").textContent = evaluated.filter(x => x.ev.tier === "hold").length;
-      document.getElementById("kpiDrop").textContent = evaluated.filter(x => x.ev.hasSignificantDrop).length;
+      document.getElementById("kpiDrop").textContent = evaluated.filter(x => x.ev.hasSignificantDrop).length + " / " + dropOrMovedCount;
       document.getElementById("kpiPass").textContent = evaluated.filter(x => x.ev.tier === "pass").length;
 
       const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
@@ -772,6 +881,7 @@
         if (activeFilter === "bet" && ev.tier !== "bet") return false;
         if (activeFilter === "hold" && ev.tier !== "hold") return false;
         if (activeFilter === "pass" && ev.tier !== "pass") return false;
+        if (activeFilter === "moved" && !ev.hasAnyMove) return false;
         if (activeFilter === "drop" && !ev.hasSignificantDrop) return false;
         if (activeFilter === "over" && ev.bestSide !== "OVER") return false;
         if (activeFilter === "under" && ev.bestSide !== "UNDER") return false;
@@ -815,11 +925,16 @@
         }
         const vClass = ev.tier === "bet" ? "v-bet" : (ev.tier === "hold" ? "v-hold" : "v-pass");
         const isSel = m.id === selectedId ? " selected" : "";
-        const dropTag = ev.hasSignificantDrop
-          ? '<span class="tele-tag drop">🔥 ' + (ev.dropPctH >= ev.dropPctL ? '大盤落飛 ▼' + ev.dropPctH.toFixed(1) : '細盤落飛 ▼' + ev.dropPctL.toFixed(1)) + '%</span>'
-          : '<span class="tele-tag">初盤 ' + ev.openH.toFixed(2) + ' / ' + ev.openL.toFixed(2) + '</span>';
+        const movedCls = ev.hasAnyMove ? " just-moved" : "";
 
-        html += '<div class="match-card' + isSel + '" onclick="selectMatch(\'' + m.id + '\')">' +
+        let moveTag = '<span class="tele-tag">初盤 ' + ev.openH.toFixed(2) + ' / ' + ev.openL.toFixed(2) + '</span>';
+        if (ev.hasSignificantDrop) {
+          moveTag = '<span class="tele-tag drop">🔥 ' + (ev.dropPctH >= ev.dropPctL ? '大盤落飛 ' + ev.openH.toFixed(2) + '→' + ev.oddsH.toFixed(2) + ' (▼' + ev.dropPctH.toFixed(1) + '%)' : '細盤落飛 ' + ev.openL.toFixed(2) + '→' + ev.oddsL.toFixed(2) + ' (▼' + ev.dropPctL.toFixed(1) + '%)') + '</span>';
+        } else if (ev.hasAnyMove) {
+          moveTag = '<span class="tele-tag good">🔄 變盤：大 ' + ev.openH.toFixed(2) + '→' + ev.oddsH.toFixed(2) + ' ｜ 細 ' + ev.openL.toFixed(2) + '→' + ev.oddsL.toFixed(2) + '</span>';
+        }
+
+        html += '<div class="match-card' + isSel + movedCls + '" onclick="selectMatch(\'' + m.id + '\')">' +
           '<div class="card-top">' +
             '<div><span class="ko-badge">🕒 ' + formatKickoffHkt(m.kickoffMs) + '</span><span class="fb-code">' + m.id + '</span><span>' + (m.league || "足球賽事") + '</span></div>' +
             '<span class="line-pill">球線 ' + ev.lineStr + '</span>' +
@@ -835,7 +950,7 @@
             '<div><span class="m-label">最高去水優勢</span><span class="m-val" style="color:' + (ev.bestEdge >= 1.5 ? '#34d399' : '#e2e8f0') + ';">' + (ev.bestEdge >= 0 ? '+' : '') + ev.bestEdge.toFixed(1) + '%</span></div>' +
           '</div>' +
           '<div class="live-telemetry">' +
-            dropTag +
+            moveTag +
             '<span class="tele-tag sofa">' + ev.profile.tag + '</span>' +
             '<span class="tele-tag">' + ev.hadInfo.note + '</span>' +
           '</div>' +
@@ -862,8 +977,8 @@
       const ev = evaluateMatch(m);
       const vClass = ev.tier === "bet" ? "v-bet" : (ev.tier === "hold" ? "v-hold" : "v-pass");
       const histHtml = (m.oddsHistory || []).slice().reverse().map(h =>
-        '<div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(148,163,184,0.12);padding:2px 0;">' +
-        '<span>' + h.t + '</span><span>大 ' + Number(h.h).toFixed(2) + ' / 細 ' + Number(h.l).toFixed(2) + '</span></div>'
+        '<div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(148,163,184,0.12);padding:3px 0;">' +
+        '<span>' + h.t + '</span><span>大 <strong>' + Number(h.h).toFixed(2) + '</strong> / 細 <strong>' + Number(h.l).toFixed(2) + '</strong></span></div>'
       ).join("") || "<div>等待下輪變盤紀錄...</div>";
 
       panel.innerHTML =
@@ -873,7 +988,7 @@
           '<span class="verdict-badge ' + vClass + '">' + ev.verdictText + '</span>' +
         '</div>' +
 
-        '<div class="section-title">五大實戰量化支柱分解（已剔除失真天氣及人手正選核對）</div>' +
+        '<div class="section-title">五大實戰量化支柱分解（即時跟隨馬會變盤重算）</div>' +
         '<div class="factor-box">' +
           '<div class="factor-row"><span>1. 主客和×大細跨彩池精算 (權重 30%)</span><strong>' + ev.hadInfo.lambda.toFixed(2) + ' 球</strong></div>' +
           '<div class="factor-row"><span>2. 馬會賠率落飛動能 (權重 25%・門檻 ' + dropThreshold.toFixed(1) + '%)</span><strong style="color:' + (ev.hasSignificantDrop ? '#fda4af' : '#cbd5e1') + ';">大 ' + (ev.dropPctH >= 0 ? '▼' : '▲') + Math.abs(ev.dropPctH).toFixed(1) + '% / 細 ' + (ev.dropPctL >= 0 ? '▼' : '▲') + Math.abs(ev.dropPctL).toFixed(1) + '%</strong></div>' +
@@ -883,7 +998,7 @@
           '<div class="factor-row"><span>推薦方向去水優勢 / 原始期望值</span><strong style="color:#34d399;">' + (ev.bestEdge >= 0 ? '+' : '') + ev.bestEdge.toFixed(2) + '% / ' + (ev.rawEvPct >= 0 ? '+' : '') + ev.rawEvPct.toFixed(1) + '%</strong></div>' +
         '</div>' +
 
-        '<div class="section-title">即時賠率與初盤落飛追蹤（可直接手動微調測試落飛）</div>' +
+        '<div class="section-title">初盤 vs 最新馬會賠率時間軸（每 3 分鐘自動雲端巡檢）</div>' +
         '<div class="factor-box">' +
           '<div class="odds-grid">' +
             '<div class="odds-cell"><label>初盤「大」賠率</label><input type="number" step="0.01" value="' + ev.openH.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'openHigh\', this.value)" /></div>' +
@@ -891,7 +1006,8 @@
             '<div class="odds-cell"><label>最新「大」賠率 (' + ev.lineStr + ')</label><input type="number" step="0.01" value="' + ev.oddsH.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'oddsHigh\', this.value)" /></div>' +
             '<div class="odds-cell"><label>最新「細」賠率 (' + ev.lineStr + ')</label><input type="number" step="0.01" value="' + ev.oddsL.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'oddsLow\', this.value)" /></div>' +
           '</div>' +
-          '<div style="margin-top:9px;font-size:0.73rem;color:#93c5fd;font-weight:700;">賠率變動時間軸：</div>' +
+          (m.manualLock ? '<div style="margin-top:6px;"><button class="btn-outline" style="padding:4px 9px;font-size:0.72rem;" onclick="unlockManualOdds(\'' + m.id + '\')">🔓 解除手動鎖定，恢復自動跟隨馬會雲端賠率</button></div>' : '') +
+          '<div style="margin-top:9px;font-size:0.73rem;color:#93c5fd;font-weight:700;">馬會賠率變動時間軸：</div>' +
           '<div class="history-list">' + histHtml + '</div>' +
         '</div>' +
 
@@ -909,14 +1025,16 @@
       const num = parseFloat(val);
       if (isNaN(num) || num <= 1.01) return;
       m[field] = num;
-      const mem = JSON.parse(localStorage.getItem(ODDS_MEM_KEY) || "{}");
-      mem[id] = mem[id] || {};
-      mem[id][field] = num;
-      if (field === "oddsHigh") mem[id].lastHigh = num;
-      if (field === "oddsLow") mem[id].lastLow = num;
-      localStorage.setItem(ODDS_MEM_KEY, JSON.stringify(mem));
+      if (field === "oddsHigh" || field === "oddsLow") m.manualLock = true;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
       renderAll();
+    }
+
+    function unlockManualOdds(id) {
+      const m = matches.find(x => x.id === id);
+      if (!m) return;
+      m.manualLock = false;
+      syncNow(true);
     }
 
     function toggleCtx(id, key, checked) {
@@ -928,7 +1046,7 @@
     }
 
     function changeInterval(sec) {
-      syncIntervalSec = parseInt(sec, 10) || 90;
+      syncIntervalSec = parseInt(sec, 10) || 45;
       countdown = syncIntervalSec;
     }
 
@@ -936,6 +1054,7 @@
       const cfg = detectGithubRepo();
       document.getElementById("cfgOwner").value = cfg.owner || "";
       document.getElementById("cfgRepo").value = cfg.repo || "";
+      document.getElementById("cfgBranch").value = cfg.branch || detectedBranch || "main";
       document.getElementById("cloudModal").classList.add("show");
     }
     function openPasteModal() { document.getElementById("pasteModal").classList.add("show"); }
@@ -945,7 +1064,10 @@
     function saveCloudConfig() {
       const owner = document.getElementById("cfgOwner").value.trim();
       const repo = document.getElementById("cfgRepo").value.trim();
-      localStorage.setItem(CFG_KEY, JSON.stringify({ owner, repo }));
+      const branch = document.getElementById("cfgBranch").value.trim();
+      localStorage.setItem(CFG_KEY, JSON.stringify({ owner, repo, branch }));
+      cachedCommitEtag = "";
+      cachedCommitSha = "";
       closeModals();
       syncNow(true);
     }
@@ -964,11 +1086,17 @@
           const l = parseFloat(floats.at(1));
           const ex = matches.find(x => x.id === code);
           if (ex) {
-            ex.oddsHigh = h; ex.oddsLow = l; count++;
+            ex.prevHigh = ex.oddsHigh;
+            ex.prevLow = ex.oddsLow;
+            ex.oddsHigh = h;
+            ex.oddsLow = l;
+            ex.oddsHistory = ex.oddsHistory || [];
+            ex.oddsHistory.push({ t: formatHktNow() + " (貼上)", h, l });
+            count++;
           }
         }
       }
-      addLog("手動貼上更新完成：已更新 " + count + " 場賽事賠率。");
+      addLog("手動貼上更新完成：已即時更新 " + count + " 場賽事賠率。");
       closeModals();
       renderAll();
     }
@@ -983,7 +1111,8 @@
       const oddsLow = parseFloat(document.getElementById("addLow").value) || 1.85;
       matches.unshift({
         id, league, home, away, line, oddsHigh, oddsLow,
-        openHigh: oddsHigh, openLow: oddsLow, kickoffMs: Date.now() + 3600000 * 4,
+        openHigh: oddsHigh, openLow: oddsLow, prevHigh: oddsHigh, prevLow: oddsLow,
+        kickoffMs: Date.now() + 3600000 * 4,
         oddsHistory: [{ t: formatHktNow(), h: oddsHigh, l: oddsLow }]
       });
       selectedId = id;
@@ -994,7 +1123,9 @@
 
     function hardResetCache() {
       localStorage.removeItem(STORAGE_KEY);
-      location.href = location.pathname + "?v=18&t=" + Date.now();
+      cachedCommitEtag = "";
+      cachedCommitSha = "";
+      location.href = location.pathname + "?v=19&t=" + Date.now();
     }
 
     function init() {
