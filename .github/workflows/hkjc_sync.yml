@@ -1,4 +1,4 @@
-name: HKJC HiLo 2.5 Auto Sync
+name: HKJC HiLo Live Odds & Drop Sync (v18)
 
 on:
   schedule:
@@ -12,17 +12,21 @@ on:
 permissions:
   contents: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+concurrency:
+  group: hkjc-hilo-sync
+  cancel-in-progress: true
 
 jobs:
-  scrape-hkjc-and-sofascore:
+  sync-hkjc:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -32,16 +36,18 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Run HKJC full-slate and dropping-odds collector
+      - name: Scrape Full HKJC Slate & Track Dropping Odds
         run: python hkjc_scraper.py
 
-      - name: Pull latest changes and commit JSON feed
+      - name: Commit & Push Updated Odds Without Blocking Manual Edits
         run: |
           git config user.name "hkjc-sync-bot"
-          git config user.email "hkjc-sync-bot@users.noreply.github.com"
+          git config user.email "actions@github.com"
           git add data/hkjc_hilo.json
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: auto-sync full HKJC HiLo slate and live odds drops"
-            git pull --rebase origin main || git pull --rebase || true
-            git push
+          if git diff --staged --quiet; then
+            echo "No odds changes detected in this cycle."
+          else
+            git commit -m "Auto-sync HKJC HiLo odds & drops (v18)"
+            git pull --rebase -X theirs origin main
+            git push origin main
           fi
