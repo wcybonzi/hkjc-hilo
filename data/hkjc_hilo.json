@@ -1,5 +1,5 @@
 {
-  "updatedAtHkt": "2026-11-25T09:51:23+08:00",
+  "updatedAtHkt": "2026-11-25T10:15:26+08:00",
   "matchCount": 72,
   "kickoffResolvedCount": 72,
   "oddsMovedCount": 1,
@@ -14,19 +14,19 @@
       "kickoffIso": "2026-11-25T11:00:00+08:00",
       "goalLine": 2.5,
       "lineLabel": "2.5",
-      "oddsHigh": 1.64,
-      "oddsLow": 2.12,
-      "hadHome": 1.79,
-      "hadDraw": 3.4,
-      "hadAway": 3.6,
+      "oddsHigh": 1.62,
+      "oddsLow": 2.15,
+      "hadHome": 1.76,
+      "hadDraw": 3.45,
+      "hadAway": 3.65,
       "isInPlay": false,
       "sofaMatched": false,
       "openHigh": 1.68,
       "openLow": 2.05,
-      "prevHigh": 1.68,
-      "prevLow": 2.05,
-      "dropHighPct": 2.38,
-      "dropLowPct": -3.41,
+      "prevHigh": 1.64,
+      "prevLow": 2.12,
+      "dropHighPct": 3.57,
+      "dropLowPct": -4.88,
       "oddsHistory": [
         {
           "t": "初盤",
@@ -37,6 +37,11 @@
           "t": "25/11 09:51",
           "h": 1.64,
           "l": 2.12
+        },
+        {
+          "t": "25/11 10:15",
+          "h": 1.62,
+          "l": 2.15
         }
       ]
     },
