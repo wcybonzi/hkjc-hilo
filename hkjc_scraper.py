@@ -11,6 +11,7 @@ from playwright.async_api import async_playwright
 HKT = timezone(timedelta(hours=8))
 HKJC_HILO_CH_URL = "https://bet.hkjc.com/ch/football/hil"
 HKJC_HILO_EN_URL = "https://bet.hkjc.com/en/football/hil"
+HKJC_HAD_CH_URL = "https://bet.hkjc.com/ch/football/had"
 HKJC_GQL_URL = "https://info.cld.hkjc.com/graphql/base/"
 OUTPUT_PATH = "data/hkjc_hilo.json"
 
@@ -24,9 +25,10 @@ WEEKDAY_MAP = {
     "周日": 6, "星期日": 6, "SUN": 6,
 }
 
-DIRECT_GQL_QUERY = """
-query matchList($startDate: String, $endDate: String, $fbOddsTypes: [FBOddsType]!, $fbOddsTypesM: [FBOddsType]!, $inplayOnly: Boolean) {
-  matches(startDate: $startDate, endDate: $endDate, fbOddsTypes: $fbOddsTypes, fbOddsTypesM: $fbOddsTypesM, inplayOnly: $inplayOnly) {
+# 備援直接分頁 GraphQL 查詢（同時支援 startIndex / endIndex 分頁與多球線 HIL + HAD）
+FALLBACK_PAGINATED_GQL = """
+query matchList($startIndex: Int, $endIndex: Int, $startDate: String, $endDate: String, $fbOddsTypes: [FBOddsType]!, $fbOddsTypesM: [FBOddsType]!, $inplayOnly: Boolean) {
+  matches(startIndex: $startIndex, endIndex: $endIndex, startDate: $startDate, endDate: $endDate, fbOddsTypes: $fbOddsTypes, fbOddsTypesM: $fbOddsTypesM, inplayOnly: $inplayOnly) {
     id
     frontEndId
     matchDate
@@ -35,7 +37,7 @@ query matchList($startDate: String, $endDate: String, $fbOddsTypes: [FBOddsType]
     homeTeam { name_en name_ch }
     awayTeam { name_en name_ch }
     tournament { name_en name_ch }
-    foPools(fbOddsTypes: $fbOddsTypes) {
+    foPools(fbOddsTypes: $fbOddsTypesM) {
       id
       oddsType
       status
@@ -61,6 +63,24 @@ def at(seq, idx, default=None):
     if not seq or idx < 0:
         return default
     return next(islice(seq, idx, None), default)
+
+
+def load_previous_snapshot() -> dict:
+    """讀取上一輪 data/hkjc_hilo.json，永久保留初盤 (openHigh/openLow)、前次賠率與賠率歷史軌跡"""
+    prev_map = {}
+    if not os.path.exists(OUTPUT_PATH):
+        return prev_map
+    try:
+        with open(OUTPUT_PATH, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+        items = raw if isinstance(raw, list) else (raw.get("matches") or [])
+        for it in items:
+            code = it.get("code")
+            if code:
+                prev_map[code] = it
+    except Exception as exc:
+        print(f"Previous snapshot read notice: {exc}")
+    return prev_map
 
 
 def resolve_year_for_month(mm_int: int) -> int:
@@ -97,7 +117,6 @@ def normalize_hkjc_kickoff(raw_val, fallback_date="") -> str:
     s = str(raw_val).strip()
     if not s:
         return ""
-
     s_norm = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", s)
 
     if re.search(r"\d{4}-\d{2}-\d{2}[T\s]+\d{1,2}:\d{2}", s_norm):
@@ -197,18 +216,26 @@ def extract_fb_code(node: dict) -> str:
     return ""
 
 
-def is_exact_25_condition(cond_raw) -> bool:
+def parse_goal_line_condition(cond_raw):
+    """解析馬會所有入球大細球線（例如 '2.5', '2.0/2.5', '2.5/3.0', '3.0/3.5', '1.5/2.0'），回傳 (數值, 顯示標籤)"""
     s = str(cond_raw or "").strip()
-    if s in ("2.5", "2.50", "2.5/2.5", "2.50/2.50"):
-        return True
+    if not s:
+        return None, ""
     parts = [p.strip() for p in s.split("/") if p.strip()]
-    if not parts:
-        return False
     try:
         vals = [float(p) for p in parts]
-        return all(abs(v - 2.5) < 0.01 for v in vals)
+        avg_line = round(sum(vals) / len(vals), 2)
+        if 1.5 <= avg_line <= 4.5:
+            if len(vals) == 2 and abs(at(vals, 0) - at(vals, 1)) > 0.05:
+                label = f"{at(vals, 0):.1f}/{at(vals, 1):.1f}"
+            else:
+                label = f"{avg_line:g}"
+                if "." not in label:
+                    label = f"{avg_line:.1f}"
+            return avg_line, label
     except ValueError:
-        return False
+        pass
+    return None, ""
 
 
 def is_status_started_or_ended(node: dict) -> bool:
@@ -244,20 +271,27 @@ def team_similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, na, nb).ratio()
 
 
-logged_sample = False
+def choose_best_hil_line(candidates: list):
+    """優先選取純 2.5 球線；若馬會該場僅開 2.0/2.5 或 2.5/3.0 等球線，自動選最接近 2.5 之正盤而不漏場"""
+    if not candidates:
+        return None
+    candidates_sorted = sorted(
+        candidates,
+        key=lambda x: (0 if abs(x.get("goalLine", 0) - 2.5) < 0.01 else 1, abs(x.get("goalLine", 0) - 2.5), 0 if x.get("isMain") else 1),
+    )
+    return at(candidates_sorted, 0)
 
 
 def collect_hkjc_graphql(
     payload,
     match_meta: dict,
     kickoff_by_key: dict,
-    hilo_map: dict,
+    hilo_candidates_map: dict,
     had_map: dict,
     started_keys: set,
     parent_id: str = "",
     parent_fb: str = "",
 ):
-    global logged_sample
     if isinstance(payload, dict):
         own_fb = extract_fb_code(payload)
         is_match_node = isinstance(payload.get("homeTeam"), dict) and isinstance(payload.get("awayTeam"), dict)
@@ -278,12 +312,6 @@ def collect_hkjc_graphql(
                     kickoff_by_key[k] = ko_here
 
         if is_match_node:
-            if not logged_sample:
-                print(
-                    f"Sample HKJC FootballMatch keys: {list(payload.keys())} | "
-                    f"kickOffTime={payload.get('kickOffTime')} | status={payload.get('status')} | fb={cur_fb}"
-                )
-                logged_sample = True
             h_obj, a_obj = payload.get("homeTeam") or {}, payload.get("awayTeam") or {}
             t_obj = payload.get("tournament") or {}
             ko_iso = ko_here or kickoff_by_key.get(cur_id) or kickoff_by_key.get(cur_fb) or ""
@@ -305,9 +333,15 @@ def collect_hkjc_graphql(
         odds_type = str(payload.get("oddsType") or "").upper()
         owner_keys = [str(payload.get("matchId") or ""), cur_fb, cur_id]
 
-        if odds_type == "HIL":
-            for line in payload.get("lines") or []:
-                if is_exact_25_condition(line.get("condition")):
+        if odds_type in ("HIL", "CHL"):
+            if odds_type == "HIL":
+                for line in payload.get("lines") or []:
+                    line_st = str(line.get("status") or "AVAILABLE").upper()
+                    if line_st in ("CLOSED", "SUSPENDED", "UNAVAILABLE"):
+                        continue
+                    g_val, g_label = parse_goal_line_condition(line.get("condition"))
+                    if g_val is None:
+                        continue
                     h_val, l_val = None, None
                     combs = line.get("combinations") or []
                     for c in combs:
@@ -324,10 +358,20 @@ def collect_hkjc_graphql(
                         v2 = c_second.get("currentOdds") or c_second.get("odds")
                         if v1 and v2:
                             h_val, l_val = float(v1), float(v2)
-                    if h_val and l_val and 1.18 <= h_val <= 4.80 and 1.18 <= l_val <= 4.80:
+                    if h_val and l_val and 1.15 <= h_val <= 5.20 and 1.15 <= l_val <= 5.20:
+                        cand_obj = {
+                            "goalLine": g_val,
+                            "lineLabel": g_label,
+                            "oddsHigh": h_val,
+                            "oddsLow": l_val,
+                            "isMain": bool(line.get("main")),
+                        }
                         for ok in owner_keys:
                             if ok:
-                                hilo_map[ok] = (h_val, l_val)
+                                lst = hilo_candidates_map.setdefault(ok, [])
+                                lst = [x for x in lst if x.get("lineLabel") != g_label]
+                                lst.append(cand_obj)
+                                hilo_candidates_map[ok] = lst
 
         elif odds_type == "HAD":
             for line in payload.get("lines") or []:
@@ -348,41 +392,84 @@ def collect_hkjc_graphql(
                             had_map[ok] = (hm, dr, aw)
 
         for v in payload.values():
-            collect_hkjc_graphql(v, match_meta, kickoff_by_key, hilo_map, had_map, started_keys, cur_id, cur_fb)
+            collect_hkjc_graphql(v, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys, cur_id, cur_fb)
     elif isinstance(payload, list):
         for item in payload:
-            collect_hkjc_graphql(item, match_meta, kickoff_by_key, hilo_map, had_map, started_keys, parent_id, parent_fb)
+            collect_hkjc_graphql(item, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys, parent_id, parent_fb)
 
 
-async def query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_map, had_map, started_keys):
+async def replay_intercepted_pagination(context, captured_gql_reqs: list, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys):
+    """重播馬會真實發出的 GraphQL 請求並自動延伸分頁 (1..300) 與 8 天日期範圍，抓齊全部賽事"""
     now_hkt = datetime.now(HKT)
     start_str = now_hkt.strftime("%Y-%m-%d")
-    end_str = (now_hkt + timedelta(days=7)).strftime("%Y-%m-%d")
-    variables = {
-        "startDate": start_str,
-        "endDate": end_str,
-        "fbOddsTypes": ["HIL", "HAD"],
-        "fbOddsTypesM": ["HIL", "HAD"],
-        "inplayOnly": False,
-    }
-    try:
-        resp = await context.request.post(
-            HKJC_GQL_URL,
-            headers={
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Origin": "https://bet.hkjc.com",
-                "Referer": "https://bet.hkjc.com/",
-            },
-            data=json.dumps({"query": DIRECT_GQL_QUERY, "variables": variables}),
-            timeout=15000,
-        )
-        if resp.status == 200:
-            data = await resp.json()
-            collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
-            print(f"Direct HKJC GraphQL query succeeded: {len(hilo_map)} HIL 2.5 entries.")
-    except Exception as exc:
-        print(f"Direct HKJC GraphQL query notice: {exc}")
+    end_str = (now_hkt + timedelta(days=8)).strftime("%Y-%m-%d")
+
+    # 1. 若攔截到馬會前端簽發之真實 GraphQL 查詢範本，沿用其查詢結構進行分頁擴展
+    for req_tpl in captured_gql_reqs[:3]:
+        q_str = req_tpl.get("query") or ""
+        base_vars = dict(req_tpl.get("variables") or {})
+        hdrs = dict(req_tpl.get("headers") or {})
+        url = req_tpl.get("url") or HKJC_GQL_URL
+        if "matches" not in q_str and "foPools" not in q_str:
+            continue
+
+        page_ranges = [(1, 100), (101, 200), (201, 300)]
+        for s_idx, e_idx in page_ranges:
+            vars_copy = dict(base_vars)
+            if "startIndex" in vars_copy or "startIndex" in q_str:
+                vars_copy["startIndex"] = s_idx
+                vars_copy["endIndex"] = e_idx
+            if "startDate" in vars_copy:
+                vars_copy["startDate"] = start_str
+            if "endDate" in vars_copy:
+                vars_copy["endDate"] = end_str
+            if "inplayOnly" in vars_copy:
+                vars_copy["inplayOnly"] = False
+            try:
+                clean_hdrs = {
+                    k: v for k, v in hdrs.items()
+                    if k.lower() not in ("content-length", "host", "connection")
+                }
+                resp = await context.request.post(
+                    url,
+                    headers=clean_hdrs,
+                    data=json.dumps({"query": q_str, "variables": vars_copy}),
+                    timeout=15000,
+                )
+                if resp.status == 200:
+                    data = await resp.json()
+                    collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys)
+            except Exception:
+                continue
+
+    # 2. 同時執行標準 1..300 分頁 GraphQL 補齊
+    for s_idx, e_idx in [(1, 100), (101, 200), (201, 300)]:
+        variables = {
+            "startIndex": s_idx,
+            "endIndex": e_idx,
+            "startDate": start_str,
+            "endDate": end_str,
+            "fbOddsTypes": ["HIL", "HAD"],
+            "fbOddsTypesM": ["HIL", "HAD"],
+            "inplayOnly": False,
+        }
+        try:
+            resp = await context.request.post(
+                HKJC_GQL_URL,
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Origin": "https://bet.hkjc.com",
+                    "Referer": "https://bet.hkjc.com/",
+                },
+                data=json.dumps({"query": FALLBACK_PAGINATED_GQL, "variables": variables}),
+                timeout=15000,
+            )
+            if resp.status == 200:
+                data = await resp.json()
+                collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys)
+        except Exception:
+            continue
 
 
 async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
@@ -402,7 +489,7 @@ async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
                         if (dm) lastDateBanner = dm.at(0);
                     }
                     const fbMatches = txt.match(/FB\\d{4}/g);
-                    if (fbMatches && fbMatches.length === 1 && txt.length >= 16 && txt.length <= 580) {
+                    if (fbMatches && fbMatches.length === 1 && txt.length >= 16 && txt.length <= 650) {
                         if (/\\d+\\.\\d{2}/.test(txt) || /\\d{1,2}:\\d{2}/.test(txt)) {
                             out.push({ code: fbMatches.at(0), rowText: txt, bannerDate: lastDateBanner });
                         }
@@ -428,20 +515,46 @@ async def harvest_dom_rows_at_scroll(page, dom_row_store: dict):
         pass
 
 
-async def scroll_and_harvest(page, dom_row_store: dict, steps: int = 7):
+async def expand_and_scroll_full_page(page, dom_row_store: dict, max_steps: int = 28):
+    """自動展開折疊面板並深度捲動最多 28 步，直至頁面底部所有馬會賽事全數載入"""
+    try:
+        await page.evaluate(
+            """() => {
+                document.querySelectorAll('button, div, span').forEach(el => {
+                    const t = (el.innerText || '').trim();
+                    if (t === '顯示更多' || t === '更多賽事' || t === '全部顯示') {
+                        try { el.click(); } catch (_) {}
+                    }
+                });
+            }"""
+        )
+    except Exception:
+        pass
+
     await harvest_dom_rows_at_scroll(page, dom_row_store)
-    for _ in range(steps):
+    stagnant_rounds = 0
+    prev_count = len(dom_row_store)
+
+    for _ in range(max_steps):
         try:
             await page.evaluate(
                 """() => {
-                    window.scrollBy(0, 1000);
+                    window.scrollBy(0, 1300);
                     document.querySelectorAll('div, main, section').forEach(el => {
-                        if (el.scrollHeight > el.clientHeight + 200) el.scrollTop += 1000;
+                        if (el.scrollHeight > el.clientHeight + 250) el.scrollTop += 1300;
                     });
                 }"""
             )
-            await page.wait_for_timeout(900)
+            await page.wait_for_timeout(750)
             await harvest_dom_rows_at_scroll(page, dom_row_store)
+            cur_count = len(dom_row_store)
+            if cur_count == prev_count:
+                stagnant_rounds += 1
+                if stagnant_rounds >= 5:
+                    break
+            else:
+                stagnant_rounds = 0
+                prev_count = cur_count
         except Exception:
             break
 
@@ -481,12 +594,12 @@ async def enrich_with_sofascore(context, matches_list: list):
     try:
         try:
             await sofa_page.goto("https://www.sofascore.com/", wait_until="domcontentloaded", timeout=15000)
-            await sofa_page.wait_for_timeout(1200)
+            await sofa_page.wait_for_timeout(1000)
         except Exception:
             pass
 
         now_utc = datetime.now(timezone.utc)
-        date_strs = [(now_utc + timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, 4)]
+        date_strs = [(now_utc + timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, 5)]
         schedule_paths = [
             f"/api/v1/sport/football/scheduled-events/{ds}{suffix}"
             for ds in date_strs
@@ -498,18 +611,16 @@ async def enrich_with_sofascore(context, matches_list: list):
             if payload and isinstance(payload.get("events"), list):
                 sofa_events.extend(payload.get("events"))
 
-        print(f"SofaScore loaded {len(sofa_events)} global events.")
         if not sofa_events:
             return
 
-        sem = asyncio.Semaphore(5)
+        sem = asyncio.Semaphore(6)
 
         async def enrich_single_match(m: dict, ev_id: int):
             async with sem:
-                pf, st_data, lu = await asyncio.gather(
+                pf, st_data = await asyncio.gather(
                     fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/pregame-form"),
                     fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/team-streaks"),
-                    fetch_sofa_dual_host(context, f"/api/v1/event/{ev_id}/lineups"),
                 )
                 form_lambda = None
                 if pf:
@@ -538,12 +649,7 @@ async def enrich_with_sofascore(context, matches_list: list):
                     form_lambda = round((form_lambda + lam_est) / 2.0, 2) if form_lambda else round(lam_est, 2)
 
                 if form_lambda:
-                    m["sofaFormLambda"] = max(1.45, min(4.10, form_lambda))
-
-                if lu:
-                    m["sofaLineupConfirmed"] = bool(lu.get("confirmed"))
-                    m["sofaMissingHome"] = len((lu.get("home") or {}).get("missingPlayers") or [])
-                    m["sofaMissingAway"] = len((lu.get("away") or {}).get("missingPlayers") or [])
+                    m["sofaFormLambda"] = max(1.45, min(4.15, form_lambda))
 
         tasks = []
         for m in matches_list:
@@ -576,23 +682,68 @@ async def enrich_with_sofascore(context, matches_list: list):
                 ev_ts = best_ev.get("startTimestamp")
                 if ev_ts and not m.get("kickoffIso"):
                     m["kickoffIso"] = normalize_hkjc_kickoff(ev_ts)
-                if ev_id and len(tasks) < 35:
+                if ev_id and len(tasks) < 55:
                     tasks.append(enrich_single_match(m, ev_id))
 
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
     except Exception as exc:
-        print(f"SofaScore enrichment warning: {exc}")
+        print(f"SofaScore enrichment notice: {exc}")
     finally:
         await sofa_page.close()
 
 
+def attach_persistent_odds_history(m: dict, prev_snapshot: dict, now_short_hkt: str):
+    """將最新馬會賠率與上一輪檔案比對，永久保存初盤 (openHigh/openLow)、上次變動盤與賠率落飛 %"""
+    code = m["code"]
+    cur_h = float(m["oddsHigh"])
+    cur_l = float(m["oddsLow"])
+    cur_label = m.get("lineLabel") or "2.5"
+
+    old = prev_snapshot.get(code)
+    # 若球線相同，沿用歷史初盤；若馬會轉線則以新球線首次賠率為初盤
+    if old and str(old.get("lineLabel") or "2.5") == str(cur_label):
+        open_h = float(old.get("openHigh") or old.get("oddsHigh") or cur_h)
+        open_l = float(old.get("openLow") or old.get("oddsLow") or cur_l)
+        old_cur_h = float(old.get("oddsHigh") or cur_h)
+        old_cur_l = float(old.get("oddsLow") or cur_l)
+        if abs(cur_h - old_cur_h) >= 0.01 or abs(cur_l - old_cur_l) >= 0.01:
+            prev_h, prev_l = old_cur_h, old_cur_l
+        else:
+            prev_h = float(old.get("prevHigh") or open_h)
+            prev_l = float(old.get("prevLow") or open_l)
+
+        hist = list(old.get("oddsHistory") or [])
+        if not hist:
+            hist.append({"t": "初盤", "h": open_h, "l": open_l})
+        last_entry = at(hist, len(hist) - 1, {})
+        if abs(float(last_entry.get("h") or 0) - cur_h) >= 0.01 or abs(float(last_entry.get("l") or 0) - cur_l) >= 0.01:
+            hist.append({"t": now_short_hkt, "h": cur_h, "l": cur_l})
+        hist = hist[-8:]
+    else:
+        open_h, open_l = cur_h, cur_l
+        prev_h, prev_l = cur_h, cur_l
+        hist = [{"t": f"初盤 ({now_short_hkt})", "h": cur_h, "l": cur_l}]
+
+    m["openHigh"] = round(open_h, 2)
+    m["openLow"] = round(open_l, 2)
+    m["prevHigh"] = round(prev_h, 2)
+    m["prevLow"] = round(prev_l, 2)
+    m["dropHighPct"] = round(((open_h - cur_h) / open_h) * 100.0, 2) if open_h > 0 else 0.0
+    m["dropLowPct"] = round(((open_l - cur_l) / open_l) * 100.0, 2) if open_l > 0 else 0.0
+    m["oddsHistory"] = hist
+
+
 async def scrape_hkjc_and_sofascore():
-    match_meta, kickoff_by_key, hilo_map, had_map = {}, {}, {}, {}
+    prev_snapshot = load_previous_snapshot()
+    match_meta, kickoff_by_key, hilo_candidates_map, had_map = {}, {}, {}, {}
     started_keys = set()
     dom_row_store = {}
+    captured_gql_reqs = []
     captured_matches = {}
-    now_ts = datetime.now(HKT).timestamp()
+    now_dt = datetime.now(HKT)
+    now_ts = now_dt.timestamp()
+    now_short_hkt = now_dt.strftime("%d/%m %H:%M")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
@@ -602,20 +753,35 @@ async def scrape_hkjc_and_sofascore():
         context = await browser.new_context(
             locale="zh-HK",
             timezone_id="Asia/Hong_Kong",
-            viewport={"width": 1440, "height": 2200},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            viewport={"width": 1440, "height": 2400},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
         )
         await context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined});")
         page = await context.new_page()
+
+        def handle_request(request):
+            if "graphql" in request.url.lower() and request.method.upper() == "POST":
+                try:
+                    post_json = json.loads(request.post_data or "{}")
+                    if isinstance(post_json, dict) and post_json.get("query"):
+                        captured_gql_reqs.append({
+                            "url": request.url,
+                            "headers": request.headers,
+                            "query": post_json.get("query"),
+                            "variables": post_json.get("variables") or {},
+                        })
+                except Exception:
+                    pass
 
         async def handle_response(response):
             if "graphql" in response.url.lower() and response.status == 200:
                 try:
                     data = await response.json()
-                    collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
+                    collect_hkjc_graphql(data, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys)
                 except Exception:
                     pass
 
+        page.on("request", handle_request)
         page.on("response", handle_response)
 
         try:
@@ -624,18 +790,28 @@ async def scrape_hkjc_and_sofascore():
             print(f"HKJC CH navigation notice: {exc}")
 
         for _ in range(12):
-            if hilo_map:
+            if hilo_candidates_map:
                 break
             await page.wait_for_timeout(1000)
         await page.wait_for_timeout(2000)
-        await scroll_and_harvest(page, dom_row_store, steps=7)
+        await expand_and_scroll_full_page(page, dom_row_store, max_steps=28)
 
-        await query_hkjc_graphql_directly(context, match_meta, kickoff_by_key, hilo_map, had_map, started_keys)
+        # 重播攔截到的 GraphQL 請求與 1..300 分頁查詢，確保遠期與次級賽事無遺漏
+        await replay_intercepted_pagination(
+            context, captured_gql_reqs, match_meta, kickoff_by_key, hilo_candidates_map, had_map, started_keys
+        )
+
+        # 順道讀取 HAD 主客和頁面以補齊主客和賠率與遺漏場次
+        try:
+            await page.goto(HKJC_HAD_CH_URL, wait_until="domcontentloaded", timeout=30000)
+            await page.wait_for_timeout(2500)
+        except Exception:
+            pass
 
         try:
             await page.goto(HKJC_HILO_EN_URL, wait_until="domcontentloaded", timeout=35000)
-            await page.wait_for_timeout(3000)
-            await scroll_and_harvest(page, dom_row_store, steps=5)
+            await page.wait_for_timeout(2500)
+            await expand_and_scroll_full_page(page, dom_row_store, max_steps=14)
         except Exception as exc:
             print(f"HKJC EN pass notice: {exc}")
 
@@ -648,9 +824,9 @@ async def scrape_hkjc_and_sofascore():
             if (dom_row_store.get(fb_code) or {}).get("isLiveDom"):
                 continue
 
-            odds_pair = hilo_map.get(key) or hilo_map.get(fb_code)
-            if odds_pair and meta.get("home") and meta.get("away"):
-                h_odds, l_odds = odds_pair
+            cands = hilo_candidates_map.get(key) or hilo_candidates_map.get(fb_code) or []
+            best_line = choose_best_hil_line(cands)
+            if best_line and meta.get("home") and meta.get("away"):
                 ko_final = (
                     meta.get("kickoffIso")
                     or kickoff_by_key.get(key)
@@ -675,8 +851,10 @@ async def scrape_hkjc_and_sofascore():
                     "enHome": meta.get("enHome") or "",
                     "enAway": meta.get("enAway") or "",
                     "kickoffIso": ko_final,
-                    "oddsHigh": h_odds,
-                    "oddsLow": l_odds,
+                    "goalLine": best_line["goalLine"],
+                    "lineLabel": best_line["lineLabel"],
+                    "oddsHigh": best_line["oddsHigh"],
+                    "oddsLow": best_line["oddsLow"],
                     "hadHome": had_h,
                     "hadDraw": had_d,
                     "hadAway": had_a,
@@ -684,6 +862,8 @@ async def scrape_hkjc_and_sofascore():
                     "sofaMatched": False,
                 }
 
+        # DOM 補漏：支援 2.5、2.0/2.5、2.5/3.0、3.0/3.5、1.5/2.0 等所有球線
+        dom_line_re = re.compile(r"((?:1\.5|2\.0|2\.5|3\.0|3\.5)(?:/(?:2\.0|2\.5|3\.0|3\.5|4\.0))?)(?:\s*球)?[^\d]{0,10}(\d+\.\d{2})\s+(\d+\.\d{2})")
         for fb_code, row_info in dom_row_store.items():
             if row_info.get("isLiveDom") or (fb_code in started_keys):
                 continue
@@ -706,31 +886,46 @@ async def scrape_hkjc_and_sofascore():
                         captured_matches[fb_code]["enAway"] = en_m.group(2).strip()
             else:
                 tm = re.search(r"([^\n\r\t]+?)\s*對\s*([^\n\r\t]+)", r_txt)
-                om = re.search(r"2\.5(?:/2\.5)?(?:\s*球)?[^\d]{0,8}(\d+\.\d{2})\s+(\d+\.\d{2})", r_txt)
-                if tm and om:
-                    h_o, l_o = float(om.group(1)), float(om.group(2))
-                    if 1.18 <= h_o <= 4.80 and 1.18 <= l_o <= 4.80:
-                        captured_matches[fb_code] = {
-                            "code": fb_code,
-                            "league": "足智彩入球大細",
-                            "home": clean_team_name(tm.group(1)),
-                            "away": clean_team_name(tm.group(2)),
-                            "enHome": "",
-                            "enAway": "",
-                            "kickoffIso": ko_dom,
-                            "oddsHigh": h_o,
-                            "oddsLow": l_o,
-                            "isInPlay": False,
-                            "sofaMatched": False,
-                        }
+                line_hits = []
+                for lm in dom_line_re.finditer(r_txt):
+                    g_val, g_label = parse_goal_line_condition(lm.group(1))
+                    h_o, l_o = float(lm.group(2)), float(lm.group(3))
+                    if g_val and 1.15 <= h_o <= 5.20 and 1.15 <= l_o <= 5.20:
+                        line_hits.append({"goalLine": g_val, "lineLabel": g_label, "oddsHigh": h_o, "oddsLow": l_o, "isMain": True})
+                best_dom = choose_best_hil_line(line_hits)
+                if tm and best_dom:
+                    captured_matches[fb_code] = {
+                        "code": fb_code,
+                        "league": "足智彩入球大細",
+                        "home": clean_team_name(tm.group(1)),
+                        "away": clean_team_name(tm.group(2)),
+                        "enHome": "",
+                        "enAway": "",
+                        "kickoffIso": ko_dom,
+                        "goalLine": best_dom["goalLine"],
+                        "lineLabel": best_dom["lineLabel"],
+                        "oddsHigh": best_dom["oddsHigh"],
+                        "oddsLow": best_dom["oddsLow"],
+                        "isInPlay": False,
+                        "sofaMatched": False,
+                    }
 
         final_list = list(captured_matches.values())
-        print(f"HKJC upcoming pre-match 2.5 captured: {len(final_list)} matches.")
+        print(f"HKJC full pre-match slate captured: {len(final_list)} matches.")
+
+        # 合併上一輪初盤與賠率變動歷史（同時保留 SofaScore 快取避免重複請求）
+        for m in final_list:
+            old_rec = prev_snapshot.get(m["code"]) or {}
+            if old_rec.get("sofaMatched") and not m.get("sofaMatched"):
+                m["sofaMatched"] = True
+                m["sofaFormLambda"] = old_rec.get("sofaFormLambda")
+                m["sofaOver25Rate"] = old_rec.get("sofaOver25Rate")
+            attach_persistent_odds_history(m, prev_snapshot, now_short_hkt)
 
         try:
-            await asyncio.wait_for(enrich_with_sofascore(context, final_list), timeout=40.0)
+            await asyncio.wait_for(enrich_with_sofascore(context, final_list), timeout=42.0)
         except asyncio.TimeoutError:
-            print("SofaScore enrichment reached 40s cap; proceeding with HKJC matches.")
+            print("SofaScore enrichment reached 42s cap; proceeding with full HKJC slate.")
 
         await browser.close()
 
@@ -742,70 +937,22 @@ async def scrape_hkjc_and_sofascore():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
     ko_ok_count = sum(1 for x in final_list if x.get("kickoffIso"))
-    sofa_ok_count = sum(1 for x in final_list if x.get("sofaMatched"))
+    moved_count = sum(
+        1 for x in final_list
+        if abs(x.get("dropHighPct") or 0) >= 0.5 or abs(x.get("dropLowPct") or 0) >= 0.5
+    )
 
     output_payload = {
         "updatedAtHkt": datetime.now(HKT).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
         "matchCount": len(final_list),
         "kickoffResolvedCount": ko_ok_count,
-        "sofaMatchedCount": sofa_ok_count,
+        "oddsMovedCount": moved_count,
         "matches": final_list,
     }
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
-    print(f"Saved {len(final_list)} upcoming HKJC games (Kick-off times resolved: {ko_ok_count}, SofaScore enriched: {sofa_ok_count}).")
+    print(f"Saved {len(final_list)} HKJC matches (Kickoff resolved: {ko_ok_count}, Odds moved: {moved_count}).")
 
 
 if __name__ == "__main__":
     asyncio.run(scrape_hkjc_and_sofascore())
-
-
-Box 3: .github/workflows/hkjc_sync.yml (Keep as-is if already updated)
-
-name: HKJC HiLo 2.5 Auto Sync
-
-on:
-  schedule:
-    - cron: '0,20,40 0-23 1-31 1-12 0-6'
-  workflow_dispatch:
-  push:
-    paths:
-      - 'hkjc_scraper.py'
-      - '.github/workflows/hkjc_sync.yml'
-
-permissions:
-  contents: write
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-
-jobs:
-  scrape-hkjc-and-sofascore:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Playwright Chromium
-        run: |
-          pip install playwright
-          playwright install --with-deps chromium
-
-      - name: Run HKJC and SofaScore collector
-        run: python hkjc_scraper.py
-
-      - name: Pull latest changes and commit JSON feed
-        run: |
-          git config user.name "hkjc-sync-bot"
-          git config user.email "hkjc-sync-bot@users.noreply.github.com"
-          git add data/hkjc_hilo.json
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: auto-sync HKJC pre-match HiLo 2.5 odds and kickoff times"
-            git pull --rebase origin main || git pull --rebase || true
-            git push
-          fi
