@@ -1,39 +1,10 @@
 {
   "version": "v19",
-  "updatedAtIso": "2026-11-25T18:04:49.494298+08:00",
-  "updatedAtHkt": "25/11 (Wed) 18:04:49 HKT",
-  "matchCount": 40,
+  "updatedAtIso": "2026-11-25T18:59:16.772088+08:00",
+  "updatedAtHkt": "25/11 (Wed) 18:59:16 HKT",
+  "matchCount": 39,
   "oddsChangedCount": 0,
   "matches": [
-    {
-      "id": "FB9489",
-      "league": "日本職業聯賽",
-      "home": "浦和紅鑽",
-      "away": "大阪櫻花",
-      "homeEn": "Urawa Reds",
-      "awayEn": "Cerezo Osaka",
-      "kickoffMs": 1795602600000,
-      "line": "2.5",
-      "oddsHigh": 1.53,
-      "oddsLow": 2.33,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.53,
-      "openLow": 2.33,
-      "prevHigh": 1.53,
-      "prevLow": 2.33,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.53,
-          "l": 2.33
-        }
-      ],
-      "updatedAtHkt": "25/11 10:16"
-    },
     {
       "id": "FB9546",
       "league": "亞冠2",
