@@ -1,4 +1,4 @@
-name: HKJC HiLo Live Odds & Drop Sync (v18)
+name: HKJC HiLo Live Odds & Drop Sync (v19)
 
 on:
   schedule:
@@ -19,7 +19,7 @@ concurrency:
 jobs:
   sync-hkjc:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 14
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,18 +36,5 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Scrape Full HKJC Slate & Track Dropping Odds
-        run: python hkjc_scraper.py
-
-      - name: Commit & Push Updated Odds Without Blocking Manual Edits
-        run: |
-          git config user.name "hkjc-sync-bot"
-          git config user.email "actions@github.com"
-          git add data/hkjc_hilo.json
-          if git diff --staged --quiet; then
-            echo "No odds changes detected in this cycle."
-          else
-            git commit -m "Auto-sync HKJC HiLo odds & drops (v18)"
-            git pull --rebase -X theirs origin main
-            git push origin main
-          fi
+      - name: High-Frequency HKJC Live Odds Burst (Every 3 Minutes x 4 Cycles)
+        run: python hkjc_scraper.py --cycles 4 --interval 180 --git-push
