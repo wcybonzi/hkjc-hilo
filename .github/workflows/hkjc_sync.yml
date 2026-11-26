@@ -1,8 +1,8 @@
-name: HKJC HiLo Live Odds & Drop Sync (v19)
+name: HKJC HiLo Live Odds & Drop Sync (v20)
 
 on:
   schedule:
-    - cron: '0,15,30,45 0-23 1-31 1-12 0-6'
+    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 0-23 1-31 1-12 0-6'
   workflow_dispatch:
   push:
     paths:
@@ -19,12 +19,12 @@ concurrency:
 jobs:
   sync-hkjc:
     runs-on: ubuntu-latest
-    timeout-minutes: 14
+    timeout-minutes: 8
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -33,8 +33,22 @@ jobs:
 
       - name: Install Playwright Chromium
         run: |
-          pip install playwright
-          playwright install --with-deps chromium
+          pip install -q playwright
+          playwright install chromium
 
-      - name: High-Frequency HKJC Live Odds Burst (Every 3 Minutes x 4 Cycles)
-        run: python hkjc_scraper.py --cycles 4 --interval 180 --git-push
+      - name: Scrape Latest HKJC Pre-Match Fixtures & Live Odds
+        run: python hkjc_scraper.py
+
+      - name: Commit, push, and purge CDN cache immediately
+        run: |
+          git config user.name "hkjc-sync-bot"
+          git config user.email "actions@github.com"
+          git add data/hkjc_hilo.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Auto-sync HKJC fixtures & live odds (v20)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          curl -s "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@${GITHUB_REF_NAME}/data/hkjc_hilo.json" > /dev/null || true
