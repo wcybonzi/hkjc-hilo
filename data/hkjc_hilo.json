@@ -1,687 +1,12 @@
 {
   "version": "v20",
-  "updatedAtIso": "2026-11-26T17:50:03.071030+08:00",
-  "updatedAtHkt": "26/11 (Thu) 17:50:03 HKT",
-  "matchCount": 78,
-  "scrapedFreshCount": 78,
-  "newMatchesAddedCount": 32,
-  "oddsChangedCount": 8,
+  "updatedAtIso": "2026-11-27T03:21:44.675636+08:00",
+  "updatedAtHkt": "27/11 (Fri) 03:21:44 HKT",
+  "matchCount": 152,
+  "scrapedFreshCount": 152,
+  "newMatchesAddedCount": 96,
+  "oddsChangedCount": 15,
   "matches": [
-    {
-      "id": "FB9581",
-      "league": "亞冠2",
-      "home": "淡濱尼流浪",
-      "away": "FC上海",
-      "homeEn": "Tampines Rovers",
-      "awayEn": "FC Shanghai",
-      "kickoffMs": 1795687200000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.85,
-      "oddsLow": 1.85,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.85,
-      "openLow": 1.85,
-      "prevHigh": 1.85,
-      "prevLow": 1.85,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.85,
-          "l": 1.85
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9582",
-      "league": "亞冠2",
-      "home": "巴吞聯",
-      "away": "獅城水手",
-      "homeEn": "BG Pathum Utd",
-      "awayEn": "Lion City Sailors",
-      "kickoffMs": 1795695300000,
-      "line": "2.5",
-      "oddsHigh": 1.59,
-      "oddsLow": 2.2,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.59,
-      "openLow": 2.2,
-      "prevHigh": 1.59,
-      "prevLow": 2.2,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.59,
-          "l": 2.2
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9522",
-      "league": "俄羅斯盃",
-      "home": "FC奧倫堡",
-      "away": "莫斯科斯巴達",
-      "homeEn": "FC Orenburg",
-      "awayEn": "Spartak Moscow",
-      "kickoffMs": 1795701600000,
-      "line": "2.5",
-      "oddsHigh": 1.57,
-      "oddsLow": 2.25,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.58,
-      "openLow": 2.22,
-      "prevHigh": 1.58,
-      "prevLow": 2.22,
-      "dropPctHigh": 0.63,
-      "dropPctLow": -1.35,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.58,
-          "l": 2.22
-        },
-        {
-          "t": "26/11 17:50",
-          "h": 1.57,
-          "l": 2.25
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9562",
-      "league": "沙特職業聯賽",
-      "home": "艾法特",
-      "away": "艾利雅德",
-      "homeEn": "Al Fateh",
-      "awayEn": "Al Riyadh",
-      "kickoffMs": 1795703100000,
-      "line": "2.5",
-      "oddsHigh": 1.68,
-      "oddsLow": 2.05,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.68,
-      "openLow": 2.05,
-      "prevHigh": 1.68,
-      "prevLow": 2.05,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.68,
-          "l": 2.05
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9560",
-      "league": "沙特職業聯賽",
-      "home": "艾伯哈FC",
-      "away": "艾沙比",
-      "homeEn": "Abha FC",
-      "awayEn": "Al Shabab",
-      "kickoffMs": 1795705500000,
-      "line": "2.5",
-      "oddsHigh": 1.57,
-      "oddsLow": 2.25,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.57,
-      "openLow": 2.25,
-      "prevHigh": 1.57,
-      "prevLow": 2.25,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.57,
-          "l": 2.25
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9579",
-      "league": "歐洲協會聯賽",
-      "home": "卡拉特",
-      "away": "米贊比",
-      "homeEn": "Kairat",
-      "awayEn": "Mjallby",
-      "kickoffMs": 1795707000000,
-      "line": "2.5",
-      "oddsHigh": 1.82,
-      "oddsLow": 1.88,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.82,
-      "openLow": 1.88,
-      "prevHigh": 1.82,
-      "prevLow": 1.88,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.82,
-          "l": 1.88
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9516",
-      "league": "俄羅斯盃",
-      "home": "莫斯科戴拿模",
-      "away": "法高爾佛羅內什",
-      "homeEn": "Dinamo Moscow",
-      "awayEn": "Fakel Voronezh",
-      "kickoffMs": 1795710600000,
-      "line": "2.5",
-      "oddsHigh": 1.6,
-      "oddsLow": 2.19,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.6,
-      "openLow": 2.19,
-      "prevHigh": 1.6,
-      "prevLow": 2.19,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.6,
-          "l": 2.19
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9561",
-      "league": "沙特職業聯賽",
-      "home": "費薩里FC",
-      "away": "迪里耶會",
-      "homeEn": "Al Faisaly FC",
-      "awayEn": "Diriyah Club",
-      "kickoffMs": 1795714200000,
-      "line": "2.5",
-      "oddsHigh": 1.66,
-      "oddsLow": 2.08,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.66,
-      "openLow": 2.08,
-      "prevHigh": 1.66,
-      "prevLow": 2.08,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.66,
-          "l": 2.08
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9527",
-      "league": "歐霸盃",
-      "home": "柏辛域陀尼亞",
-      "away": "賓菲加",
-      "homeEn": "Viktoria Plzen",
-      "awayEn": "Benfica",
-      "kickoffMs": 1795715100000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.83,
-      "oddsLow": 1.87,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.83,
-      "openLow": 1.87,
-      "prevHigh": 1.83,
-      "prevLow": 1.87,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.83,
-          "l": 1.87
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9528",
-      "league": "歐霸盃",
-      "home": "奧林比亞高斯",
-      "away": "AC米蘭",
-      "homeEn": "Olympiakos",
-      "awayEn": "AC Milan",
-      "kickoffMs": 1795715100000,
-      "line": "2.5",
-      "oddsHigh": 1.78,
-      "oddsLow": 1.92,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.78,
-      "openLow": 1.92,
-      "prevHigh": 1.78,
-      "prevLow": 1.92,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.78,
-          "l": 1.92
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9530",
-      "league": "歐霸盃",
-      "home": "馬賽",
-      "away": "索菲亞利夫斯基",
-      "homeEn": "Marseille",
-      "awayEn": "Levski Sofia",
-      "kickoffMs": 1795715100000,
-      "line": "2.5",
-      "oddsHigh": 1.53,
-      "oddsLow": 2.33,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.53,
-      "openLow": 2.33,
-      "prevHigh": 1.53,
-      "prevLow": 2.33,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.53,
-          "l": 2.33
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9533",
-      "league": "歐霸盃",
-      "home": "薩爾斯堡",
-      "away": "艾拉華特阿美尼亞",
-      "homeEn": "Salzburg",
-      "awayEn": "Ararat-Armenia",
-      "kickoffMs": 1795715100000,
-      "line": "3.5",
-      "oddsHigh": 1.75,
-      "oddsLow": 1.95,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.8,
-      "openLow": 1.9,
-      "prevHigh": 1.8,
-      "prevLow": 1.9,
-      "dropPctHigh": 2.78,
-      "dropPctLow": -2.63,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.8,
-          "l": 1.9
-        },
-        {
-          "t": "26/11 17:50",
-          "h": 1.75,
-          "l": 1.95
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9535",
-      "league": "歐霸盃",
-      "home": "比錫達斯",
-      "away": "比亞斯華夏普爾",
-      "homeEn": "Besiktas",
-      "awayEn": "Hapoel Beer Sheva",
-      "kickoffMs": 1795715100000,
-      "line": "3.5",
-      "oddsHigh": 1.9,
-      "oddsLow": 1.8,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.9,
-      "openLow": 1.8,
-      "prevHigh": 1.9,
-      "prevLow": 1.8,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.9,
-          "l": 1.8
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9539",
-      "league": "歐霸盃",
-      "home": "薩格勒布戴拿模",
-      "away": "利華古遜",
-      "homeEn": "Dinamo Zagreb",
-      "awayEn": "Leverkusen",
-      "kickoffMs": 1795715100000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.93,
-      "oddsLow": 1.77,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.93,
-      "openLow": 1.77,
-      "prevHigh": 1.93,
-      "prevLow": 1.77,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.93,
-          "l": 1.77
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9542",
-      "league": "歐霸盃",
-      "home": "切爾達",
-      "away": "般尼茅夫",
-      "homeEn": "Celta Vigo",
-      "awayEn": "Bournemouth",
-      "kickoffMs": 1795715100000,
-      "line": "2.5",
-      "oddsHigh": 1.76,
-      "oddsLow": 1.94,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.77,
-      "openLow": 1.93,
-      "prevHigh": 1.77,
-      "prevLow": 1.93,
-      "dropPctHigh": 0.56,
-      "dropPctLow": -0.52,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 1.77,
-          "l": 1.93
-        },
-        {
-          "t": "26/11 17:50",
-          "h": 1.76,
-          "l": 1.94
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9553",
-      "league": "歐霸盃",
-      "home": "聖基萊斯聯",
-      "away": "列治普斯納",
-      "homeEn": "Union Saint Gilloise",
-      "awayEn": "Lech Poznan",
-      "kickoffMs": 1795715100000,
-      "line": "3.5",
-      "oddsHigh": 2.02,
-      "oddsLow": 1.7,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 2.02,
-      "openLow": 1.7,
-      "prevHigh": 2.02,
-      "prevLow": 1.7,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "初盤 (25/11 09:51)",
-          "h": 2.02,
-          "l": 1.7
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9568",
-      "league": "歐洲協會聯賽",
-      "home": "白蘭恩",
-      "away": "阿侯斯",
-      "homeEn": "Brann",
-      "awayEn": "AGF Aarhus",
-      "kickoffMs": 1795715100000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.92,
-      "oddsLow": 1.78,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.92,
-      "openLow": 1.78,
-      "prevHigh": 1.92,
-      "prevLow": 1.78,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.92,
-          "l": 1.78
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9569",
-      "league": "歐洲協會聯賽",
-      "home": "白禮頓",
-      "away": "CS卡拉奧華大學",
-      "homeEn": "Brighton",
-      "awayEn": "CS Universitatea Craiova",
-      "kickoffMs": 1795715100000,
-      "line": "3.5",
-      "oddsHigh": 1.83,
-      "oddsLow": 1.87,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.83,
-      "openLow": 1.87,
-      "prevHigh": 1.83,
-      "prevLow": 1.87,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.83,
-          "l": 1.87
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9574",
-      "league": "歐洲協會聯賽",
-      "home": "阿積士",
-      "away": "杜安",
-      "homeEn": "Ajax",
-      "awayEn": "Thun",
-      "kickoffMs": 1795715100000,
-      "line": "3.5",
-      "oddsHigh": 1.56,
-      "oddsLow": 2.27,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.56,
-      "openLow": 2.27,
-      "prevHigh": 1.56,
-      "prevLow": 2.27,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.56,
-          "l": 2.27
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9576",
-      "league": "歐洲協會聯賽",
-      "home": "赫斯",
-      "away": "摩納哥",
-      "homeEn": "Hearts",
-      "awayEn": "Monaco",
-      "kickoffMs": 1795715100000,
-      "line": "3.0/3.5",
-      "oddsHigh": 2.07,
-      "oddsLow": 1.67,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 2.07,
-      "openLow": 1.67,
-      "prevHigh": 2.07,
-      "prevLow": 1.67,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 2.07,
-          "l": 1.67
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9577",
-      "league": "歐洲協會聯賽",
-      "home": "積布尼克",
-      "away": "盧加諾",
-      "homeEn": "Jablonec",
-      "awayEn": "Lugano",
-      "kickoffMs": 1795715100000,
-      "line": "2.5",
-      "oddsHigh": 1.65,
-      "oddsLow": 2.1,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 1.65,
-      "openLow": 2.1,
-      "prevHigh": 1.65,
-      "prevLow": 2.1,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.65,
-          "l": 2.1
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
-    {
-      "id": "FB9583",
-      "league": "歐洲協會聯賽",
-      "home": "帕福斯",
-      "away": "米迪蘭特",
-      "homeEn": "Pafos",
-      "awayEn": "Midtjylland",
-      "kickoffMs": 1795715100000,
-      "line": "3.0/3.5",
-      "oddsHigh": 2.01,
-      "oddsLow": 1.71,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openHigh": 2.01,
-      "openLow": 1.71,
-      "prevHigh": 2.01,
-      "prevLow": 1.71,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 2.01,
-          "l": 1.71
-        }
-      ],
-      "updatedAtHkt": "26/11 17:50"
-    },
     {
       "id": "FB9529",
       "league": "歐霸盃",
@@ -691,8 +16,8 @@
       "awayEn": "Jagiellonia Bialystok",
       "kickoffMs": 1795723200000,
       "line": "3.0/3.5",
-      "oddsHigh": 1.93,
-      "oddsLow": 1.77,
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -700,17 +25,22 @@
       "openLow": 1.77,
       "prevHigh": 1.93,
       "prevLow": 1.77,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -6.22,
+      "dropPctLow": 5.08,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.93,
           "l": 1.77
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 2.05,
+          "l": 1.68
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9531",
@@ -740,7 +70,7 @@
           "l": 1.75
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9532",
@@ -770,7 +100,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9534",
@@ -781,8 +111,8 @@
       "awayEn": "Celtic",
       "kickoffMs": 1795723200000,
       "line": "3.0/3.5",
-      "oddsHigh": 2.0,
-      "oddsLow": 1.72,
+      "oddsHigh": 1.86,
+      "oddsLow": 1.84,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -790,17 +120,22 @@
       "openLow": 1.72,
       "prevHigh": 2.0,
       "prevLow": 1.72,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 7.0,
+      "dropPctLow": -6.98,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 2.0,
           "l": 1.72
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.86,
+          "l": 1.84
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9536",
@@ -811,8 +146,8 @@
       "awayEn": "Sturm Graz",
       "kickoffMs": 1795723200000,
       "line": "3.5",
-      "oddsHigh": 1.84,
-      "oddsLow": 1.86,
+      "oddsHigh": 1.79,
+      "oddsLow": 1.91,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -820,17 +155,22 @@
       "openLow": 1.86,
       "prevHigh": 1.84,
       "prevLow": 1.86,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 2.72,
+      "dropPctLow": -2.69,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.84,
           "l": 1.86
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.79,
+          "l": 1.91
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9537",
@@ -841,8 +181,8 @@
       "awayEn": "Lillestrom",
       "kickoffMs": 1795723200000,
       "line": "3.5",
-      "oddsHigh": 1.89,
-      "oddsLow": 1.81,
+      "oddsHigh": 2.08,
+      "oddsLow": 1.66,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -850,17 +190,22 @@
       "openLow": 1.81,
       "prevHigh": 1.89,
       "prevLow": 1.81,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -10.05,
+      "dropPctLow": 8.29,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.89,
           "l": 1.81
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 2.08,
+          "l": 1.66
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9538",
@@ -871,8 +216,8 @@
       "awayEn": "Omonia Nicosia",
       "kickoffMs": 1795723200000,
       "line": "3.5",
-      "oddsHigh": 2.0,
-      "oddsLow": 1.72,
+      "oddsHigh": 2.17,
+      "oddsLow": 1.61,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -880,17 +225,22 @@
       "openLow": 1.72,
       "prevHigh": 2.0,
       "prevLow": 1.72,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -8.5,
+      "dropPctLow": 6.4,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 2.0,
           "l": 1.72
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 2.17,
+          "l": 1.61
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9540",
@@ -901,8 +251,8 @@
       "awayEn": "Rennes",
       "kickoffMs": 1795723200000,
       "line": "3.0/3.5",
-      "oddsHigh": 2.01,
-      "oddsLow": 1.71,
+      "oddsHigh": 1.85,
+      "oddsLow": 1.85,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -910,17 +260,22 @@
       "openLow": 1.71,
       "prevHigh": 2.01,
       "prevLow": 1.71,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 7.96,
+      "dropPctLow": -8.19,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 2.01,
           "l": 1.71
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.85,
+          "l": 1.85
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9541",
@@ -931,8 +286,8 @@
       "awayEn": "Real Sociedad",
       "kickoffMs": 1795723200000,
       "line": "3.0/3.5",
-      "oddsHigh": 2.0,
-      "oddsLow": 1.72,
+      "oddsHigh": 1.93,
+      "oddsLow": 1.77,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -940,17 +295,22 @@
       "openLow": 1.72,
       "prevHigh": 2.0,
       "prevLow": 1.72,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 3.5,
+      "dropPctLow": -2.91,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 2.0,
           "l": 1.72
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.93,
+          "l": 1.77
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9552",
@@ -961,17 +321,17 @@
       "awayEn": "Huddersfield",
       "kickoffMs": 1795723200000,
       "line": "2.5",
-      "oddsHigh": 1.58,
-      "oddsLow": 2.22,
+      "oddsHigh": 1.57,
+      "oddsLow": 2.25,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
       "openHigh": 1.55,
       "openLow": 2.29,
-      "prevHigh": 1.55,
-      "prevLow": 2.29,
-      "dropPctHigh": -1.94,
-      "dropPctLow": 3.06,
+      "prevHigh": 1.58,
+      "prevLow": 2.22,
+      "dropPctHigh": -1.29,
+      "dropPctLow": 1.75,
       "isNewMatch": false,
       "oddsHistory": [
         {
@@ -983,9 +343,14 @@
           "t": "26/11 17:50",
           "h": 1.58,
           "l": 2.22
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.57,
+          "l": 2.25
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9554",
@@ -996,17 +361,17 @@
       "awayEn": "Anderlecht",
       "kickoffMs": 1795723200000,
       "line": "2.5",
-      "oddsHigh": 1.57,
-      "oddsLow": 2.25,
+      "oddsHigh": 1.69,
+      "oddsLow": 2.04,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
       "openHigh": 1.53,
       "openLow": 2.33,
-      "prevHigh": 1.53,
-      "prevLow": 2.33,
-      "dropPctHigh": -2.61,
-      "dropPctLow": 3.43,
+      "prevHigh": 1.57,
+      "prevLow": 2.25,
+      "dropPctHigh": -10.46,
+      "dropPctLow": 12.45,
       "isNewMatch": false,
       "oddsHistory": [
         {
@@ -1018,9 +383,14 @@
           "t": "26/11 17:50",
           "h": 1.57,
           "l": 2.25
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.69,
+          "l": 2.04
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9570",
@@ -1050,7 +420,7 @@
           "l": 1.95
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9571",
@@ -1060,14 +430,14 @@
       "homeEn": "Braga",
       "awayEn": "KuPS",
       "kickoffMs": 1795723200000,
-      "line": "3.5",
-      "oddsHigh": 1.93,
-      "oddsLow": 1.77,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.94,
+      "oddsLow": 1.76,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
-      "openHigh": 1.93,
-      "openLow": 1.77,
+      "openHigh": 1.94,
+      "openLow": 1.76,
       "prevHigh": 1.93,
       "prevLow": 1.77,
       "dropPctHigh": 0.0,
@@ -1075,12 +445,12 @@
       "isNewMatch": false,
       "oddsHistory": [
         {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.93,
-          "l": 1.77
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.94,
+          "l": 1.76
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9572",
@@ -1091,8 +461,8 @@
       "awayEn": "Panathinaikos",
       "kickoffMs": 1795723200000,
       "line": "2.5",
-      "oddsHigh": 1.59,
-      "oddsLow": 2.2,
+      "oddsHigh": 1.62,
+      "oddsLow": 2.15,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1100,17 +470,22 @@
       "openLow": 2.2,
       "prevHigh": 1.59,
       "prevLow": 2.2,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -1.89,
+      "dropPctLow": 2.27,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.59,
           "l": 2.2
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.62,
+          "l": 2.15
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9573",
@@ -1140,7 +515,7 @@
           "l": 2.13
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9575",
@@ -1170,7 +545,7 @@
           "l": 1.65
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9578",
@@ -1200,7 +575,7 @@
           "l": 1.75
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9580",
@@ -1211,8 +586,8 @@
       "awayEn": "Twente",
       "kickoffMs": 1795723200000,
       "line": "3.0/3.5",
-      "oddsHigh": 1.98,
-      "oddsLow": 1.73,
+      "oddsHigh": 2.3,
+      "oddsLow": 1.54,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1220,17 +595,22 @@
       "openLow": 1.73,
       "prevHigh": 1.98,
       "prevLow": 1.73,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -16.16,
+      "dropPctLow": 10.98,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.98,
           "l": 1.73
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 2.3,
+          "l": 1.54
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9584",
@@ -1240,32 +620,27 @@
       "homeEn": "Inter d'Escaldes",
       "awayEn": "Copenhagen",
       "kickoffMs": 1795723200000,
-      "line": "3.0/3.5",
-      "oddsHigh": 2.07,
-      "oddsLow": 1.67,
+      "line": "2.5",
+      "oddsHigh": 1.74,
+      "oddsLow": 1.97,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
-      "openHigh": 1.94,
-      "openLow": 1.76,
+      "openHigh": 1.74,
+      "openLow": 1.97,
       "prevHigh": 1.94,
       "prevLow": 1.76,
-      "dropPctHigh": -6.7,
-      "dropPctLow": 5.11,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
       "isNewMatch": false,
       "oddsHistory": [
         {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.94,
-          "l": 1.76
-        },
-        {
-          "t": "26/11 17:50",
-          "h": 2.07,
-          "l": 1.67
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.74,
+          "l": 1.97
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9543",
@@ -1276,8 +651,8 @@
       "awayEn": "Clube do Remo",
       "kickoffMs": 1795734000000,
       "line": "2.5",
-      "oddsHigh": 1.62,
-      "oddsLow": 2.15,
+      "oddsHigh": 1.79,
+      "oddsLow": 1.91,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1285,17 +660,22 @@
       "openLow": 2.15,
       "prevHigh": 1.62,
       "prevLow": 2.15,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -10.49,
+      "dropPctLow": 11.16,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 1.62,
           "l": 2.15
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.79,
+          "l": 1.91
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9586",
@@ -1330,7 +710,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9563",
@@ -1341,17 +721,17 @@
       "awayEn": "Guadalajara",
       "kickoffMs": 1795741200000,
       "line": "2.5",
-      "oddsHigh": 1.8,
-      "oddsLow": 1.9,
+      "oddsHigh": 1.84,
+      "oddsLow": 1.86,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
       "openHigh": 1.75,
       "openLow": 1.95,
-      "prevHigh": 1.75,
-      "prevLow": 1.95,
-      "dropPctHigh": -2.86,
-      "dropPctLow": 2.56,
+      "prevHigh": 1.8,
+      "prevLow": 1.9,
+      "dropPctHigh": -5.14,
+      "dropPctLow": 4.62,
       "isNewMatch": false,
       "oddsHistory": [
         {
@@ -1363,9 +743,14 @@
           "t": "26/11 17:50",
           "h": 1.8,
           "l": 1.9
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.84,
+          "l": 1.86
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9566",
@@ -1395,7 +780,7 @@
           "l": 2.04
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9616",
@@ -1406,8 +791,8 @@
       "awayEn": "Lions FC",
       "kickoffMs": 1795768200000,
       "line": "3.5",
-      "oddsHigh": 1.91,
-      "oddsLow": 1.79,
+      "oddsHigh": 1.86,
+      "oddsLow": 1.84,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1415,17 +800,22 @@
       "openLow": 1.79,
       "prevHigh": 1.91,
       "prevLow": 1.79,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "dropPctHigh": 2.62,
+      "dropPctLow": -2.79,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.91,
           "l": 1.79
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.86,
+          "l": 1.84
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9589",
@@ -1447,7 +837,7 @@
       "prevLow": 2.04,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1455,7 +845,7 @@
           "l": 2.04
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9598",
@@ -1477,7 +867,7 @@
       "prevLow": 2.13,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1485,7 +875,7 @@
           "l": 2.13
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9610",
@@ -1507,7 +897,7 @@
       "prevLow": 2.22,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1515,7 +905,37 @@
           "l": 2.22
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9694",
+      "league": "卡塔爾超級聯賽",
+      "home": "艾塞利亞",
+      "away": "艾加拉法",
+      "homeEn": "Al Sailiya",
+      "awayEn": "Al Gharafa",
+      "kickoffMs": 1795784400000,
+      "line": "3.5",
+      "oddsHigh": 1.92,
+      "oddsLow": 1.78,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.92,
+      "openLow": 1.78,
+      "prevHigh": 1.92,
+      "prevLow": 1.78,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.92,
+          "l": 1.78
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9611",
@@ -1537,7 +957,7 @@
       "prevLow": 1.94,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1545,7 +965,37 @@
           "l": 1.94
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9695",
+      "league": "卡塔爾超級聯賽",
+      "home": "盧沙爾SC",
+      "away": "多哈艾阿拉比",
+      "homeEn": "Lusail SC",
+      "awayEn": "Al Arabi Doha",
+      "kickoffMs": 1795793400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.91,
+      "oddsLow": 1.79,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.91,
+      "openLow": 1.79,
+      "prevHigh": 1.91,
+      "prevLow": 1.79,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.91,
+          "l": 1.79
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9599",
@@ -1567,7 +1017,7 @@
       "prevLow": 1.82,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1575,7 +1025,7 @@
           "l": 1.82
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9613",
@@ -1597,7 +1047,7 @@
       "prevLow": 2.19,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1605,7 +1055,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9614",
@@ -1627,7 +1077,7 @@
       "prevLow": 2.01,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1635,7 +1085,37 @@
           "l": 2.01
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9701",
+      "league": "南非超級聯賽",
+      "home": "史泰倫博斯",
+      "away": "TS銀河",
+      "homeEn": "Stellenbosch",
+      "awayEn": "TS Galaxy",
+      "kickoffMs": 1795800600000,
+      "line": "2.5",
+      "oddsHigh": 2.58,
+      "oddsLow": 1.44,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.58,
+      "openLow": 1.44,
+      "prevHigh": 2.58,
+      "prevLow": 1.44,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.58,
+          "l": 1.44
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9600",
@@ -1657,7 +1137,7 @@
       "prevLow": 2.19,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1665,7 +1145,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9617",
@@ -1687,7 +1167,7 @@
       "prevLow": 1.67,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1695,7 +1175,7 @@
           "l": 1.67
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9590",
@@ -1717,7 +1197,7 @@
       "prevLow": 1.8,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1725,7 +1205,7 @@
           "l": 1.8
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9593",
@@ -1736,8 +1216,8 @@
       "awayEn": "Willem II",
       "kickoffMs": 1795806000000,
       "line": "3.0/3.5",
-      "oddsHigh": 1.82,
-      "oddsLow": 1.88,
+      "oddsHigh": 1.89,
+      "oddsLow": 1.81,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1745,17 +1225,22 @@
       "openLow": 1.88,
       "prevHigh": 1.82,
       "prevLow": 1.88,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "dropPctHigh": -3.85,
+      "dropPctLow": 3.72,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.82,
           "l": 1.88
+        },
+        {
+          "t": "27/11 03:21",
+          "h": 1.89,
+          "l": 1.81
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9601",
@@ -1777,7 +1262,7 @@
       "prevLow": 2.1,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1785,7 +1270,7 @@
           "l": 2.1
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9602",
@@ -1807,7 +1292,7 @@
       "prevLow": 1.85,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1815,7 +1300,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9603",
@@ -1837,7 +1322,7 @@
       "prevLow": 1.89,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1845,7 +1330,7 @@
           "l": 1.89
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9604",
@@ -1867,7 +1352,7 @@
       "prevLow": 1.83,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1875,7 +1360,7 @@
           "l": 1.83
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9605",
@@ -1897,7 +1382,7 @@
       "prevLow": 1.87,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1905,7 +1390,7 @@
           "l": 1.87
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9606",
@@ -1927,7 +1412,7 @@
       "prevLow": 2.0,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1935,7 +1420,7 @@
           "l": 2.0
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9607",
@@ -1957,7 +1442,7 @@
       "prevLow": 1.98,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1965,7 +1450,7 @@
           "l": 1.98
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9588",
@@ -1987,7 +1472,7 @@
       "prevLow": 1.79,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -1995,7 +1480,7 @@
           "l": 1.79
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9608",
@@ -2017,7 +1502,7 @@
       "prevLow": 1.56,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2025,7 +1510,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9591",
@@ -2047,7 +1532,7 @@
       "prevLow": 1.75,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2055,7 +1540,7 @@
           "l": 1.75
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9592",
@@ -2077,7 +1562,7 @@
       "prevLow": 1.9,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2085,7 +1570,7 @@
           "l": 1.9
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9609",
@@ -2107,7 +1592,7 @@
       "prevLow": 2.07,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2115,7 +1600,7 @@
           "l": 2.07
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9587",
@@ -2137,7 +1622,7 @@
       "prevLow": 2.0,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2145,7 +1630,7 @@
           "l": 2.0
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9594",
@@ -2167,7 +1652,7 @@
       "prevLow": 1.78,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2175,7 +1660,7 @@
           "l": 1.78
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9615",
@@ -2197,7 +1682,7 @@
       "prevLow": 2.29,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2205,7 +1690,7 @@
           "l": 2.29
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9597",
@@ -2227,7 +1712,7 @@
       "prevLow": 1.65,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2235,7 +1720,7 @@
           "l": 1.65
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9612",
@@ -2257,7 +1742,7 @@
       "prevLow": 1.55,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2265,7 +1750,7 @@
           "l": 1.55
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9595",
@@ -2287,7 +1772,7 @@
       "prevLow": 2.0,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2295,7 +1780,7 @@
           "l": 2.0
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9596",
@@ -2317,7 +1802,7 @@
       "prevLow": 1.85,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2325,7 +1810,1507 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9702",
+      "league": "美國職業聯賽",
+      "home": "皇家鹽湖城",
+      "away": "溫哥華白帽",
+      "homeEn": "Real Salt Lake",
+      "awayEn": "Vancouver Whitecaps",
+      "kickoffMs": 1795834800000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9693",
+      "league": "澳洲冠軍聯賽盃",
+      "home": "普雷斯頓雄獅",
+      "away": "西部APIA FC",
+      "homeEn": "Preston Lions",
+      "awayEn": "Wests APIA FC",
+      "kickoffMs": 1795838400000,
+      "line": "2.5",
+      "oddsHigh": 1.67,
+      "oddsLow": 2.07,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.67,
+      "openLow": 2.07,
+      "prevHigh": 1.67,
+      "prevLow": 2.07,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.67,
+          "l": 2.07
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9658",
+      "league": "南韓乙組聯賽",
+      "home": "金海FC",
+      "away": "FC城南",
+      "homeEn": "Gimhae FC",
+      "awayEn": "Seongnam FC",
+      "kickoffMs": 1795842000000,
+      "line": "2.5",
+      "oddsHigh": 1.68,
+      "oddsLow": 2.05,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.68,
+      "openLow": 2.05,
+      "prevHigh": 1.68,
+      "prevLow": 2.05,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.68,
+          "l": 2.05
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9659",
+      "league": "日本職業聯賽",
+      "home": "清水心跳",
+      "away": "浦和紅鑽",
+      "homeEn": "Shimizu S-Pulse",
+      "awayEn": "Urawa Reds",
+      "kickoffMs": 1795842000000,
+      "line": "2.5",
+      "oddsHigh": 1.8,
+      "oddsLow": 1.9,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.8,
+      "openLow": 1.9,
+      "prevHigh": 1.8,
+      "prevLow": 1.9,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.8,
+          "l": 1.9
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9660",
+      "league": "日本乙組聯賽",
+      "home": "RB大宮松鼠",
+      "away": "FC今治",
+      "homeEn": "RB Omiya Ardija",
+      "awayEn": "FC Imabari",
+      "kickoffMs": 1795842000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.08,
+      "oddsLow": 1.66,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.08,
+      "openLow": 1.66,
+      "prevHigh": 2.08,
+      "prevLow": 1.66,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.08,
+          "l": 1.66
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9661",
+      "league": "日本職業聯賽",
+      "home": "京都不死鳥",
+      "away": "大阪櫻花",
+      "homeEn": "Kyoto Sanga",
+      "awayEn": "Cerezo Osaka",
+      "kickoffMs": 1795842000000,
+      "line": "2.5",
+      "oddsHigh": 1.66,
+      "oddsLow": 2.08,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.66,
+      "openLow": 2.08,
+      "prevHigh": 1.66,
+      "prevLow": 2.08,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.66,
+          "l": 2.08
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9704",
+      "league": "南韓職業聯賽",
+      "home": "FC首爾",
+      "away": "大田市民",
+      "homeEn": "FC Seoul",
+      "awayEn": "Daejeon Citizen",
+      "kickoffMs": 1795842000000,
+      "line": "2.5",
+      "oddsHigh": 1.71,
+      "oddsLow": 2.01,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.71,
+      "openLow": 2.01,
+      "prevHigh": 1.71,
+      "prevLow": 2.01,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.71,
+          "l": 2.01
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9705",
+      "league": "南韓職業聯賽",
+      "home": "FC安養",
+      "away": "濟州SK",
+      "homeEn": "FC Anyang",
+      "awayEn": "Jeju SK",
+      "kickoffMs": 1795842000000,
+      "line": "2.5",
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.82,
+      "openLow": 1.88,
+      "prevHigh": 1.82,
+      "prevLow": 1.88,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.82,
+          "l": 1.88
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9662",
+      "league": "日本職業聯賽",
+      "home": "鹿島鹿角",
+      "away": "岡山綠雉",
+      "homeEn": "Kashima Antlers",
+      "awayEn": "Fagiano Okayama",
+      "kickoffMs": 1795845600000,
+      "line": "2.5",
+      "oddsHigh": 1.79,
+      "oddsLow": 1.91,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.79,
+      "openLow": 1.91,
+      "prevHigh": 1.79,
+      "prevLow": 1.91,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.79,
+          "l": 1.91
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9663",
+      "league": "日本職業聯賽",
+      "home": "神戶勝利船",
+      "away": "千葉市原",
+      "homeEn": "Vissel Kobe",
+      "awayEn": "JEF United Chiba",
+      "kickoffMs": 1795845600000,
+      "line": "2.5",
+      "oddsHigh": 1.8,
+      "oddsLow": 1.9,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.8,
+      "openLow": 1.9,
+      "prevHigh": 1.8,
+      "prevLow": 1.9,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.8,
+          "l": 1.9
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9664",
+      "league": "日本職業聯賽",
+      "home": "柏雷素爾",
+      "away": "廣島三箭",
+      "homeEn": "Kashiwa Reysol",
+      "awayEn": "Sanfrecce Hiroshima",
+      "kickoffMs": 1795849200000,
+      "line": "2.5",
+      "oddsHigh": 1.61,
+      "oddsLow": 2.17,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.61,
+      "openLow": 2.17,
+      "prevHigh": 1.61,
+      "prevLow": 2.17,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.61,
+          "l": 2.17
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9706",
+      "league": "南韓職業聯賽",
+      "home": "FC富川",
+      "away": "金泉尚武",
+      "homeEn": "Bucheon FC",
+      "awayEn": "Gimcheon Sangmu",
+      "kickoffMs": 1795851000000,
+      "line": "2.5",
+      "oddsHigh": 1.73,
+      "oddsLow": 1.98,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.73,
+      "openLow": 1.98,
+      "prevHigh": 1.73,
+      "prevLow": 1.98,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.73,
+          "l": 1.98
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9710",
+      "league": "南韓職業聯賽",
+      "home": "浦項制鐵",
+      "away": "FC光州",
+      "homeEn": "Pohang Steelers",
+      "awayEn": "Gwangju FC",
+      "kickoffMs": 1795851000000,
+      "line": "2.5",
+      "oddsHigh": 1.84,
+      "oddsLow": 1.86,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.84,
+      "openLow": 1.86,
+      "prevHigh": 1.84,
+      "prevLow": 1.86,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.84,
+          "l": 1.86
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9696",
+      "league": "澳洲冠軍聯賽盃",
+      "home": "比斯活特城",
+      "away": "悉尼聯",
+      "homeEn": "Bayswater City",
+      "awayEn": "Sydney Utd",
+      "kickoffMs": 1795854600000,
+      "line": "2.5",
+      "oddsHigh": 1.66,
+      "oddsLow": 2.08,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.66,
+      "openLow": 2.08,
+      "prevHigh": 1.66,
+      "prevLow": 2.08,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.66,
+          "l": 2.08
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9631",
+      "league": "澳洲職業聯賽",
+      "home": "中岸水手",
+      "away": "奧克蘭FC",
+      "homeEn": "Central Coast Mariners",
+      "awayEn": "Auckland FC",
+      "kickoffMs": 1795855200000,
+      "line": "2.5",
+      "oddsHigh": 1.68,
+      "oddsLow": 2.05,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.68,
+      "openLow": 2.05,
+      "prevHigh": 1.68,
+      "prevLow": 2.05,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.68,
+          "l": 2.05
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9684",
+      "league": "德國乙組聯賽",
+      "home": "哈化柏林",
+      "away": "卡爾斯魯厄",
+      "homeEn": "Hertha Berlin",
+      "awayEn": "Karlsruher",
+      "kickoffMs": 1795867200000,
+      "line": "3.5",
+      "oddsHigh": 1.85,
+      "oddsLow": 1.85,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.85,
+      "openLow": 1.85,
+      "prevHigh": 1.85,
+      "prevLow": 1.85,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.85,
+          "l": 1.85
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9685",
+      "league": "德國乙組聯賽",
+      "home": "基爾",
+      "away": "凱沙羅頓",
+      "homeEn": "Holstein Kiel",
+      "awayEn": "Kaiserslautern",
+      "kickoffMs": 1795867200000,
+      "line": "2.5",
+      "oddsHigh": 1.69,
+      "oddsLow": 2.04,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.69,
+      "openLow": 2.04,
+      "prevHigh": 1.69,
+      "prevLow": 2.04,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.69,
+          "l": 2.04
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9689",
+      "league": "德國乙組聯賽",
+      "home": "特雷斯登",
+      "away": "聖保利",
+      "homeEn": "Dresden",
+      "awayEn": "St. Pauli",
+      "kickoffMs": 1795867200000,
+      "line": "2.5",
+      "oddsHigh": 1.71,
+      "oddsLow": 2.01,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.71,
+      "openLow": 2.01,
+      "prevHigh": 1.71,
+      "prevLow": 2.01,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.71,
+          "l": 2.01
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9700",
+      "league": "西班牙甲組聯賽",
+      "home": "貝迪斯",
+      "away": "華歷簡奴",
+      "homeEn": "Betis",
+      "awayEn": "Vallecano",
+      "kickoffMs": 1795870800000,
+      "line": "2.5",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.53,
+      "openLow": 2.33,
+      "prevHigh": 1.53,
+      "prevLow": 2.33,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.53,
+          "l": 2.33
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9632",
+      "league": "意大利甲組聯賽",
+      "home": "費辛隆尼",
+      "away": "帕爾馬",
+      "homeEn": "Frosinone",
+      "awayEn": "Parma",
+      "kickoffMs": 1795874400000,
+      "line": "3.5",
+      "oddsHigh": 1.89,
+      "oddsLow": 1.81,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.89,
+      "openLow": 1.81,
+      "prevHigh": 1.89,
+      "prevLow": 1.81,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.89,
+          "l": 1.81
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9626",
+      "league": "德國甲組聯賽",
+      "home": "柏達邦",
+      "away": "史浩克04",
+      "homeEn": "Paderborn",
+      "awayEn": "Schalke 04",
+      "kickoffMs": 1795876200000,
+      "line": "2.5",
+      "oddsHigh": 1.74,
+      "oddsLow": 1.97,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.74,
+      "openLow": 1.97,
+      "prevHigh": 1.74,
+      "prevLow": 1.97,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.74,
+          "l": 1.97
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9628",
+      "league": "德國甲組聯賽",
+      "home": "緬恩斯",
+      "away": "柏林聯",
+      "homeEn": "Mainz",
+      "awayEn": "Union Berlin",
+      "kickoffMs": 1795876200000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.1,
+      "oddsLow": 1.65,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.1,
+      "openLow": 1.65,
+      "prevHigh": 2.1,
+      "prevLow": 1.65,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.1,
+          "l": 1.65
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9629",
+      "league": "德國甲組聯賽",
+      "home": "漢堡",
+      "away": "拜仁慕尼黑",
+      "homeEn": "Hamburg",
+      "awayEn": "Bayern Munich",
+      "kickoffMs": 1795876200000,
+      "line": "3.5",
+      "oddsHigh": 1.7,
+      "oddsLow": 2.02,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.7,
+      "openLow": 2.02,
+      "prevHigh": 1.7,
+      "prevLow": 2.02,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.7,
+          "l": 2.02
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9630",
+      "league": "德國甲組聯賽",
+      "home": "科隆",
+      "away": "艾華斯堡",
+      "homeEn": "Cologne",
+      "awayEn": "Elversberg",
+      "kickoffMs": 1795876200000,
+      "line": "2.5",
+      "oddsHigh": 1.59,
+      "oddsLow": 2.2,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.59,
+      "openLow": 2.2,
+      "prevHigh": 1.59,
+      "prevLow": 2.2,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.59,
+          "l": 2.2
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9618",
+      "league": "英格蘭超級聯賽",
+      "home": "曼聯",
+      "away": "賓福特",
+      "homeEn": "Manchester Utd",
+      "awayEn": "Brentford",
+      "kickoffMs": 1795878000000,
+      "line": "2.5",
+      "oddsHigh": 1.54,
+      "oddsLow": 2.3,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.54,
+      "openLow": 2.3,
+      "prevHigh": 1.54,
+      "prevLow": 2.3,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.54,
+          "l": 2.3
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9619",
+      "league": "英格蘭超級聯賽",
+      "home": "列斯聯",
+      "away": "高雲地利",
+      "homeEn": "Leeds",
+      "awayEn": "Coventry",
+      "kickoffMs": 1795878000000,
+      "line": "2.5",
+      "oddsHigh": 1.59,
+      "oddsLow": 2.2,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.59,
+      "openLow": 2.2,
+      "prevHigh": 1.59,
+      "prevLow": 2.2,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.59,
+          "l": 2.2
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9621",
+      "league": "蘇格蘭超級聯賽",
+      "home": "登地聯",
+      "away": "聖莊士東",
+      "homeEn": "Dundee Utd",
+      "awayEn": "St. Johnstone",
+      "kickoffMs": 1795878000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9622",
+      "league": "蘇格蘭超級聯賽",
+      "home": "鴨巴甸",
+      "away": "登地",
+      "homeEn": "Aberdeen",
+      "awayEn": "Dundee",
+      "kickoffMs": 1795878000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.08,
+      "oddsLow": 1.66,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.08,
+      "openLow": 1.66,
+      "prevHigh": 2.08,
+      "prevLow": 1.66,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.08,
+          "l": 1.66
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9623",
+      "league": "蘇格蘭超級聯賽",
+      "home": "格拉斯哥流浪",
+      "away": "福爾柯克",
+      "homeEn": "Rangers",
+      "awayEn": "Falkirk",
+      "kickoffMs": 1795878000000,
+      "line": "3.5",
+      "oddsHigh": 1.97,
+      "oddsLow": 1.74,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.97,
+      "openLow": 1.74,
+      "prevHigh": 1.97,
+      "prevLow": 1.74,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.97,
+          "l": 1.74
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9624",
+      "league": "蘇格蘭超級聯賽",
+      "home": "聖美倫",
+      "away": "基爾馬諾克",
+      "homeEn": "St. Mirren",
+      "awayEn": "Kilmarnock",
+      "kickoffMs": 1795878000000,
+      "line": "2.5",
+      "oddsHigh": 1.64,
+      "oddsLow": 2.12,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.64,
+      "openLow": 2.12,
+      "prevHigh": 1.64,
+      "prevLow": 2.12,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.64,
+          "l": 2.12
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9648",
+      "league": "西班牙甲組聯賽",
+      "home": "馬拉加",
+      "away": "畢爾包",
+      "homeEn": "Malaga",
+      "awayEn": "Bilbao",
+      "kickoffMs": 1795878900000,
+      "line": "2.5",
+      "oddsHigh": 1.81,
+      "oddsLow": 1.89,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.81,
+      "openLow": 1.89,
+      "prevHigh": 1.81,
+      "prevLow": 1.89,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.81,
+          "l": 1.89
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9644",
+      "league": "荷蘭甲組聯賽",
+      "home": "精英隊",
+      "away": "泰斯達",
+      "homeEn": "Excelsior",
+      "awayEn": "Telstar",
+      "kickoffMs": 1795879800000,
+      "line": "2.5",
+      "oddsHigh": 1.55,
+      "oddsLow": 2.29,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.55,
+      "openLow": 2.29,
+      "prevHigh": 1.55,
+      "prevLow": 2.29,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.55,
+          "l": 2.29
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9654",
+      "league": "葡萄牙超級聯賽",
+      "home": "阿洛卡",
+      "away": "里奧艾維",
+      "homeEn": "Arouca",
+      "awayEn": "Rio Ave",
+      "kickoffMs": 1795879800000,
+      "line": "2.5",
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.82,
+      "openLow": 1.88,
+      "prevHigh": 1.82,
+      "prevLow": 1.88,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.82,
+          "l": 1.88
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9656",
+      "league": "葡萄牙超級聯賽",
+      "home": "摩里倫斯",
+      "away": "辛達卡拉",
+      "homeEn": "Moreirense",
+      "awayEn": "Santa Clara",
+      "kickoffMs": 1795879800000,
+      "line": "2.5",
+      "oddsHigh": 2.4,
+      "oddsLow": 1.5,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.4,
+      "openLow": 1.5,
+      "prevHigh": 2.4,
+      "prevLow": 1.5,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.4,
+          "l": 1.5
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9665",
+      "league": "荷蘭乙組聯賽",
+      "home": "安曼",
+      "away": "靴蒙特",
+      "homeEn": "Emmen",
+      "awayEn": "Helmond",
+      "kickoffMs": 1795879800000,
+      "line": "3.5",
+      "oddsHigh": 1.97,
+      "oddsLow": 1.74,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.97,
+      "openLow": 1.74,
+      "prevHigh": 1.97,
+      "prevLow": 1.74,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.97,
+          "l": 1.74
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9639",
+      "league": "法國甲組聯賽",
+      "home": "昂熱",
+      "away": "朗斯",
+      "homeEn": "Angers SCO",
+      "awayEn": "Lens",
+      "kickoffMs": 1795882500000,
+      "line": "2.5",
+      "oddsHigh": 1.65,
+      "oddsLow": 2.1,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.65,
+      "openLow": 2.1,
+      "prevHigh": 1.65,
+      "prevLow": 2.1,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.65,
+          "l": 2.1
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9636",
+      "league": "意大利甲組聯賽",
+      "home": "拖連奴",
+      "away": "拉素",
+      "homeEn": "AC Torino",
+      "awayEn": "Lazio",
+      "kickoffMs": 1795885200000,
+      "line": "2.5",
+      "oddsHigh": 1.81,
+      "oddsLow": 1.89,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.81,
+      "openLow": 1.89,
+      "prevHigh": 1.81,
+      "prevLow": 1.89,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.81,
+          "l": 1.89
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9683",
+      "league": "挪威超級聯賽",
+      "home": "洛辛堡",
+      "away": "莫迪",
+      "homeEn": "Rosenborg",
+      "awayEn": "Molde",
+      "kickoffMs": 1795885200000,
+      "line": "4.5",
+      "oddsHigh": 2.27,
+      "oddsLow": 1.56,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.27,
+      "openLow": 1.56,
+      "prevHigh": 2.27,
+      "prevLow": 1.56,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.27,
+          "l": 1.56
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9620",
+      "league": "英格蘭超級聯賽",
+      "home": "葉士域治",
+      "away": "阿士東維拉",
+      "homeEn": "Ipswich",
+      "awayEn": "Aston Villa",
+      "kickoffMs": 1795887000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9627",
+      "league": "德國甲組聯賽",
+      "home": "史特加",
+      "away": "法蘭克福",
+      "homeEn": "Stuttgart",
+      "awayEn": "Frankfurt",
+      "kickoffMs": 1795887000000,
+      "line": "3.5",
+      "oddsHigh": 1.66,
+      "oddsLow": 2.08,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.66,
+      "openLow": 2.08,
+      "prevHigh": 1.66,
+      "prevLow": 2.08,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.66,
+          "l": 2.08
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9647",
+      "league": "西班牙甲組聯賽",
+      "home": "艾爾切",
+      "away": "馬德里體育會",
+      "homeEn": "CF Elche",
+      "awayEn": "Atletico Madrid",
+      "kickoffMs": 1795887000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.02,
+      "oddsLow": 1.7,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.02,
+      "openLow": 1.7,
+      "prevHigh": 2.02,
+      "prevLow": 1.7,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.02,
+          "l": 1.7
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9625",
+      "league": "蘇格蘭超級聯賽",
+      "home": "馬瑟韋爾",
+      "away": "喜伯年",
+      "homeEn": "Motherwell",
+      "awayEn": "Hibernian",
+      "kickoffMs": 1795887900000,
+      "line": "2.5",
+      "oddsHigh": 1.52,
+      "oddsLow": 2.35,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.52,
+      "openLow": 2.35,
+      "prevHigh": 1.52,
+      "prevLow": 2.35,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.52,
+          "l": 2.35
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9643",
+      "league": "荷蘭甲組聯賽",
+      "home": "燕豪芬",
+      "away": "伊高斯",
+      "homeEn": "PSV Eindhoven",
+      "awayEn": "Go Ahead Eagles",
+      "kickoffMs": 1795887900000,
+      "line": "4.5",
+      "oddsHigh": 2.27,
+      "oddsLow": 1.56,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.27,
+      "openLow": 1.56,
+      "prevHigh": 2.27,
+      "prevLow": 1.56,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.27,
+          "l": 1.56
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9655",
+      "league": "葡萄牙超級聯賽",
+      "home": "維塞烏",
+      "away": "艾華卡",
+      "homeEn": "Viseu",
+      "awayEn": "Alverca",
+      "kickoffMs": 1795888800000,
+      "line": "2.5",
+      "oddsHigh": 2.08,
+      "oddsLow": 1.66,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.08,
+      "openLow": 1.66,
+      "prevHigh": 2.08,
+      "prevLow": 1.66,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.08,
+          "l": 1.66
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9686",
+      "league": "德國乙組聯賽",
+      "home": "奧斯納貝克",
+      "away": "漢諾威",
+      "homeEn": "Osnabruck",
+      "awayEn": "Hannover",
+      "kickoffMs": 1795894200000,
+      "line": "2.5",
+      "oddsHigh": 1.57,
+      "oddsLow": 2.25,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.57,
+      "openLow": 2.25,
+      "prevHigh": 1.57,
+      "prevLow": 2.25,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.57,
+          "l": 2.25
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9635",
+      "league": "意大利甲組聯賽",
+      "home": "國際米蘭",
+      "away": "熱拿亞",
+      "homeEn": "Inter Milan",
+      "awayEn": "Genoa",
+      "kickoffMs": 1795895100000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9638",
+      "league": "法國甲組聯賽",
+      "home": "尼斯",
+      "away": "特魯瓦",
+      "homeEn": "Nice",
+      "awayEn": "Troyes",
+      "kickoffMs": 1795895100000,
+      "line": "2.5",
+      "oddsHigh": 1.61,
+      "oddsLow": 2.17,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.61,
+      "openLow": 2.17,
+      "prevHigh": 1.61,
+      "prevLow": 2.17,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.61,
+          "l": 2.17
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9640",
+      "league": "法國甲組聯賽",
+      "home": "勒哈弗爾",
+      "away": "斯特拉斯堡",
+      "homeEn": "Le Havre",
+      "awayEn": "Strasbourg",
+      "kickoffMs": 1795895100000,
+      "line": "2.5",
+      "oddsHigh": 1.73,
+      "oddsLow": 1.98,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.73,
+      "openLow": 1.98,
+      "prevHigh": 1.73,
+      "prevLow": 1.98,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.73,
+          "l": 1.98
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9641",
+      "league": "法國甲組聯賽",
+      "home": "巴黎聖日耳門",
+      "away": "羅連安特",
+      "homeEn": "Paris Saint Germain",
+      "awayEn": "Lorient",
+      "kickoffMs": 1795895100000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.85,
+      "oddsLow": 1.85,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.85,
+      "openLow": 1.85,
+      "prevHigh": 1.85,
+      "prevLow": 1.85,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.85,
+          "l": 1.85
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9642",
+      "league": "法國甲組聯賽",
+      "home": "勒芒",
+      "away": "里爾",
+      "homeEn": "Le Mans",
+      "awayEn": "Lille",
+      "kickoffMs": 1795895100000,
+      "line": "2.5",
+      "oddsHigh": 1.97,
+      "oddsLow": 1.74,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.97,
+      "openLow": 1.74,
+      "prevHigh": 1.97,
+      "prevLow": 1.74,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.97,
+          "l": 1.74
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9585",
@@ -2355,7 +3340,817 @@
           "l": 1.31
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9650",
+      "league": "西班牙甲組聯賽",
+      "home": "皇家馬德里",
+      "away": "艾拉維斯",
+      "homeEn": "Real Madrid",
+      "awayEn": "Alaves",
+      "kickoffMs": 1795896000000,
+      "line": "3.5",
+      "oddsHigh": 1.69,
+      "oddsLow": 2.04,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.69,
+      "openLow": 2.04,
+      "prevHigh": 1.69,
+      "prevLow": 2.04,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.69,
+          "l": 2.04
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9697",
+      "league": "荷蘭甲組聯賽",
+      "home": "甘堡爾",
+      "away": "鹿特丹斯巴達",
+      "homeEn": "Cambuur",
+      "awayEn": "Sparta Rotterdam",
+      "kickoffMs": 1795896000000,
+      "line": "3.5",
+      "oddsHigh": 1.98,
+      "oddsLow": 1.73,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.98,
+      "openLow": 1.73,
+      "prevHigh": 1.98,
+      "prevLow": 1.73,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.98,
+          "l": 1.73
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9653",
+      "league": "葡萄牙超級聯賽",
+      "home": "甘馬雷斯",
+      "away": "艾馬多拉",
+      "homeEn": "Guimaraes",
+      "awayEn": "Amadora",
+      "kickoffMs": 1795897800000,
+      "line": "2.5",
+      "oddsHigh": 1.78,
+      "oddsLow": 1.92,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.78,
+      "openLow": 1.92,
+      "prevHigh": 1.78,
+      "prevLow": 1.92,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.78,
+          "l": 1.92
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9666",
+      "league": "日本乙組聯賽",
+      "home": "八戶雲羅里",
+      "away": "藤枝MYFC",
+      "homeEn": "Vanraure Hachinohe",
+      "awayEn": "Fujieda MYFC",
+      "kickoffMs": 1795924800000,
+      "line": "2.5",
+      "oddsHigh": 2.27,
+      "oddsLow": 1.56,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.27,
+      "openLow": 1.56,
+      "prevHigh": 2.27,
+      "prevLow": 1.56,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.27,
+          "l": 1.56
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9667",
+      "league": "南韓乙組聯賽",
+      "home": "忠南牙山",
+      "away": "釜山偶像",
+      "homeEn": "Chungnam Asan",
+      "awayEn": "Busan I'Park",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.73,
+      "oddsLow": 1.98,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.73,
+      "openLow": 1.98,
+      "prevHigh": 1.73,
+      "prevLow": 1.98,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.73,
+          "l": 1.98
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9668",
+      "league": "南韓乙組聯賽",
+      "home": "天安城",
+      "away": "FC大邱",
+      "homeEn": "Cheonan City",
+      "awayEn": "Daegu FC",
+      "kickoffMs": 1795928400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9669",
+      "league": "日本乙組聯賽",
+      "home": "秋田藍閃電",
+      "away": "FC橫濱",
+      "homeEn": "Blaublitz Akita",
+      "awayEn": "FC Yokohama",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.91,
+      "oddsLow": 1.79,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.91,
+      "openLow": 1.79,
+      "prevHigh": 1.91,
+      "prevLow": 1.79,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.91,
+          "l": 1.79
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9670",
+      "league": "日本乙組聯賽",
+      "home": "仙台維加泰",
+      "away": "山形山神",
+      "homeEn": "Vegalta Sendai",
+      "awayEn": "Montedio Yamagata",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.64,
+      "oddsLow": 2.12,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.64,
+      "openLow": 2.12,
+      "prevHigh": 1.64,
+      "prevLow": 2.12,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.64,
+          "l": 2.12
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9671",
+      "league": "日本乙組聯賽",
+      "home": "湘南比馬",
+      "away": "富山勝利",
+      "homeEn": "Shonan Bellmare",
+      "awayEn": "Kataller Toyama",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.62,
+      "oddsLow": 2.15,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.62,
+      "openLow": 2.15,
+      "prevHigh": 1.62,
+      "prevLow": 2.15,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.62,
+          "l": 2.15
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9672",
+      "league": "日本乙組聯賽",
+      "home": "磐田山葉",
+      "away": "櫪木城",
+      "homeEn": "Jubilo Iwata",
+      "awayEn": "Tochigi City",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.53,
+      "openLow": 2.33,
+      "prevHigh": 1.53,
+      "prevLow": 2.33,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.53,
+          "l": 2.33
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9673",
+      "league": "日本乙組聯賽",
+      "home": "新潟天鵝",
+      "away": "甲府風林",
+      "homeEn": "Albirex Niigata",
+      "awayEn": "Ventforet Kofu",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.84,
+      "oddsLow": 1.86,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.84,
+      "openLow": 1.86,
+      "prevHigh": 1.84,
+      "prevLow": 1.86,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.84,
+          "l": 1.86
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9674",
+      "league": "日本乙組聯賽",
+      "home": "大分三神",
+      "away": "德島漩渦",
+      "homeEn": "Oita Trinita",
+      "awayEn": "Tokushima Vortis",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 2.2,
+      "oddsLow": 1.59,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.2,
+      "openLow": 1.59,
+      "prevHigh": 2.2,
+      "prevLow": 1.59,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.2,
+          "l": 1.59
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9675",
+      "league": "日本職業聯賽",
+      "home": "橫濱水手",
+      "away": "FC東京",
+      "homeEn": "Yokohama F.Marinos",
+      "awayEn": "FC Tokyo",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.63,
+      "oddsLow": 2.13,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.63,
+      "openLow": 2.13,
+      "prevHigh": 1.63,
+      "prevLow": 2.13,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.63,
+          "l": 2.13
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9698",
+      "league": "日本職業聯賽",
+      "home": "水戶蜀葵",
+      "away": "長崎成功丸",
+      "homeEn": "Mito Hollyhock",
+      "awayEn": "V-Varen Nagasaki",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 2.04,
+      "oddsLow": 1.69,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.04,
+      "openLow": 1.69,
+      "prevHigh": 2.04,
+      "prevLow": 1.69,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.04,
+          "l": 1.69
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9699",
+      "league": "日本乙組聯賽",
+      "home": "宮崎棒牛鳥",
+      "away": "鳥棲砂岩",
+      "homeEn": "Tegevajaro Miyazaki",
+      "awayEn": "Sagan Tosu",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 2.04,
+      "oddsLow": 1.69,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.04,
+      "openLow": 1.69,
+      "prevHigh": 2.04,
+      "prevLow": 1.69,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.04,
+          "l": 1.69
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9703",
+      "league": "南韓職業聯賽",
+      "home": "蔚山HD",
+      "away": "全北汽車",
+      "homeEn": "Ulsan HD",
+      "awayEn": "Jeonbuk Motors",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.63,
+      "oddsLow": 2.13,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.63,
+      "openLow": 2.13,
+      "prevHigh": 1.63,
+      "prevLow": 2.13,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.63,
+          "l": 2.13
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9707",
+      "league": "南韓乙組聯賽",
+      "home": "全南天龍",
+      "away": "水原藍翼",
+      "homeEn": "Jeonnam Dragons",
+      "awayEn": "Suwon Bluewings",
+      "kickoffMs": 1795928400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.92,
+      "oddsLow": 1.78,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.92,
+      "openLow": 1.78,
+      "prevHigh": 1.92,
+      "prevLow": 1.78,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.92,
+          "l": 1.78
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9708",
+      "league": "南韓乙組聯賽",
+      "home": "FC慶南",
+      "away": "首爾衣戀",
+      "homeEn": "Gyeongnam FC",
+      "awayEn": "Seoul E-Land",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.6,
+      "oddsLow": 2.19,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.6,
+      "openLow": 2.19,
+      "prevHigh": 1.6,
+      "prevLow": 2.19,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.6,
+          "l": 2.19
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9709",
+      "league": "南韓乙組聯賽",
+      "home": "FC水原",
+      "away": "忠北清州",
+      "homeEn": "Suwon FC",
+      "awayEn": "Chungbuk Cheongju",
+      "kickoffMs": 1795928400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.0,
+      "oddsLow": 1.72,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.0,
+      "openLow": 1.72,
+      "prevHigh": 2.0,
+      "prevLow": 1.72,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.0,
+          "l": 1.72
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9711",
+      "league": "南韓乙組聯賽",
+      "home": "金浦FC",
+      "away": "FC華城",
+      "homeEn": "Gimpo FC",
+      "awayEn": "Hwaseong FC",
+      "kickoffMs": 1795928400000,
+      "line": "2.5",
+      "oddsHigh": 1.78,
+      "oddsLow": 1.92,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.78,
+      "openLow": 1.92,
+      "prevHigh": 1.78,
+      "prevLow": 1.92,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.78,
+          "l": 1.92
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9676",
+      "league": "日本職業聯賽",
+      "home": "川崎前鋒",
+      "away": "大阪飛腳",
+      "homeEn": "Kawasaki Frontale",
+      "awayEn": "Gamba Osaka",
+      "kickoffMs": 1795932000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.02,
+      "oddsLow": 1.7,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.02,
+      "openLow": 1.7,
+      "prevHigh": 2.02,
+      "prevLow": 1.7,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.02,
+          "l": 1.7
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9677",
+      "league": "日本乙組聯賽",
+      "home": "磐城FC",
+      "away": "北海道札幌岡薩多",
+      "homeEn": "Iwaki FC",
+      "awayEn": "Hokkaido Consadole Sapporo",
+      "kickoffMs": 1795932000000,
+      "line": "2.5",
+      "oddsHigh": 1.76,
+      "oddsLow": 1.94,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.76,
+      "openLow": 1.94,
+      "prevHigh": 1.76,
+      "prevLow": 1.94,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.76,
+          "l": 1.94
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9678",
+      "league": "日本職業聯賽",
+      "home": "名古屋鯨魚",
+      "away": "福岡黃蜂",
+      "homeEn": "Nagoya Grampus",
+      "awayEn": "Avispa Fukuoka",
+      "kickoffMs": 1795932000000,
+      "line": "2.5",
+      "oddsHigh": 1.92,
+      "oddsLow": 1.78,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.92,
+      "openLow": 1.78,
+      "prevHigh": 1.92,
+      "prevLow": 1.78,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.92,
+          "l": 1.78
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9712",
+      "league": "南韓職業聯賽",
+      "home": "仁川聯",
+      "away": "FC江原",
+      "homeEn": "Incheon Utd",
+      "awayEn": "Gangwon FC",
+      "kickoffMs": 1795937400000,
+      "line": "2.5",
+      "oddsHigh": 2.27,
+      "oddsLow": 1.56,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.27,
+      "openLow": 1.56,
+      "prevHigh": 2.27,
+      "prevLow": 1.56,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.27,
+          "l": 1.56
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9645",
+      "league": "荷蘭甲組聯賽",
+      "home": "海牙",
+      "away": "烏德勒支",
+      "homeEn": "Den Haag",
+      "awayEn": "Utrecht",
+      "kickoffMs": 1795950900000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.01,
+      "oddsLow": 1.71,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.01,
+      "openLow": 1.71,
+      "prevHigh": 2.01,
+      "prevLow": 1.71,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.01,
+          "l": 1.71
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9679",
+      "league": "荷蘭乙組聯賽",
+      "home": "禾寧丹",
+      "away": "FC燕豪芬",
+      "homeEn": "Volendam",
+      "awayEn": "FC Eindhoven",
+      "kickoffMs": 1795950900000,
+      "line": "3.5",
+      "oddsHigh": 1.79,
+      "oddsLow": 1.91,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.79,
+      "openLow": 1.91,
+      "prevHigh": 1.79,
+      "prevLow": 1.91,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.79,
+          "l": 1.91
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9634",
+      "league": "意大利甲組聯賽",
+      "home": "烏甸尼斯",
+      "away": "費倫天拿",
+      "homeEn": "Udinese",
+      "awayEn": "Fiorentina",
+      "kickoffMs": 1795951800000,
+      "line": "2.5",
+      "oddsHigh": 1.68,
+      "oddsLow": 2.05,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.68,
+      "openLow": 2.05,
+      "prevHigh": 1.68,
+      "prevLow": 2.05,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.68,
+          "l": 2.05
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     },
     {
       "id": "FB9500",
@@ -2377,7 +4172,7 @@
       "prevLow": 2.13,
       "dropPctHigh": 0.0,
       "dropPctLow": 0.0,
-      "isNewMatch": true,
+      "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
@@ -2385,7 +4180,487 @@
           "l": 2.13
         }
       ],
-      "updatedAtHkt": "26/11 17:50"
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9680",
+      "league": "德國乙組聯賽",
+      "home": "格雷特霍夫",
+      "away": "比勒費爾德",
+      "homeEn": "Greuther Furth",
+      "awayEn": "Bielefeld",
+      "kickoffMs": 1795955400000,
+      "line": "2.5",
+      "oddsHigh": 1.71,
+      "oddsLow": 2.01,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.71,
+      "openLow": 2.01,
+      "prevHigh": 1.71,
+      "prevLow": 2.01,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.71,
+          "l": 2.01
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9687",
+      "league": "德國乙組聯賽",
+      "home": "馬格德堡",
+      "away": "科特布斯",
+      "homeEn": "Magdeburg",
+      "awayEn": "Cottbus",
+      "kickoffMs": 1795955400000,
+      "line": "3.5",
+      "oddsHigh": 1.92,
+      "oddsLow": 1.78,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.92,
+      "openLow": 1.78,
+      "prevHigh": 1.92,
+      "prevLow": 1.78,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.92,
+          "l": 1.78
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9688",
+      "league": "德國乙組聯賽",
+      "home": "布倫瑞克",
+      "away": "禾夫斯堡",
+      "homeEn": "Braunschweig",
+      "awayEn": "Wolfsburg",
+      "kickoffMs": 1795955400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.97,
+      "oddsLow": 1.74,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.97,
+      "openLow": 1.74,
+      "prevHigh": 1.97,
+      "prevLow": 1.74,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.97,
+          "l": 1.74
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9651",
+      "league": "西班牙甲組聯賽",
+      "home": "華倫西亞",
+      "away": "奧沙辛拿",
+      "homeEn": "Valencia",
+      "awayEn": "Osasuna",
+      "kickoffMs": 1795957200000,
+      "line": "2.5",
+      "oddsHigh": 2.25,
+      "oddsLow": 1.57,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.25,
+      "openLow": 1.57,
+      "prevHigh": 2.25,
+      "prevLow": 1.57,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.25,
+          "l": 1.57
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9681",
+      "league": "丹麥超級聯賽",
+      "home": "寧比",
+      "away": "域堡",
+      "homeEn": "Lyngby",
+      "awayEn": "Viborg",
+      "kickoffMs": 1795957200000,
+      "line": "2.5",
+      "oddsHigh": 1.53,
+      "oddsLow": 2.33,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.53,
+      "openLow": 2.33,
+      "prevHigh": 1.53,
+      "prevLow": 2.33,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.53,
+          "l": 2.33
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9646",
+      "league": "荷蘭甲組聯賽",
+      "home": "幸運薛達",
+      "away": "海倫芬",
+      "homeEn": "Fortuna Sittard",
+      "awayEn": "Heerenveen",
+      "kickoffMs": 1795959000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.02,
+      "oddsLow": 1.7,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.02,
+      "openLow": 1.7,
+      "prevHigh": 2.02,
+      "prevLow": 1.7,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.02,
+          "l": 1.7
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9691",
+      "league": "挪威超級聯賽",
+      "home": "費德列斯達",
+      "away": "阿里辛特",
+      "homeEn": "Fredrikstad",
+      "awayEn": "Aalesund",
+      "kickoffMs": 1795959000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.94,
+      "oddsLow": 1.76,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.94,
+      "openLow": 1.76,
+      "prevHigh": 1.94,
+      "prevLow": 1.76,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.94,
+          "l": 1.76
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9633",
+      "league": "意大利甲組聯賽",
+      "home": "薩斯索羅",
+      "away": "拿玻里",
+      "homeEn": "Sassuolo",
+      "awayEn": "Napoli",
+      "kickoffMs": 1795960800000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9649",
+      "league": "西班牙甲組聯賽",
+      "home": "拉科魯尼亞",
+      "away": "巴塞隆拿",
+      "homeEn": "Deportivo",
+      "awayEn": "Barcelona",
+      "kickoffMs": 1795965300000,
+      "line": "3.5",
+      "oddsHigh": 1.55,
+      "oddsLow": 2.29,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.55,
+      "openLow": 2.29,
+      "prevHigh": 1.55,
+      "prevLow": 2.29,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.55,
+          "l": 2.29
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9682",
+      "league": "荷蘭乙組聯賽",
+      "home": "洛達",
+      "away": "迪加史卓普",
+      "homeEn": "Roda",
+      "awayEn": "De Graafschap",
+      "kickoffMs": 1795967100000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.07,
+      "oddsLow": 1.67,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.07,
+      "openLow": 1.67,
+      "prevHigh": 2.07,
+      "prevLow": 1.67,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.07,
+          "l": 1.67
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9692",
+      "league": "挪威超級聯賽",
+      "home": "辛迪夫佐特",
+      "away": "特林素",
+      "homeEn": "Sandefjord",
+      "awayEn": "Tromso",
+      "kickoffMs": 1795968000000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9501",
+      "league": "英格蘭超級聯賽",
+      "home": "阿仙奴",
+      "away": "曼城",
+      "homeEn": "Arsenal",
+      "awayEn": "Manchester City",
+      "kickoffMs": 1795969800000,
+      "line": "2.5",
+      "oddsHigh": 1.75,
+      "oddsLow": 1.95,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.75,
+      "openLow": 1.95,
+      "prevHigh": 1.75,
+      "prevLow": 1.95,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.75,
+          "l": 1.95
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9637",
+      "league": "意大利甲組聯賽",
+      "home": "羅馬",
+      "away": "蒙沙",
+      "homeEn": "Roma",
+      "awayEn": "Monza",
+      "kickoffMs": 1795971600000,
+      "line": "3.5",
+      "oddsHigh": 1.75,
+      "oddsLow": 1.95,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.75,
+      "openLow": 1.95,
+      "prevHigh": 1.75,
+      "prevLow": 1.95,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.75,
+          "l": 1.95
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9652",
+      "league": "葡萄牙超級聯賽",
+      "home": "基維辛迪",
+      "away": "艾斯杜尼",
+      "homeEn": "Gil Vicente",
+      "awayEn": "Estoril",
+      "kickoffMs": 1795975200000,
+      "line": "2.5",
+      "oddsHigh": 1.91,
+      "oddsLow": 1.79,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.91,
+      "openLow": 1.79,
+      "prevHigh": 1.91,
+      "prevLow": 1.79,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.91,
+          "l": 1.79
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9690",
+      "league": "挪威超級聯賽",
+      "home": "維京",
+      "away": "華拉倫加",
+      "homeEn": "Viking",
+      "awayEn": "Valerenga",
+      "kickoffMs": 1795976100000,
+      "line": "4.5",
+      "oddsHigh": 2.05,
+      "oddsLow": 1.68,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 2.05,
+      "openLow": 1.68,
+      "prevHigh": 2.05,
+      "prevLow": 1.68,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 2.05,
+          "l": 1.68
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
+    },
+    {
+      "id": "FB9657",
+      "league": "葡萄牙超級聯賽",
+      "home": "波圖",
+      "away": "士砵亭",
+      "homeEn": "Porto",
+      "awayEn": "Sporting",
+      "kickoffMs": 1795984200000,
+      "line": "2.5",
+      "oddsHigh": 1.85,
+      "oddsLow": 1.85,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openHigh": 1.85,
+      "openLow": 1.85,
+      "prevHigh": 1.85,
+      "prevLow": 1.85,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 03:21 (初盤)",
+          "h": 1.85,
+          "l": 1.85
+        }
+      ],
+      "updatedAtHkt": "27/11 03:21"
     }
   ]
 }
