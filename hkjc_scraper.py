@@ -1,6 +1,7 @@
 import asyncio
 import copy
 import json
+import math
 import os
 import re
 import sys
@@ -22,6 +23,59 @@ LINE_PRIORITY = {ln: idx for idx, ln in enumerate(PREFERRED_LINES)}
 
 def line_rank(line_str):
     return LINE_PRIORITY.get(str(line_str or "").strip(), 999)
+
+
+def poisson_pmf(k, lam):
+    if lam <= 0:
+        return 1.0 if k == 0 else 0.0
+    return math.exp(-lam + k * math.log(lam) - math.lgamma(k + 1))
+
+
+def single_line_ev(single_line, lam, odds_h, odds_l):
+    L = float(single_line)
+    is_int = abs(L - round(L)) < 0.01
+    p_under = 0.0
+    p_push = 0.0
+    if is_int:
+        L0 = int(round(L))
+        for k in range(L0):
+            p_under += poisson_pmf(k, lam)
+        p_push = poisson_pmf(L0, lam)
+    else:
+        for k in range(int(math.floor(L)) + 1):
+            p_under += poisson_pmf(k, lam)
+    p_over = max(0.0, 1.0 - p_under - p_push)
+    ev_over = p_over * (odds_h - 1.0) - p_under
+    ev_under = p_under * (odds_l - 1.0) - p_over
+    return ev_over, ev_under
+
+
+def solve_market_implied_lambda(line_str, odds_h, odds_l):
+    """Computes exact vig-free implied goal total for integer, half, or split Asian lines."""
+    h = max(1.04, float(odds_h or 1.85))
+    l = max(1.04, float(odds_l or 1.85))
+    overround = (1.0 / h) + (1.0 / l)
+    fair_h = h * overround
+    fair_l = l * overround
+    clean = str(line_str or "2.5").strip()
+    parts = [float(x) for x in clean.split("/") if x] if "/" in clean else [float(clean or 2.5)]
+
+    lo, hi = 0.65, 5.60
+    for _ in range(30):
+        mid = 0.5 * (lo + hi)
+        if len(parts) == 2:
+            l1, l2 = parts
+            eo1, eu1 = single_line_ev(l1, mid, fair_h, fair_l)
+            eo2, eu2 = single_line_ev(l2, mid, fair_h, fair_l)
+            diff = 0.5 * (eo1 + eo2) - 0.5 * (eu1 + eu2)
+        else:
+            eo, eu = single_line_ev(parts[0], mid, fair_h, fair_l)
+            diff = eo - eu
+        if diff < 0:
+            lo = mid
+        else:
+            hi = mid
+    return round(0.5 * (lo + hi), 4)
 
 
 def load_previous_memory():
@@ -66,7 +120,6 @@ def parse_kickoff_to_ms(val):
     if s.isdigit():
         num = int(s)
         return num if num > 10_000_000_000 else num * 1000
-    # Ignore pure YYYY-MM-DD without clock time so today's evening matches never look past midnight
     if len(s) <= 10 or ("T" not in s and ":" not in s):
         return 0
     try:
@@ -221,7 +274,6 @@ def walk_graphql_matches(obj, collected, now_ms):
             collected.pop(front_id, None)
             return
 
-        # Strictly parse clock-based kick-off fields ONLY (never date-only matchDate!)
         ko_ms = (
             parse_kickoff_to_ms(obj.get("kickOffTime"))
             or parse_kickoff_to_ms(obj.get("matchTime"))
@@ -249,7 +301,6 @@ def walk_graphql_matches(obj, collected, now_ms):
 
 
 def patch_pagination_vars(node, start_idx, end_idx):
-    """Recursively patches startIndex / endIndex inside single or batched GraphQL bodies."""
     mutated = False
     if isinstance(node, list):
         for elem in node:
@@ -292,7 +343,6 @@ async def scroll_all_containers(page, steps=24):
 
 
 async def extract_dom_fallback(page, collected, now_ms, now_dt):
-    """Backup DOM extractor on /ch/football/hil so visible FB rows & live odds are never missed."""
     try:
         raw_blocks = await page.evaluate(
             """() => {
@@ -342,10 +392,9 @@ async def extract_dom_fallback(page, collected, now_ms, now_dt):
 
         odds_found = [float(x) for x in re.findall(r"\b(\d+\.\d{2})\b", blk) if 1.08 <= float(x) <= 8.50]
         if len(odds_found) >= 2 and (home_ch or fid in collected):
-            h_odd, l_odd = odds_found[0], odds_found[1]
+            h_odd, l_odd = odds_found[:2]
             ex = collected.get(fid)
             if ex:
-                # Only fill missing fields; GraphQL remains authoritative if already present
                 if ko_ms > 0 and not ex.get("kickoffMs"):
                     ex["kickoffMs"] = ko_ms
             elif home_ch and away_ch:
@@ -368,7 +417,6 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
-        # CRITICAL: Do NOT set custom extra_http_headers here, or HKJC GraphQL CORS preflight blocks!
         context = await browser.new_context(
             locale="zh-HK",
             timezone_id="Asia/Hong_Kong",
@@ -377,7 +425,6 @@ async def main():
         )
         page = await context.new_page()
 
-        # Disable Chromium HTTP cache natively via CDP without injecting any CORS-breaking headers
         try:
             cdp = await context.new_cdp_session(page)
             await cdp.send("Network.enable")
@@ -407,7 +454,6 @@ async def main():
 
         page.on("response", handle_response)
 
-        # Pass 1: Full HAD page (all matches cross-pool 1X2 odds)
         current_stage = "HAD"
         try:
             await page.goto("https://bet.hkjc.com/ch/football/had", wait_until="domcontentloaded", timeout=35000)
@@ -416,7 +462,6 @@ async def main():
         except Exception as e:
             print(f"HAD navigation note: {e}")
 
-        # Pass 2: Full HIL page (authoritative latest HiLo lines & live odds)
         current_stage = "HIL"
         try:
             await page.goto("https://bet.hkjc.com/ch/football/hil", wait_until="domcontentloaded", timeout=35000)
@@ -426,7 +471,6 @@ async def main():
         except Exception as e:
             print(f"HIL navigation note: {e}")
 
-        # Pass 3: CORS-free native APIRequestContext pagination (1..400) for both HAD and HIL
         for stage_key in ("HAD", "HIL"):
             tmpl = gql_templates.get(stage_key)
             if not tmpl:
@@ -473,32 +517,40 @@ async def main():
             new_matches_count += 1
 
         old = old or {}
-        same_line = str(old.get("line", cur["line"])) == cur["line"]
+        # Preserve original opening line, opening odds & opening implied goal total across line shifts!
+        open_line = str(old.get("openLine") or old.get("line") or cur["line"]).strip()
+        open_h = float(old.get("openHigh") or cur["oddsHigh"])
+        open_l = float(old.get("openLow") or cur["oddsLow"])
+        open_mkt_lam = float(old.get("openMarketLambda") or 0.0)
+        if open_mkt_lam <= 0.5:
+            open_mkt_lam = solve_market_implied_lambda(open_line, open_h, open_l)
 
-        open_h = float(old.get("openHigh") or cur["oddsHigh"]) if same_line else cur["oddsHigh"]
-        open_l = float(old.get("openLow") or cur["oddsLow"]) if same_line else cur["oddsLow"]
-        last_h = float(old.get("oddsHigh") or cur["oddsHigh"]) if same_line else cur["oddsHigh"]
-        last_l = float(old.get("oddsLow") or cur["oddsLow"]) if same_line else cur["oddsLow"]
+        last_line = str(old.get("line") or cur["line"]).strip()
+        last_h = float(old.get("oddsHigh") or cur["oddsHigh"])
+        last_l = float(old.get("oddsLow") or cur["oddsLow"])
 
-        history = list(old.get("oddsHistory") or []) if same_line else []
+        history = list(old.get("oddsHistory") or [])
         if not history:
-            history.append({"t": now_label + " (初盤)", "h": round(open_h, 2), "l": round(open_l, 2)})
+            history.append({"t": now_label + " (初盤)", "line": open_line, "h": round(open_h, 2), "l": round(open_l, 2)})
 
-        moved = abs(cur["oddsHigh"] - last_h) >= 0.01 or abs(cur["oddsLow"] - last_l) >= 0.01
+        moved = (cur["line"] != last_line) or abs(cur["oddsHigh"] - last_h) >= 0.01 or abs(cur["oddsLow"] - last_l) >= 0.01
         if moved:
             changed_count += 1
-            history.append({"t": now_label, "h": cur["oddsHigh"], "l": cur["oddsLow"]})
-            history = history[max(0, len(history) - 14):]
+            history.append({"t": now_label, "line": cur["line"], "h": cur["oddsHigh"], "l": cur["oddsLow"]})
+            history = history[max(0, len(history) - 16):]
 
         prev_h = last_h if moved else float(old.get("prevHigh") or open_h)
         prev_l = last_l if moved else float(old.get("prevLow") or open_l)
 
-        drop_h = round(((open_h - cur["oddsHigh"]) / open_h) * 100, 2) if open_h > 1.01 else 0.0
-        drop_l = round(((open_l - cur["oddsLow"]) / open_l) * 100, 2) if open_l > 1.01 else 0.0
+        same_open_line = (open_line == cur["line"])
+        drop_h = round(((open_h - cur["oddsHigh"]) / open_h) * 100, 2) if (same_open_line and open_h > 1.01) else 0.0
+        drop_l = round(((open_l - cur["oddsLow"]) / open_l) * 100, 2) if (same_open_line and open_l > 1.01) else 0.0
 
         cur.update({
+            "openLine": open_line,
             "openHigh": round(open_h, 2),
             "openLow": round(open_l, 2),
+            "openMarketLambda": round(open_mkt_lam, 4),
             "prevHigh": round(prev_h, 2),
             "prevLow": round(prev_l, 2),
             "dropPctHigh": drop_h,
@@ -513,7 +565,7 @@ async def main():
 
     os.makedirs("data", exist_ok=True)
     output_payload = {
-        "version": "v20",
+        "version": "v21",
         "updatedAtIso": now_dt.isoformat(),
         "updatedAtHkt": now_dt.strftime("%d/%m (%a) %H:%M:%S HKT"),
         "matchCount": len(final_matches),
@@ -528,7 +580,7 @@ async def main():
 
     print(
         f"Done ({now_label} HKT): {len(final_matches)} live matches saved | "
-        f"+{new_matches_count} new matches | {changed_count} odds updated."
+        f"+{new_matches_count} new matches | {changed_count} odds/line updates."
     )
 
 
