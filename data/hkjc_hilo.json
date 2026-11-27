@@ -1,152 +1,12 @@
 {
   "version": "v21",
-  "updatedAtIso": "2026-11-27T10:20:50.257735+08:00",
-  "updatedAtHkt": "27/11 (Fri) 10:20:50 HKT",
+  "updatedAtIso": "2026-11-27T19:08:05.083245+08:00",
+  "updatedAtHkt": "27/11 (Fri) 19:08:05 HKT",
   "matchCount": 132,
   "scrapedFreshCount": 132,
-  "newMatchesAddedCount": 0,
-  "oddsChangedCount": 0,
+  "newMatchesAddedCount": 8,
+  "oddsChangedCount": 11,
   "matches": [
-    {
-      "id": "FB9566",
-      "league": "墨西哥超級聯賽",
-      "home": "利昂",
-      "away": "藍十字",
-      "homeEn": "Club Leon",
-      "awayEn": "Cruz Azul",
-      "kickoffMs": 1795749000000,
-      "line": "2.5",
-      "oddsHigh": 1.63,
-      "oddsLow": 2.13,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "2.5",
-      "openHigh": 1.69,
-      "openLow": 2.04,
-      "openMarketLambda": 2.8694,
-      "prevHigh": 1.69,
-      "prevLow": 2.04,
-      "dropPctHigh": 3.55,
-      "dropPctLow": -4.41,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 09:21 (初盤)",
-          "h": 1.69,
-          "l": 2.04
-        },
-        {
-          "t": "27/11 09:42",
-          "line": "2.5",
-          "h": 1.63,
-          "l": 2.13
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9616",
-      "league": "澳洲冠軍聯賽盃",
-      "home": "布羅德梅多魔術",
-      "away": "FC獅子",
-      "homeEn": "Broadmeadow Magic",
-      "awayEn": "Lions FC",
-      "kickoffMs": 1795768200000,
-      "line": "3.5",
-      "oddsHigh": 1.86,
-      "oddsLow": 1.84,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "3.5",
-      "openHigh": 1.91,
-      "openLow": 1.79,
-      "openMarketLambda": 3.5953,
-      "prevHigh": 1.91,
-      "prevLow": 1.79,
-      "dropPctHigh": 2.62,
-      "dropPctLow": -2.79,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.91,
-          "l": 1.79
-        },
-        {
-          "t": "27/11 03:21",
-          "h": 1.86,
-          "l": 1.84
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9589",
-      "league": "澳洲職業聯賽",
-      "home": "FC麥克阿瑟",
-      "away": "墨爾本城",
-      "homeEn": "Macarthur FC",
-      "awayEn": "Melbourne City",
-      "kickoffMs": 1795768800000,
-      "line": "2.5",
-      "oddsHigh": 1.69,
-      "oddsLow": 2.04,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "2.5",
-      "openHigh": 1.69,
-      "openLow": 2.04,
-      "openMarketLambda": 2.8694,
-      "prevHigh": 1.69,
-      "prevLow": 2.04,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.69,
-          "l": 2.04
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9715",
-      "league": "國際賽",
-      "home": "塞浦路斯女足",
-      "away": "盧森堡女足",
-      "homeEn": "Cyprus Women",
-      "awayEn": "Luxembourg Women",
-      "kickoffMs": 1795770000000,
-      "line": "3.0/3.5",
-      "oddsHigh": 2.07,
-      "oddsLow": 1.67,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "3.0/3.5",
-      "openHigh": 2.07,
-      "openLow": 1.67,
-      "openMarketLambda": 3.197,
-      "prevHigh": 2.07,
-      "prevLow": 1.67,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "27/11 09:42 (初盤)",
-          "line": "3.0/3.5",
-          "h": 2.07,
-          "l": 1.67
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
     {
       "id": "FB9598",
       "league": "泰國甲組聯賽",
@@ -156,8 +16,8 @@
       "awayEn": "Sisaket Utd",
       "kickoffMs": 1795780800000,
       "line": "2.5",
-      "oddsHigh": 1.63,
-      "oddsLow": 2.13,
+      "oddsHigh": 1.6,
+      "oddsLow": 2.19,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -167,17 +27,23 @@
       "openMarketLambda": 2.9543,
       "prevHigh": 1.63,
       "prevLow": 2.13,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 1.84,
+      "dropPctLow": -2.82,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.63,
           "l": 2.13
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 1.6,
+          "l": 2.19
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9610",
@@ -209,7 +75,7 @@
           "l": 2.22
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9694",
@@ -220,8 +86,8 @@
       "awayEn": "Al Gharafa",
       "kickoffMs": 1795784400000,
       "line": "3.5",
-      "oddsHigh": 1.92,
-      "oddsLow": 1.78,
+      "oddsHigh": 1.95,
+      "oddsLow": 1.75,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -231,17 +97,23 @@
       "openMarketLambda": 3.5826,
       "prevHigh": 1.92,
       "prevLow": 1.78,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -1.56,
+      "dropPctLow": 1.69,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "27/11 03:21 (初盤)",
           "h": 1.92,
           "l": 1.78
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "3.5",
+          "h": 1.95,
+          "l": 1.75
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9611",
@@ -252,8 +124,8 @@
       "awayEn": "Al Fayha",
       "kickoffMs": 1795789200000,
       "line": "3.5",
-      "oddsHigh": 1.76,
-      "oddsLow": 1.94,
+      "oddsHigh": 1.56,
+      "oddsLow": 2.27,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -263,17 +135,23 @@
       "openMarketLambda": 3.7893,
       "prevHigh": 1.76,
       "prevLow": 1.94,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 11.36,
+      "dropPctLow": -17.01,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.76,
           "l": 1.94
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "3.5",
+          "h": 1.56,
+          "l": 2.27
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9695",
@@ -284,8 +162,8 @@
       "awayEn": "Al Arabi Doha",
       "kickoffMs": 1795793400000,
       "line": "3.0/3.5",
-      "oddsHigh": 1.91,
-      "oddsLow": 1.79,
+      "oddsHigh": 1.9,
+      "oddsLow": 1.8,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -295,17 +173,23 @@
       "openMarketLambda": 3.3497,
       "prevHigh": 1.91,
       "prevLow": 1.79,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 0.52,
+      "dropPctLow": -0.56,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "27/11 03:21 (初盤)",
           "h": 1.91,
           "l": 1.79
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "3.0/3.5",
+          "h": 1.9,
+          "l": 1.8
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9599",
@@ -337,7 +221,7 @@
           "l": 1.82
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9613",
@@ -369,7 +253,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9614",
@@ -380,8 +264,8 @@
       "awayEn": "NEOM SC",
       "kickoffMs": 1795800600000,
       "line": "2.5",
-      "oddsHigh": 1.71,
-      "oddsLow": 2.01,
+      "oddsHigh": 1.7,
+      "oddsLow": 2.02,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -391,17 +275,23 @@
       "openMarketLambda": 2.8413,
       "prevHigh": 1.71,
       "prevLow": 2.01,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 0.58,
+      "dropPctLow": -0.5,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.71,
           "l": 2.01
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 1.7,
+          "l": 2.02
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9701",
@@ -433,7 +323,7 @@
           "l": 1.44
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9600",
@@ -465,7 +355,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9617",
@@ -497,7 +387,7 @@
           "l": 1.67
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9590",
@@ -529,7 +419,7 @@
           "l": 1.8
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9593",
@@ -540,8 +430,8 @@
       "awayEn": "Willem II",
       "kickoffMs": 1795806000000,
       "line": "3.0/3.5",
-      "oddsHigh": 1.89,
-      "oddsLow": 1.81,
+      "oddsHigh": 1.82,
+      "oddsLow": 1.88,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -549,10 +439,10 @@
       "openHigh": 1.82,
       "openLow": 1.88,
       "openMarketLambda": 3.4518,
-      "prevHigh": 1.82,
-      "prevLow": 1.88,
-      "dropPctHigh": -3.85,
-      "dropPctLow": 3.72,
+      "prevHigh": 1.89,
+      "prevLow": 1.81,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
       "isNewMatch": false,
       "oddsHistory": [
         {
@@ -564,9 +454,15 @@
           "t": "27/11 03:21",
           "h": 1.89,
           "l": 1.81
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "3.0/3.5",
+          "h": 1.82,
+          "l": 1.88
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9601",
@@ -577,8 +473,8 @@
       "awayEn": "Den Bosch",
       "kickoffMs": 1795806000000,
       "line": "3.5",
-      "oddsHigh": 1.65,
-      "oddsLow": 2.1,
+      "oddsHigh": 1.79,
+      "oddsLow": 1.91,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -588,17 +484,23 @@
       "openMarketLambda": 3.9667,
       "prevHigh": 1.65,
       "prevLow": 2.1,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -8.48,
+      "dropPctLow": 9.05,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.65,
           "l": 2.1
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "3.5",
+          "h": 1.79,
+          "l": 1.91
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9602",
@@ -630,103 +532,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9603",
-      "league": "荷蘭乙組聯賽",
-      "home": "烏德勒支青年隊",
-      "away": "阿梅爾城",
-      "homeEn": "Jong Utrecht",
-      "awayEn": "Almere City",
-      "kickoffMs": 1795806000000,
-      "line": "3.5",
-      "oddsHigh": 1.81,
-      "oddsLow": 1.89,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "3.5",
-      "openHigh": 1.81,
-      "openLow": 1.89,
-      "openMarketLambda": 3.7238,
-      "prevHigh": 1.81,
-      "prevLow": 1.89,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.81,
-          "l": 1.89
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9604",
-      "league": "荷蘭乙組聯賽",
-      "home": "芬洛",
-      "away": "華域克",
-      "homeEn": "Venlo",
-      "awayEn": "RKC Waalwijk",
-      "kickoffMs": 1795806000000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.87,
-      "oddsLow": 1.83,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "3.0/3.5",
-      "openHigh": 1.87,
-      "openLow": 1.83,
-      "openMarketLambda": 3.3948,
-      "prevHigh": 1.87,
-      "prevLow": 1.83,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.87,
-          "l": 1.83
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9605",
-      "league": "荷蘭乙組聯賽",
-      "home": "阿爾克馬爾青年隊",
-      "away": "奧斯",
-      "homeEn": "Jong AZ Alkmaar",
-      "awayEn": "Oss",
-      "kickoffMs": 1795806000000,
-      "line": "3.0/3.5",
-      "oddsHigh": 1.83,
-      "oddsLow": 1.87,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "3.0/3.5",
-      "openHigh": 1.83,
-      "openLow": 1.87,
-      "openMarketLambda": 3.4403,
-      "prevHigh": 1.83,
-      "prevLow": 1.87,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.83,
-          "l": 1.87
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9606",
@@ -758,39 +564,7 @@
           "l": 2.0
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
-    },
-    {
-      "id": "FB9607",
-      "league": "荷蘭乙組聯賽",
-      "home": "多德勒支",
-      "away": "維迪斯",
-      "homeEn": "Dordrecht",
-      "awayEn": "Vitesse",
-      "kickoffMs": 1795806000000,
-      "line": "2.5",
-      "oddsHigh": 1.73,
-      "oddsLow": 1.98,
-      "hadHome": 0,
-      "hadDraw": 0,
-      "hadAway": 0,
-      "openLine": "2.5",
-      "openHigh": 1.73,
-      "openLow": 1.98,
-      "openMarketLambda": 2.8132,
-      "prevHigh": 1.73,
-      "prevLow": 1.98,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
-      "isNewMatch": false,
-      "oddsHistory": [
-        {
-          "t": "26/11 17:50 (初盤)",
-          "h": 1.73,
-          "l": 1.98
-        }
-      ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9588",
@@ -822,7 +596,7 @@
           "l": 1.79
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9608",
@@ -854,7 +628,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9591",
@@ -886,7 +660,7 @@
           "l": 1.75
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9592",
@@ -918,7 +692,7 @@
           "l": 1.9
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9609",
@@ -950,7 +724,7 @@
           "l": 2.07
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9587",
@@ -961,8 +735,8 @@
       "awayEn": "Chelsea",
       "kickoffMs": 1795809600000,
       "line": "2.5",
-      "oddsHigh": 1.72,
-      "oddsLow": 2.0,
+      "oddsHigh": 1.75,
+      "oddsLow": 1.95,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -972,17 +746,23 @@
       "openMarketLambda": 2.8299,
       "prevHigh": 1.72,
       "prevLow": 2.0,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -1.74,
+      "dropPctLow": 2.5,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.72,
           "l": 2.0
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 1.75,
+          "l": 1.95
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9594",
@@ -1020,7 +800,7 @@
           "l": 1.87
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9615",
@@ -1052,7 +832,7 @@
           "l": 2.29
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9597",
@@ -1063,8 +843,8 @@
       "awayEn": "Nacional",
       "kickoffMs": 1795810500000,
       "line": "2.5",
-      "oddsHigh": 2.1,
-      "oddsLow": 1.65,
+      "oddsHigh": 2.25,
+      "oddsLow": 1.57,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -1074,17 +854,56 @@
       "openMarketLambda": 2.4373,
       "prevHigh": 2.1,
       "prevLow": 1.65,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": -7.14,
+      "dropPctLow": 4.85,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 2.1,
           "l": 1.65
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 2.25,
+          "l": 1.57
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9722",
+      "league": "盃賽",
+      "home": "牙買加女足",
+      "away": "哥斯達黎加女足",
+      "homeEn": "Jamaica Women",
+      "awayEn": "Costa Rica Women",
+      "kickoffMs": 1795816800000,
+      "line": "2.5",
+      "oddsHigh": 1.83,
+      "oddsLow": 1.87,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "2.5",
+      "openHigh": 1.83,
+      "openLow": 1.87,
+      "openMarketLambda": 2.696,
+      "prevHigh": 1.83,
+      "prevLow": 1.87,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "2.5",
+          "h": 1.83,
+          "l": 1.87
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9612",
@@ -1116,7 +935,7 @@
           "l": 1.55
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9595",
@@ -1148,7 +967,7 @@
           "l": 2.0
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9714",
@@ -1181,7 +1000,7 @@
           "l": 1.61
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9596",
@@ -1213,7 +1032,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9702",
@@ -1245,7 +1064,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9693",
@@ -1277,7 +1096,7 @@
           "l": 2.07
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9658",
@@ -1309,7 +1128,7 @@
           "l": 2.05
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9659",
@@ -1341,7 +1160,7 @@
           "l": 1.9
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9660",
@@ -1373,7 +1192,7 @@
           "l": 1.66
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9661",
@@ -1405,7 +1224,7 @@
           "l": 2.08
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9704",
@@ -1437,7 +1256,7 @@
           "l": 2.01
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9705",
@@ -1469,7 +1288,7 @@
           "l": 1.88
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9662",
@@ -1501,7 +1320,7 @@
           "l": 1.91
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9663",
@@ -1533,7 +1352,7 @@
           "l": 1.9
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9664",
@@ -1565,7 +1384,7 @@
           "l": 2.17
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9706",
@@ -1597,7 +1416,7 @@
           "l": 1.98
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9710",
@@ -1629,7 +1448,7 @@
           "l": 1.86
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9696",
@@ -1661,7 +1480,7 @@
           "l": 2.08
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9631",
@@ -1693,7 +1512,7 @@
           "l": 2.05
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9684",
@@ -1725,7 +1544,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9685",
@@ -1757,7 +1576,7 @@
           "l": 2.04
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9689",
@@ -1789,7 +1608,7 @@
           "l": 2.01
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9700",
@@ -1821,7 +1640,7 @@
           "l": 2.33
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9632",
@@ -1853,7 +1672,7 @@
           "l": 1.81
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9626",
@@ -1885,7 +1704,7 @@
           "l": 1.97
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9628",
@@ -1917,7 +1736,7 @@
           "l": 1.65
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9629",
@@ -1955,7 +1774,7 @@
           "l": 1.98
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9630",
@@ -1987,7 +1806,7 @@
           "l": 2.2
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9618",
@@ -2019,7 +1838,7 @@
           "l": 2.3
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9619",
@@ -2051,7 +1870,7 @@
           "l": 2.2
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9621",
@@ -2083,7 +1902,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9622",
@@ -2115,7 +1934,7 @@
           "l": 1.66
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9623",
@@ -2147,7 +1966,7 @@
           "l": 1.74
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9624",
@@ -2179,7 +1998,40 @@
           "l": 2.12
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9723",
+      "league": "挪威超級聯賽",
+      "home": "波杜基林特",
+      "away": "KFUM奧斯陸",
+      "homeEn": "Bodo Glimt",
+      "awayEn": "KFUM Oslo",
+      "kickoffMs": 1795878000000,
+      "line": "4.5",
+      "oddsHigh": 1.95,
+      "oddsLow": 1.75,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "4.5",
+      "openHigh": 1.95,
+      "openLow": 1.75,
+      "openMarketLambda": 4.5268,
+      "prevHigh": 1.95,
+      "prevLow": 1.75,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "4.5",
+          "h": 1.95,
+          "l": 1.75
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9648",
@@ -2211,7 +2063,7 @@
           "l": 1.89
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9644",
@@ -2243,7 +2095,7 @@
           "l": 2.29
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9654",
@@ -2275,7 +2127,7 @@
           "l": 1.88
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9656",
@@ -2307,7 +2159,7 @@
           "l": 1.5
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9665",
@@ -2339,7 +2191,7 @@
           "l": 1.74
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9639",
@@ -2371,7 +2223,7 @@
           "l": 2.1
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9636",
@@ -2403,7 +2255,7 @@
           "l": 1.89
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9683",
@@ -2435,7 +2287,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9620",
@@ -2467,7 +2319,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9627",
@@ -2499,7 +2351,7 @@
           "l": 2.08
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9647",
@@ -2531,7 +2383,7 @@
           "l": 1.7
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9625",
@@ -2563,7 +2415,7 @@
           "l": 2.35
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9643",
@@ -2595,7 +2447,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9655",
@@ -2627,7 +2479,7 @@
           "l": 1.66
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9686",
@@ -2659,7 +2511,7 @@
           "l": 2.25
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9635",
@@ -2691,7 +2543,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9638",
@@ -2723,7 +2575,7 @@
           "l": 2.17
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9640",
@@ -2755,7 +2607,7 @@
           "l": 1.98
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9641",
@@ -2787,7 +2639,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9642",
@@ -2819,7 +2671,7 @@
           "l": 1.74
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9585",
@@ -2830,8 +2682,8 @@
       "awayEn": "Estudiantes",
       "kickoffMs": 1795896000000,
       "line": "2.5",
-      "oddsHigh": 3.1,
-      "oddsLow": 1.31,
+      "oddsHigh": 2.8,
+      "oddsLow": 1.37,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -2841,17 +2693,23 @@
       "openMarketLambda": 1.9029,
       "prevHigh": 3.1,
       "prevLow": 1.31,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 9.68,
+      "dropPctLow": -4.58,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 09:21 (初盤)",
           "h": 3.1,
           "l": 1.31
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 2.8,
+          "l": 1.37
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9650",
@@ -2883,7 +2741,7 @@
           "l": 2.04
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9697",
@@ -2915,7 +2773,7 @@
           "l": 1.73
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9653",
@@ -2947,7 +2805,7 @@
           "l": 1.92
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9666",
@@ -2979,7 +2837,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9667",
@@ -3011,7 +2869,7 @@
           "l": 1.98
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9668",
@@ -3043,7 +2901,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9669",
@@ -3075,7 +2933,7 @@
           "l": 1.79
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9670",
@@ -3107,7 +2965,7 @@
           "l": 2.12
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9671",
@@ -3139,7 +2997,7 @@
           "l": 2.15
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9672",
@@ -3171,7 +3029,7 @@
           "l": 2.33
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9673",
@@ -3203,7 +3061,7 @@
           "l": 1.86
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9674",
@@ -3235,7 +3093,7 @@
           "l": 1.59
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9675",
@@ -3267,7 +3125,7 @@
           "l": 2.13
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9698",
@@ -3299,7 +3157,7 @@
           "l": 1.69
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9699",
@@ -3331,7 +3189,7 @@
           "l": 1.69
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9703",
@@ -3363,7 +3221,7 @@
           "l": 2.13
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9707",
@@ -3395,7 +3253,7 @@
           "l": 1.78
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9708",
@@ -3427,7 +3285,7 @@
           "l": 2.19
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9709",
@@ -3459,7 +3317,7 @@
           "l": 1.72
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9711",
@@ -3491,7 +3349,7 @@
           "l": 1.92
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9676",
@@ -3523,7 +3381,7 @@
           "l": 1.7
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9677",
@@ -3555,7 +3413,7 @@
           "l": 1.94
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9678",
@@ -3587,7 +3445,40 @@
           "l": 1.78
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9721",
+      "league": "日本職業聯賽",
+      "home": "町田澤維亞",
+      "away": "東京綠茵",
+      "homeEn": "Machida Zelvia",
+      "awayEn": "Tokyo Verdy",
+      "kickoffMs": 1795935600000,
+      "line": "2.5",
+      "oddsHigh": 2.13,
+      "oddsLow": 1.63,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "2.5",
+      "openHigh": 2.13,
+      "openLow": 1.63,
+      "openMarketLambda": 2.4123,
+      "prevHigh": 2.13,
+      "prevLow": 1.63,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "2.5",
+          "h": 2.13,
+          "l": 1.63
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9712",
@@ -3619,7 +3510,7 @@
           "l": 1.56
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9645",
@@ -3651,7 +3542,7 @@
           "l": 1.71
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9679",
@@ -3683,7 +3574,7 @@
           "l": 1.91
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9634",
@@ -3715,7 +3606,7 @@
           "l": 2.05
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9500",
@@ -3726,8 +3617,8 @@
       "awayEn": "Liverpool",
       "kickoffMs": 1795953600000,
       "line": "2.5",
-      "oddsHigh": 1.63,
-      "oddsLow": 2.13,
+      "oddsHigh": 1.6,
+      "oddsLow": 2.19,
       "hadHome": 0,
       "hadDraw": 0,
       "hadAway": 0,
@@ -3737,17 +3628,23 @@
       "openMarketLambda": 2.9543,
       "prevHigh": 1.63,
       "prevLow": 2.13,
-      "dropPctHigh": 0.0,
-      "dropPctLow": 0.0,
+      "dropPctHigh": 1.84,
+      "dropPctLow": -2.82,
       "isNewMatch": false,
       "oddsHistory": [
         {
           "t": "26/11 17:50 (初盤)",
           "h": 1.63,
           "l": 2.13
+        },
+        {
+          "t": "27/11 19:08",
+          "line": "2.5",
+          "h": 1.6,
+          "l": 2.19
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9680",
@@ -3779,7 +3676,7 @@
           "l": 2.01
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9687",
@@ -3811,7 +3708,7 @@
           "l": 1.78
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9688",
@@ -3843,7 +3740,7 @@
           "l": 1.74
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9651",
@@ -3875,7 +3772,7 @@
           "l": 1.57
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9681",
@@ -3907,7 +3804,7 @@
           "l": 2.33
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9646",
@@ -3939,7 +3836,7 @@
           "l": 1.7
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9691",
@@ -3971,7 +3868,7 @@
           "l": 1.76
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9633",
@@ -4003,7 +3900,172 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9716",
+      "league": "英格蘭超級聯賽",
+      "home": "白禮頓",
+      "away": "紐卡素",
+      "homeEn": "Brighton",
+      "awayEn": "Newcastle",
+      "kickoffMs": 1795961100000,
+      "line": "3.0/3.5",
+      "oddsHigh": 2.0,
+      "oddsLow": 1.72,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "3.0/3.5",
+      "openHigh": 2.0,
+      "openLow": 1.72,
+      "openMarketLambda": 3.2614,
+      "prevHigh": 2.0,
+      "prevLow": 1.72,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "3.0/3.5",
+          "h": 2.0,
+          "l": 1.72
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9717",
+      "league": "英格蘭超級聯賽",
+      "home": "新特蘭",
+      "away": "熱刺",
+      "homeEn": "Sunderland",
+      "awayEn": "Tottenham",
+      "kickoffMs": 1795961100000,
+      "line": "2.5",
+      "oddsHigh": 1.87,
+      "oddsLow": 1.83,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "2.5",
+      "openHigh": 1.87,
+      "openLow": 1.83,
+      "openMarketLambda": 2.6522,
+      "prevHigh": 1.87,
+      "prevLow": 1.83,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "2.5",
+          "h": 1.87,
+          "l": 1.83
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9718",
+      "league": "英格蘭超級聯賽",
+      "home": "富咸",
+      "away": "般尼茅夫",
+      "homeEn": "Fulham",
+      "awayEn": "Bournemouth",
+      "kickoffMs": 1795961100000,
+      "line": "2.5",
+      "oddsHigh": 1.72,
+      "oddsLow": 2.0,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "2.5",
+      "openHigh": 1.72,
+      "openLow": 2.0,
+      "openMarketLambda": 2.8299,
+      "prevHigh": 1.72,
+      "prevLow": 2.0,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "2.5",
+          "h": 1.72,
+          "l": 2.0
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9719",
+      "league": "英格蘭超級聯賽",
+      "home": "水晶宮",
+      "away": "侯城",
+      "homeEn": "Crystal Palace",
+      "awayEn": "Hull City",
+      "kickoffMs": 1795961100000,
+      "line": "2.5",
+      "oddsHigh": 1.75,
+      "oddsLow": 1.95,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "2.5",
+      "openHigh": 1.75,
+      "openLow": 1.95,
+      "openMarketLambda": 2.7853,
+      "prevHigh": 1.75,
+      "prevLow": 1.95,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "2.5",
+          "h": 1.75,
+          "l": 1.95
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
+    },
+    {
+      "id": "FB9720",
+      "league": "蘇格蘭超級聯賽",
+      "home": "赫斯",
+      "away": "些路迪",
+      "homeEn": "Hearts",
+      "awayEn": "Celtic",
+      "kickoffMs": 1795964400000,
+      "line": "3.0/3.5",
+      "oddsHigh": 1.84,
+      "oddsLow": 1.86,
+      "hadHome": 0,
+      "hadDraw": 0,
+      "hadAway": 0,
+      "openLine": "3.0/3.5",
+      "openHigh": 1.84,
+      "openLow": 1.86,
+      "openMarketLambda": 3.4289,
+      "prevHigh": 1.84,
+      "prevLow": 1.86,
+      "dropPctHigh": 0.0,
+      "dropPctLow": 0.0,
+      "isNewMatch": true,
+      "oddsHistory": [
+        {
+          "t": "27/11 19:08 (初盤)",
+          "line": "3.0/3.5",
+          "h": 1.84,
+          "l": 1.86
+        }
+      ],
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9649",
@@ -4035,7 +4097,7 @@
           "l": 2.29
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9682",
@@ -4067,7 +4129,7 @@
           "l": 1.67
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9692",
@@ -4099,7 +4161,7 @@
           "l": 1.68
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9501",
@@ -4131,7 +4193,7 @@
           "l": 1.95
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9637",
@@ -4163,7 +4225,7 @@
           "l": 1.95
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9652",
@@ -4195,7 +4257,7 @@
           "l": 1.79
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9690",
@@ -4233,7 +4295,7 @@
           "l": 1.62
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     },
     {
       "id": "FB9657",
@@ -4265,7 +4327,7 @@
           "l": 1.85
         }
       ],
-      "updatedAtHkt": "27/11 10:20"
+      "updatedAtHkt": "27/11 19:08"
     }
   ]
 }
