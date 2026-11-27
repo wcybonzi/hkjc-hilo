@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>足智彩「入球大細」全賽事秒級跟盤與落飛實戰系統 v20</title>
+  <title>足智彩「入球大細」全自動正期望值 (+EV) 精算系統 v21</title>
   <style>
     :root {
       --bg-dark: #09101d; --bg-card: #121c30; --bg-panel: #1a2742; --border: #293a5a;
@@ -110,10 +110,10 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <span class="brand-badge">足智彩 v20 雙引擎全抓盤＋即時變盤版</span>
+        <span class="brand-badge">足智彩 v21 正期望值 (+EV) 精算升級版</span>
         <div>
-          <h1>入球大細全自動量化系統（修復馬會 CORS 攔截・全賽事提取・即時賠率落飛追蹤）</h1>
-          <p>30% 跨彩池主客和×大細精算 + 25% 馬會即時賠率落飛動能 + 20% 聯賽基準 + 20% 球隊近況 + 5% 臨場情境</p>
+          <h1>入球大細全自動量化系統（雙變量泊松解算・真實得失球 GF/GA・亞洲讓球線精確 EV・落飛確認防追高）</h1>
+          <p>Dixon-Coles 1X2 雙變量入球解算 + ESPN 實戰得失球率 + 整數/半一線走水精確期望值 + 扣除馬會抽水後嚴格正 EV 篩選</p>
         </div>
       </div>
       <div class="header-actions">
@@ -133,7 +133,7 @@
         <span class="feed-pill ok" id="hktClockPill">香港時間：計算中</span>
         <span class="feed-pill wait" id="hkjcPill">馬會雲端：連線中</span>
         <span class="feed-pill wait" id="cloudTimePill">馬會實時抓盤：讀取中</span>
-        <span class="feed-pill wait" id="espnPill">賽程校準：待命</span>
+        <span class="feed-pill wait" id="espnPill">GF/GA 攻防校準：待命</span>
         <span style="color:var(--hkjc-gold);font-weight:700;" id="nextSyncLabel">下次同步：45秒</span>
       </div>
       <div class="sync-controls">
@@ -150,19 +150,19 @@
   <div class="container">
     <div class="strategy-strip">
       <div class="strategy-group">
-        <strong style="color:var(--hkjc-gold);">🎯 投資策略鬆緊度：</strong>
+        <strong style="color:var(--hkjc-gold);">🎯 扣水後真實正期望值 (+EV) 門檻：</strong>
         <div class="mode-quick-btns">
-          <button class="mode-btn" id="modeBtn_strict" onclick="setStrategyMode('strict')">嚴謹精選 (≥2.6%優勢)</button>
-          <button class="mode-btn active" id="modeBtn_standard" onclick="setStrategyMode('standard')">標準實戰 (預設 ≥1.5%優勢)</button>
-          <button class="mode-btn" id="modeBtn_active" onclick="setStrategyMode('active')">積極進取 (多場次 ≥0.9%優勢)</button>
+          <button class="mode-btn" id="modeBtn_strict" onclick="setStrategyMode('strict')">嚴謹精選 (真實EV ≥ +2.0%)</button>
+          <button class="mode-btn active" id="modeBtn_standard" onclick="setStrategyMode('standard')">標準實戰 (真實EV ≥ +0.5%)</button>
+          <button class="mode-btn" id="modeBtn_active" onclick="setStrategyMode('active')">積極捕捉 (真實EV > +0.05%)</button>
         </div>
       </div>
       <div class="strategy-group">
-        <strong style="color:#fda4af;">🔥 取代正選核對・落飛觸發門檻：</strong>
+        <strong style="color:#fda4af;">🔥 落飛同向確認 / 逆向否決門檻（不虛增入球）：</strong>
         <select class="sync-select" id="dropThresholdSelect" onchange="setDropThreshold(this.value)">
-          <option value="2.0">賠率落飛 ≥ 2.0% (靈敏捕捉)</option>
+          <option value="2.0">賠率落飛 ≥ 2.0% (靈敏確認)</option>
           <option value="3.0" selected>賠率落飛 ≥ 3.0% (標準實戰)</option>
-          <option value="4.5">賠率落飛 ≥ 4.5% (強勢落飛)</option>
+          <option value="4.5">賠率落飛 ≥ 4.5% (強勢資金)</option>
           <option value="6.5">賠率落飛 ≥ 6.5% (重注異動)</option>
         </select>
       </div>
@@ -170,28 +170,28 @@
 
     <div class="kpi-grid">
       <div class="kpi-card"><div class="kpi-label">顯示中未開賽正盤</div><div class="kpi-value" id="kpiTotal">0</div></div>
-      <div class="kpi-card"><div class="kpi-label">建議投注 (核心推薦)</div><div class="kpi-value" style="color:var(--bet-green);" id="kpiBet">0</div></div>
-      <div class="kpi-card"><div class="kpi-label">輕注考慮 (次選傾向)</div><div class="kpi-value" style="color:var(--bet-amber);" id="kpiHold">0</div></div>
-      <div class="kpi-card"><div class="kpi-label">🔥 顯著落飛 / 已有變盤</div><div class="kpi-value" style="color:var(--drop-fire);" id="kpiDrop">0</div></div>
-      <div class="kpi-card"><div class="kpi-label">嚴守紀律放棄 (無優勢)</div><div class="kpi-value" style="color:var(--pass-red);" id="kpiPass">0</div></div>
+      <div class="kpi-card"><div class="kpi-label">建議投注 (扣水後 +EV)</div><div class="kpi-value" style="color:var(--bet-green);" id="kpiBet">0</div></div>
+      <div class="kpi-card"><div class="kpi-label">輕注觀望 (邊際 / 等高水)</div><div class="kpi-value" style="color:var(--bet-amber);" id="kpiHold">0</div></div>
+      <div class="kpi-card"><div class="kpi-label">🔥 顯著落飛 / 變盤或移線</div><div class="kpi-value" style="color:var(--drop-fire);" id="kpiDrop">0</div></div>
+      <div class="kpi-card"><div class="kpi-label">嚴守紀律放棄 (負 EV)</div><div class="kpi-value" style="color:var(--pass-red);" id="kpiPass">0</div></div>
     </div>
 
     <div class="controls-stack">
       <div class="filter-row">
         <div class="filter-bar">
           <button class="chip active" data-filter="all" onclick="setFilter('all', this)">全部未開賽賽事</button>
-          <button class="chip" data-filter="bet" onclick="setFilter('bet', this)">✅ 建議投注 (大/細)</button>
-          <button class="chip" data-filter="hold" onclick="setFilter('hold', this)">⚡ 輕注考慮 (次選)</button>
-          <button class="chip" data-filter="moved" onclick="setFilter('moved', this)">🔄 賠率已有變動</button>
-          <button class="chip" data-filter="drop" onclick="setFilter('drop', this)">🔥 顯著落飛達標</button>
+          <button class="chip" data-filter="bet" onclick="setFilter('bet', this)">✅ 建議投注 (真實 +EV)</button>
+          <button class="chip" data-filter="hold" onclick="setFilter('hold', this)">⚡ 輕注觀望 (等高水)</button>
+          <button class="chip" data-filter="moved" onclick="setFilter('moved', this)">🔄 賠率或球線已變動</button>
+          <button class="chip" data-filter="drop" onclick="setFilter('drop', this)">🔥 顯著落飛確認</button>
           <button class="chip" data-filter="over" onclick="setFilter('over', this)">專看傾向「大」</button>
           <button class="chip" data-filter="under" onclick="setFilter('under', this)">專看傾向「細」</button>
-          <button class="chip" data-filter="pass" onclick="setFilter('pass', this)">放棄投注</button>
+          <button class="chip" data-filter="pass" onclick="setFilter('pass', this)">放棄投注 (負 EV)</button>
         </div>
         <select class="sync-select" id="sortSelect" onchange="renderAll()">
           <option value="time">排序：香港開賽時間 (最早優先)</option>
-          <option value="edge">排序：最高去水優勢優先 (推薦置頂)</option>
-          <option value="drop">排序：最大賠率落飛 % 優先</option>
+          <option value="ev">排序：最高真實期望值 (+EV%) 優先</option>
+          <option value="drop">排序：最大賠率落飛 / 移線幅度優先</option>
         </select>
       </div>
       <div class="filter-row">
@@ -208,13 +208,13 @@
     <div class="workspace">
       <div class="match-list" id="matchList"></div>
       <div class="inspector" id="inspectorPanel">
-        <div style="color:var(--text-muted);font-size:0.84rem;">請點選左側任何一場賽事，檢視跨彩池精算與即時賠率變動時間軸。</div>
+        <div style="color:var(--text-muted);font-size:0.84rem;">請點選左側任何一場賽事，檢視雙變量泊松解算、真實 GF/GA 攻防率、亞洲球線走水精算及初盤移線時間軸。</div>
       </div>
     </div>
 
     <div class="log-box">
       <div style="display:flex;justify-content:space-between;margin-bottom:5px;color:#7dd3fc;font-weight:800;">
-        <span>即時雲端跟盤與新賽事提取診斷日誌 (v20 ETag + jsDelivr 雙通道零快取)</span>
+        <span>即時雲端跟盤與正期望值 (+EV) 精算診斷日誌 (v21)</span>
         <span>香港時間 HKT (UTC+8)</span>
       </div>
       <div id="syncLogs"></div>
@@ -259,7 +259,7 @@
       <input id="addLeague" placeholder="聯賽名稱 (如 英格蘭超級聯賽)" />
       <input id="addHome" placeholder="主隊名稱" />
       <input id="addAway" placeholder="客隊名稱" />
-      <input id="addLine" value="2.5" placeholder="球線 (2.5 / 2.0/2.5 / 2.5/3.0)" />
+      <input id="addLine" value="2.5" placeholder="球線 (2.5 / 2.0/2.5 / 2.5/3.0 / 3.0)" />
       <input id="addHigh" type="number" step="0.01" value="1.85" placeholder="大盤賠率" />
       <input id="addLow" type="number" step="0.01" value="1.85" placeholder="細盤賠率" />
       <div style="display:flex;justify-content:flex-end;gap:8px;">
@@ -270,16 +270,16 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "hkjc_v20_matches";
-    const ODDS_MEM_KEY = "hkjc_v20_odds_memory";
-    const CFG_KEY = "hkjc_v20_cfg";
+    const STORAGE_KEY = "hkjc_v21_matches";
+    const ODDS_MEM_KEY = "hkjc_v21_odds_memory";
+    const CFG_KEY = "hkjc_v21_cfg";
 
-    let matches = [];
+    let matches = Array.of();
     let selectedId = null;
     let activeFilter = "all";
     let activeTimeFilter = "all";
-    let strategyMode = localStorage.getItem("hkjc_v20_mode") || localStorage.getItem("hkjc_v19_mode") || "standard";
-    let dropThreshold = parseFloat(localStorage.getItem("hkjc_v20_drop") || localStorage.getItem("hkjc_v19_drop") || "3.0");
+    let strategyMode = localStorage.getItem("hkjc_v21_mode") || localStorage.getItem("hkjc_v20_mode") || "standard";
+    let dropThreshold = parseFloat(localStorage.getItem("hkjc_v21_drop") || localStorage.getItem("hkjc_v20_drop") || "3.0");
     let syncIntervalSec = 45;
     let countdown = 45;
 
@@ -289,7 +289,13 @@
     let detectedBranch = "";
     let lastCloudUpdatedIso = "";
 
-    const LEAGUE_PROFILES = [
+    const LOG_FACT = (() => {
+      const arr = Array.from({ length: 18 }, () => 0);
+      for (let i = 2; i < 18; i++) arr.splice(i, 1, arr.at(i - 1) + Math.log(i));
+      return arr;
+    })();
+
+    const LEAGUE_PROFILES = Array.of(
       { keys: "德甲,德國甲組,德乙,德國乙組,荷甲,荷乙,瑞士超,挪超,挪威超,瑞典超,冰島", avg: 3.06, tag: "高入球聯賽" },
       { keys: "美國職業,美職,MLS,澳洲職業,澳職,亞冠,亞冠2,亞洲聯賽冠軍,日職,日本職業,J1", avg: 2.94, tag: "開放進攻聯賽" },
       { keys: "英超,英格蘭超級,英冠,丹超,比甲,奧甲,蘇超,歐聯,歐洲聯賽冠軍,歐霸,歐協聯,自由盃", avg: 2.86, tag: "中高入球聯賽" },
@@ -297,7 +303,7 @@
       { keys: "西甲,西班牙甲組,英甲,英乙,德丙,法乙,荷蘭盃,英足盃,英聯盃", avg: 2.61, tag: "中段節奏聯賽" },
       { keys: "日乙,J2,日丙,巴甲,巴西甲組,哥倫比亞,秘魯,南球盃,國際賽,世盃外,歐國聯", avg: 2.44, tag: "審慎防守聯賽" },
       { keys: "西乙,意乙,阿甲,阿根廷,巴乙,希超,埃及,摩洛哥,非洲,烏拉圭,厄瓜多爾", avg: 2.22, tag: "極低入球聯賽" }
-    ];
+    );
 
     const TEAM_EN_DICT = {
       "聖荷西地震": "san jose earthquakes", "侯斯頓戴拿模": "houston dynamo",
@@ -360,173 +366,315 @@
 
     function poissonPmf(k, lambda) {
       if (lambda <= 0) return k === 0 ? 1 : 0;
-      let logP = -lambda + k * Math.log(lambda);
-      for (let i = 2; i <= k; i++) logP -= Math.log(i);
-      return Math.exp(logP);
+      const lf = k < LOG_FACT.length ? LOG_FACT.at(k) : (k * Math.log(k) - k);
+      return Math.exp(-lambda + k * Math.log(lambda) - lf);
     }
 
-    function probSingleLineOver(singleLine, lambda) {
-      const floorK = Math.floor(singleLine);
-      const isIntegerLine = Math.abs(singleLine - Math.round(singleLine)) < 0.01;
-      let cdfFloor = 0;
-      for (let k = 0; k <= floorK; k++) cdfFloor += poissonPmf(k, lambda);
-      if (!isIntegerLine) return Math.min(0.97, Math.max(0.03, 1 - cdfFloor));
-      const pPush = poissonPmf(Math.round(singleLine), lambda);
-      const pOver = Math.max(0.01, 1 - cdfFloor);
-      const denom = Math.max(0.05, 1 - pPush);
-      return Math.min(0.97, Math.max(0.03, pOver / denom));
+    // Exact Single-Line Win, Push, Loss & Real-Money EV Calculator (handles .0 integer & .5 half lines)
+    function calcSingleLineOutcome(singleLine, lambda, oddsH, oddsL) {
+      const L = Number(singleLine) || 2.5;
+      const isInt = Math.abs(L - Math.round(L)) < 0.01;
+      let pUnderWin = 0;
+      let pPush = 0;
+
+      if (isInt) {
+        const L0 = Math.round(L);
+        for (let k = 0; k < L0; k++) pUnderWin += poissonPmf(k, lambda);
+        pPush = poissonPmf(L0, lambda);
+      } else {
+        const floorK = Math.floor(L);
+        for (let k = 0; k <= floorK; k++) pUnderWin += poissonPmf(k, lambda);
+        pPush = 0;
+      }
+
+      const pOverWin = Math.max(0, 1 - pUnderWin - pPush);
+      const evOver = pOverWin * (oddsH - 1) - pUnderWin;
+      const evUnder = pUnderWin * (oddsL - 1) - pOverWin;
+
+      return { pOverWin, pPush, pUnderWin, evOver, evUnder };
     }
 
-    function probLineOver(lineStr, lambda) {
+    // Exact Asian Split/Quarter & Integer Line Calculator (averages half-stakes on L1/L2)
+    function calcAsianLineMetrics(lineStr, lambda, oddsH = 1.85, oddsL = 1.85) {
       const clean = String(lineStr || "2.5").trim();
       if (clean.includes("/")) {
         const segs = clean.split("/").map(Number).filter(n => !isNaN(n));
         if (segs.length === 2) {
-          return 0.5 * probSingleLineOver(segs.at(0), lambda) + 0.5 * probSingleLineOver(segs.at(1), lambda);
+          const s1 = calcSingleLineOutcome(segs.at(0), lambda, oddsH, oddsL);
+          const s2 = calcSingleLineOutcome(segs.at(1), lambda, oddsH, oddsL);
+          const pOverWin = 0.5 * s1.pOverWin + 0.5 * s2.pOverWin;
+          const pPush = 0.5 * s1.pPush + 0.5 * s2.pPush;
+          const pUnderWin = 0.5 * s1.pUnderWin + 0.5 * s2.pUnderWin;
+          const evOver = 0.5 * s1.evOver + 0.5 * s2.evOver;
+          const evUnder = 0.5 * s1.evUnder + 0.5 * s2.evUnder;
+          const settledDenom = Math.max(0.05, pOverWin + pUnderWin);
+          return {
+            pOverWin, pPush, pUnderWin,
+            settledOverProb: pOverWin / settledDenom,
+            settledUnderProb: pUnderWin / settledDenom,
+            evOver, evUnder
+          };
         }
       }
-      return probSingleLineOver(parseFloat(clean) || 2.5, lambda);
+      const s = calcSingleLineOutcome(parseFloat(clean) || 2.5, lambda, oddsH, oddsL);
+      const settledDenom = Math.max(0.05, s.pOverWin + s.pUnderWin);
+      return {
+        pOverWin: s.pOverWin,
+        pPush: s.pPush,
+        pUnderWin: s.pUnderWin,
+        settledOverProb: s.pOverWin / settledDenom,
+        settledUnderProb: s.pUnderWin / settledDenom,
+        evOver: s.evOver,
+        evUnder: s.evUnder
+      };
     }
 
-    function solveImpliedLambda(lineStr, targetOverProb) {
-      let lo = 0.70, hi = 5.40;
-      for (let iter = 0; iter < 28; iter++) {
+    // Solves exact market-implied total goals (lambda) under proportional fair odds for ANY Asian line
+    function solveMarketImpliedLambda(lineStr, oddsH, oddsL) {
+      const h = Math.max(1.04, parseFloat(oddsH) || 1.85);
+      const l = Math.max(1.04, parseFloat(oddsL) || 1.85);
+      const overround = (1 / h) + (1 / l);
+      const fairH = h * overround;
+      const fairL = l * overround;
+
+      let lo = 0.65, hi = 5.60;
+      for (let iter = 0; iter < 30; iter++) {
         const mid = 0.5 * (lo + hi);
-        if (probLineOver(lineStr, mid) < targetOverProb) lo = mid;
+        const m = calcAsianLineMetrics(lineStr, mid, fairH, fairL);
+        if (m.evOver - m.evUnder < 0) lo = mid;
         else hi = mid;
       }
       return 0.5 * (lo + hi);
     }
 
+    // Power-method 1X2 de-vigging (accounts for favorite-longshot bias on heavy underdogs)
+    function deVig1X2Power(h, d, a) {
+      let lo = 0.50, hi = 1.60;
+      for (let iter = 0; iter < 22; iter++) {
+        const k = 0.5 * (lo + hi);
+        const sum = Math.pow(1 / h, k) + Math.pow(1 / d, k) + Math.pow(1 / a, k);
+        if (sum > 1) lo = k;
+        else hi = k;
+      }
+      const kStar = 0.5 * (lo + hi);
+      const pH = Math.pow(1 / h, kStar);
+      const pD = Math.pow(1 / d, kStar);
+      const pA = Math.pow(1 / a, kStar);
+      const norm = pH + pD + pA;
+      return { pH: pH / norm, pD: pD / norm, pA: pA / norm };
+    }
+
+    // Exact Dixon-Coles (1997) 1X2 probability matrix for candidate (lambdaHome, lambdaAway)
+    function dixonColes1X2Probs(lh, la) {
+      const maxG = 11;
+      const px = Array.from({ length: maxG }, (_, i) => poissonPmf(i, lh));
+      const py = Array.from({ length: maxG }, (_, j) => poissonPmf(j, la));
+      const rho = Math.max(-0.065, -0.45 / Math.max(1.0, lh, la));
+
+      let pH = 0, pD = 0, pA = 0;
+      for (let i = 0; i < maxG; i++) {
+        for (let j = 0; j < maxG; j++) {
+          let tau = 1.0;
+          if (i === 0 && j === 0) tau = 1 - lh * la * rho;
+          else if (i === 1 && j === 0) tau = 1 + la * rho;
+          else if (i === 0 && j === 1) tau = 1 + lh * rho;
+          else if (i === 1 && j === 1) tau = 1 - rho;
+
+          const p = Math.max(0, tau * px.at(i) * py.at(j));
+          if (i > j) pH += p;
+          else if (i === j) pD += p;
+          else pA += p;
+        }
+      }
+      const tot = Math.max(1e-6, pH + pD + pA);
+      return { pH: pH / tot, pD: pD / tot, pA: pA / tot };
+    }
+
+    // Calibrated 2D Bivariate Dixon-Coles Solver: solves (lambdaHome, lambdaAway) directly from 1X2 odds without double-counting
     function computeHadCrossPoolLambda(m, leagueAvg) {
       const h = parseFloat(m.hadHome) || 0;
       const d = parseFloat(m.hadDraw) || 0;
       const a = parseFloat(m.hadAway) || 0;
-      if (h <= 1.01 || a <= 1.01) return { lambda: leagueAvg, note: "無主客和盤・採用聯賽基準", active: false };
+      if (h <= 1.02 || a <= 1.02) {
+        return { lambda: leagueAvg, lambdaH: 0.54 * leagueAvg, lambdaA: 0.46 * leagueAvg, note: "無主客和盤・採用聯賽基準", active: false };
+      }
 
-      const invH = 1 / h, invA = 1 / a;
-      const invD = d > 1.05 ? (1 / d) : Math.max(0.18, 1.115 - invH - invA);
-      const sum = invH + invD + invA;
-      const pH = invH / sum, pD = invD / sum, pA = invA / sum;
-      const favProb = Math.max(pH, pA);
-      const supremacy = Math.abs(pH - pA);
+      // If Draw odds missing, only solve share at leagueAvg without inventing draw bonuses
+      if (d <= 1.05) {
+        return { lambda: leagueAvg, lambdaH: 0.54 * leagueAvg, lambdaA: 0.46 * leagueAvg, note: "僅主客賠率・採用聯賽總球基準", active: false };
+      }
 
-      const drawEffect = (0.262 - pD) * 4.85;
-      const supEffect = (supremacy - 0.20) * 0.72;
-      const heavyFavBonus = favProb >= 0.66 ? 0.16 : (favProb <= 0.40 ? -0.10 : 0);
-      const hadLambda = Math.min(4.15, Math.max(1.65, leagueAvg + drawEffect + supEffect + heavyFavBonus));
-      const note = "主 " + h.toFixed(2) + (d > 1 ? " / 和 " + d.toFixed(2) : "") + " / 客 " + a.toFixed(2) + " → 跨彩池預期 " + hadLambda.toFixed(2) + "球";
-      return { lambda: hadLambda, note, active: true };
+      const { pH: targetH, pD: targetD, pA: targetA } = deVig1X2Power(h, d, a);
+      const targetDiff = targetH - targetA;
+
+      function solveHomeShareForTotal(totalGoals) {
+        let sLo = 0.05, sHi = 0.95;
+        for (let it = 0; it < 15; it++) {
+          const sMid = 0.5 * (sLo + sHi);
+          const res = dixonColes1X2Probs(totalGoals * sMid, totalGoals * (1 - sMid));
+          if ((res.pH - res.pA) < targetDiff) sLo = sMid;
+          else sHi = sMid;
+        }
+        return 0.5 * (sLo + sHi);
+      }
+
+      let tLo = 1.45, tHi = 4.45;
+      for (let outer = 0; outer < 17; outer++) {
+        const tMid = 0.5 * (tLo + tHi);
+        const sStar = solveHomeShareForTotal(tMid);
+        const res = dixonColes1X2Probs(tMid * sStar, tMid * (1 - sStar));
+        // Draw probability decreases monotonically as totalGoals increases for fixed skill gap
+        if (res.pD > targetD) tLo = tMid;
+        else tHi = tMid;
+      }
+
+      const solvedTotalRaw = 0.5 * (tLo + tHi);
+      const solvedShare = solveHomeShareForTotal(solvedTotalRaw);
+      // Mild empirical Bayesian shrinkage (80% solved 1X2 total + 20% league prior) prevents extreme tail noise
+      const calibratedTotal = Math.min(4.25, Math.max(1.60, 0.80 * solvedTotalRaw + 0.20 * leagueAvg));
+      const lambdaH = calibratedTotal * solvedShare;
+      const lambdaA = calibratedTotal * (1 - solvedShare);
+
+      const note = "1X2雙變量解算 λ主" + lambdaH.toFixed(2) + " + λ客" + lambdaA.toFixed(2) + " = " + calibratedTotal.toFixed(2) + "球";
+      return { lambda: calibratedTotal, lambdaH, lambdaA, note, active: true };
     }
 
     function evaluateMatch(m) {
-      const lineStr = String(m.line || "2.5");
+      const lineStr = String(m.line || "2.5").trim();
+      const openLine = String(m.openLine || lineStr).trim();
       const oddsH = parseFloat(m.oddsHigh) || 1.85;
       const oddsL = parseFloat(m.oddsLow) || 1.85;
       const invH = 1 / oddsH, invL = 1 / oddsL;
       const overround = invH + invL;
+      const vigPct = (overround - 1) * 100;
       const vigFreeOver = invH / overround;
       const vigFreeUnder = invL / overround;
 
-      const marketLambda = solveImpliedLambda(lineStr, vigFreeOver);
-      const profile = getLeagueProfile(m.league);
-      const hadInfo = computeHadCrossPoolLambda(m, profile.avg);
-
+      const marketLambda = solveMarketImpliedLambda(lineStr, oddsH, oddsL);
       const openH = parseFloat(m.openHigh) || oddsH;
       const openL = parseFloat(m.openLow) || oddsL;
       const prevH = parseFloat(m.prevHigh) || openH;
       const prevL = parseFloat(m.prevLow) || openL;
 
-      const dropPctH = openH > 1.01 ? ((openH - oddsH) / openH) * 100 : 0;
-      const dropPctL = openL > 1.01 ? ((openL - oddsL) / openL) * 100 : 0;
-      const hasAnyMove = Math.abs(openH - oddsH) >= 0.01 || Math.abs(openL - oddsL) >= 0.01 || Math.abs(prevH - oddsH) >= 0.01 || Math.abs(prevL - oddsL) >= 0.01;
-      const maxAbsDrop = Math.max(dropPctH, dropPctL);
-      const hasSignificantDrop = maxAbsDrop >= dropThreshold;
+      const openMarketLambda = (typeof m.openMarketLambda === "number" && m.openMarketLambda > 0.5)
+        ? m.openMarketLambda
+        : solveMarketImpliedLambda(openLine, openH, openL);
 
-      const netDropDiff = dropPctH - dropPctL;
-      let dropGoalShift = Math.max(-0.42, Math.min(0.42, netDropDiff * 0.038));
-      if (dropPctH >= dropThreshold && dropPctH > dropPctL) dropGoalShift += 0.09;
-      if (dropPctL >= dropThreshold && dropPctL > dropPctH) dropGoalShift -= 0.09;
+      const lineShifted = openLine !== lineStr;
+      const impliedLambdaShift = marketLambda - openMarketLambda;
 
-      const crossPoolAnchor = 0.56 * hadInfo.lambda + 0.44 * profile.avg;
+      // Same-line percentage drop OR cross-line implied goal shift converted to equivalent steam %
+      const sameLineDropH = !lineShifted && openH > 1.01 ? ((openH - oddsH) / openH) * 100 : 0;
+      const sameLineDropL = !lineShifted && openL > 1.01 ? ((openL - oddsL) / openL) * 100 : 0;
+      const shiftEquivPct = impliedLambdaShift * 18.0;
+      const dropPctH = lineShifted ? Math.max(0, shiftEquivPct) : sameLineDropH;
+      const dropPctL = lineShifted ? Math.max(0, -shiftEquivPct) : sameLineDropL;
+
+      const hasAnyMove = lineShifted ||
+        Math.abs(openH - oddsH) >= 0.01 || Math.abs(openL - oddsL) >= 0.01 ||
+        Math.abs(prevH - oddsH) >= 0.01 || Math.abs(prevL - oddsL) >= 0.01;
+      const maxAbsDrop = Math.max(dropPctH, dropPctL, Math.abs(sameLineDropH), Math.abs(sameLineDropL));
+      const hasSignificantDrop = maxAbsDrop >= dropThreshold || Math.abs(impliedLambdaShift) >= 0.14;
+
+      const profile = getLeagueProfile(m.league);
+      const hadInfo = computeHadCrossPoolLambda(m, profile.avg);
       const hasForm = typeof m.formGoalsAvg === "number" && m.formGoalsAvg > 0.5;
-      const formLambda = hasForm ? m.formGoalsAvg : (0.55 * crossPoolAnchor + 0.45 * profile.avg);
+      const formLambda = hasForm ? m.formGoalsAvg : profile.avg;
 
       let contextShift = 0;
-      if (m.ctxOpenTactics) contextShift += 0.18;
-      if (m.ctxParkBus) contextShift -= 0.20;
-      if (m.ctxHeavyRain) contextShift -= 0.24;
+      if (m.ctxOpenTactics) contextShift += 0.16;
+      if (m.ctxParkBus) contextShift -= 0.18;
+      if (m.ctxHeavyRain) contextShift -= 0.22;
 
-      let lambdaFinal =
-        0.30 * marketLambda +
-        0.30 * hadInfo.lambda +
-        0.20 * profile.avg +
-        0.20 * formLambda +
-        dropGoalShift +
-        contextShift;
+      // Independent fundamental goal model (NO dropGoalShift added after steam has moved!)
+      let indepLambda = profile.avg;
+      let marketAnchorWeight = 0.35;
+      if (hadInfo.active && hasForm) {
+        indepLambda = 0.45 * hadInfo.lambda + 0.35 * formLambda + 0.20 * profile.avg;
+        marketAnchorWeight = 0.22;
+      } else if (hadInfo.active) {
+        indepLambda = 0.62 * hadInfo.lambda + 0.38 * profile.avg;
+        marketAnchorWeight = 0.28;
+      } else if (hasForm) {
+        indepLambda = 0.60 * formLambda + 0.40 * profile.avg;
+        marketAnchorWeight = 0.30;
+      }
 
-      lambdaFinal = Math.min(4.35, Math.max(1.55, lambdaFinal));
+      const lambdaFinal = Math.min(
+        4.35,
+        Math.max(1.50, marketAnchorWeight * marketLambda + (1 - marketAnchorWeight) * indepLambda + contextShift)
+      );
 
-      const modelOver = probLineOver(lineStr, lambdaFinal);
-      const modelUnder = 1 - modelOver;
+      // Exact Asian Line Win / Push / Loss & Post-Vig Expected Value
+      const asian = calcAsianLineMetrics(lineStr, lambdaFinal, oddsH, oddsL);
+      const rawEvOverPct = asian.evOver * 100;
+      const rawEvUnderPct = asian.evUnder * 100;
 
-      const edgeOver = (modelOver - vigFreeOver) * 100;
-      const edgeUnder = (modelUnder - vigFreeUnder) * 100;
-      const pickOver = edgeOver >= edgeUnder;
+      const edgeOver = (asian.settledOverProb - vigFreeOver) * 100;
+      const edgeUnder = (asian.settledUnderProb - vigFreeUnder) * 100;
+
+      const pickOver = rawEvOverPct >= rawEvUnderPct;
       const bestSide = pickOver ? "OVER" : "UNDER";
       const bestSideLabel = pickOver ? ("大 (" + lineStr + ")") : ("細 (" + lineStr + ")");
+      const rawEvPct = pickOver ? rawEvOverPct : rawEvUnderPct;
       const bestEdge = pickOver ? edgeOver : edgeUnder;
       const pickedOdds = pickOver ? oddsH : oddsL;
-      const alignedDropPct = pickOver ? dropPctH : dropPctL;
-      const opposeDropPct = pickOver ? dropPctL : dropPctH;
-      const rawEvPct = ((pickOver ? modelOver : modelUnder) * pickedOdds - 1) * 100;
 
-      const modeCfg = {
-        strict:   { betEdge: 2.6, holdEdge: 1.5, dropBoostEdge: 1.1 },
-        standard: { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.45 },
-        active:   { betEdge: 0.9, holdEdge: 0.45, dropBoostEdge: 0.10 }
-      }[strategyMode] || { betEdge: 1.5, holdEdge: 0.8, dropBoostEdge: 0.45 };
+      const steamConfirmed = pickOver
+        ? (dropPctH >= dropThreshold || impliedLambdaShift >= 0.10)
+        : (dropPctL >= dropThreshold || impliedLambdaShift <= -0.10);
+
+      const reverseSteamBlocked = pickOver
+        ? (dropPctL >= (dropThreshold + 0.8) || impliedLambdaShift <= -0.15)
+        : (dropPctH >= (dropThreshold + 0.8) || impliedLambdaShift >= 0.15);
+
+      // Strictly gate BET recommendations on positive post-vig Expected Value (rawEvPct > 0)
+      const modeMap = {
+        strict:   { betEv: 2.0,  holdEv: 0.5 },
+        standard: { betEv: 0.5,  holdEv: -0.4 },
+        active:   { betEv: 0.05, holdEv: -1.1 }
+      };
+      const modeCfg = modeMap[strategyMode] || modeMap.standard;
 
       let tier = "pass";
-      let verdictText = "放棄投注 (無優勢)";
+      let verdictText = "放棄投注 (負EV)";
       let reason = "";
 
-      const reverseSteamBlocked = opposeDropPct >= (dropThreshold + 1.0);
-
-      if (!reverseSteamBlocked && pickedOdds >= 1.48 && (
-        bestEdge >= modeCfg.betEdge ||
-        (alignedDropPct >= dropThreshold && bestEdge >= modeCfg.dropBoostEdge)
-      )) {
+      if (!reverseSteamBlocked && pickedOdds >= 1.50 && rawEvPct >= modeCfg.betEv) {
         tier = "bet";
         verdictText = "建議投注：" + bestSideLabel;
-        reason = alignedDropPct >= dropThreshold
-          ? ("賠率落飛 ▼" + alignedDropPct.toFixed(1) + "% 與跨彩池模型同向共振（去水優勢 +" + bestEdge.toFixed(1) + "%）")
-          : ("跨彩池 HAD×聯賽預期 " + lambdaFinal.toFixed(2) + " 球，較馬會盤口具 +" + bestEdge.toFixed(1) + "% 去水優勢");
-      } else if (!reverseSteamBlocked && pickedOdds >= 1.44 && (
-        bestEdge >= modeCfg.holdEdge || alignedDropPct >= (dropThreshold * 0.75)
-      )) {
+        reason = steamConfirmed
+          ? ("扣水後真實正期望值 +" + rawEvPct.toFixed(2) + "%，且市場落飛/移線同向確認（模型 " + lambdaFinal.toFixed(2) + "球 vs 盤口 " + marketLambda.toFixed(2) + "球）")
+          : ("扣水後真實正期望值 +" + rawEvPct.toFixed(2) + "%（去水優勢 +" + bestEdge.toFixed(1) + "%｜模型 " + lambdaFinal.toFixed(2) + "球）");
+      } else if (!reverseSteamBlocked && pickedOdds >= 1.46 && rawEvPct >= modeCfg.holdEv && bestEdge >= 1.2) {
         tier = "hold";
-        verdictText = "輕注考慮：傾向" + bestSideLabel;
-        reason = "具備邊際去水優勢 (+" + bestEdge.toFixed(1) + "%)，可留意臨場賠率會否進一步落飛。";
+        verdictText = "輕注觀望：傾向" + bestSideLabel;
+        reason = rawEvPct >= 0
+          ? ("邊際正期望值 (+" + rawEvPct.toFixed(2) + "%)，建議輕注或等候走地更佳水位。")
+          : ("模型傾向" + bestSideLabel + " (去水 +" + bestEdge.toFixed(1) + "%)，惟馬會抽水 (" + vigPct.toFixed(1) + "%) 後 EV 為 " + rawEvPct.toFixed(2) + "%，宜等高水吸納。");
       } else {
         tier = "pass";
-        verdictText = reverseSteamBlocked ? "放棄 (逆向落飛警示)" : "放棄投注 (盤口貼近)";
+        verdictText = reverseSteamBlocked ? "放棄 (逆向資金警示)" : "放棄投注 (負期望值)";
         reason = reverseSteamBlocked
-          ? ("對家方向出現 ▼" + opposeDropPct.toFixed(1) + "% 逆向落飛，嚴格避開風險。")
-          : ("模型預期 " + lambdaFinal.toFixed(2) + " 球與馬會盤口 (" + marketLambda.toFixed(2) + " 球) 接近，嚴守紀律觀望。");
+          ? ("市場隱含入球或落飛方向與模型相反（初盤 " + openMarketLambda.toFixed(2) + "球 → 現盤 " + marketLambda.toFixed(2) + "球），嚴格規避。")
+          : ("扣除馬會抽水後最高 EV 僅 " + (rawEvPct >= 0 ? "+" : "") + rawEvPct.toFixed(2) + "%，無正期望值空間，嚴守紀律放棄。");
       }
 
       return {
-        lineStr, oddsH, oddsL, openH, openL, prevH, prevL, dropPctH, dropPctL,
-        hasAnyMove, maxAbsDrop, hasSignificantDrop, vigFreeOver, vigFreeUnder,
-        marketLambda, profile, hadInfo, formLambda, hasForm, lambdaFinal,
-        modelOver, modelUnder, bestSide, bestSideLabel, bestEdge, pickedOdds,
-        rawEvPct, tier, verdictText, reason
+        lineStr, openLine, lineShifted, oddsH, oddsL, openH, openL, prevH, prevL,
+        dropPctH, dropPctL, sameLineDropH, sameLineDropL,
+        openMarketLambda, marketLambda, impliedLambdaShift,
+        hasAnyMove, maxAbsDrop, hasSignificantDrop, steamConfirmed, reverseSteamBlocked,
+        vigPct, vigFreeOver, vigFreeUnder, profile, hadInfo, formLambda, hasForm,
+        indepLambda, lambdaFinal, asian,
+        modelOver: asian.settledOverProb, modelUnder: asian.settledUnderProb,
+        rawEvOverPct, rawEvUnderPct, rawEvPct,
+        bestSide, bestSideLabel, bestEdge, pickedOdds, tier, verdictText, reason
       };
     }
 
     function detectGithubRepo() {
-      const saved = JSON.parse(localStorage.getItem(CFG_KEY) || localStorage.getItem("hkjc_v19_cfg") || "{}");
+      const saved = JSON.parse(localStorage.getItem(CFG_KEY) || localStorage.getItem("hkjc_v20_cfg") || "{}");
       if (saved.owner && saved.repo) return { owner: saved.owner, repo: saved.repo, branch: saved.branch || "" };
       const host = location.hostname;
       const pathSegs = location.pathname.split("/").filter(Boolean);
@@ -598,7 +746,6 @@
           } catch (e) {}
         }
 
-        // Rate-limit-proof fallback: Purge + read jsDelivr edge cache directly
         for (const br of branchesToTry) {
           try {
             if (manualBust) {
@@ -636,15 +783,16 @@
       throw new Error("無法讀取雲端 data/hkjc_hilo.json，請點選右上角「雲端倉庫設定」確認用戶名與倉庫名。");
     }
 
+    // Preserves openLine, openHigh, openLow & openMarketLambda even when HKJC shifts the goal line (e.g. 2.5 -> 2.5/3.0)
     function mergeMatchWithOddsMemory(incomingList, cloudStamp) {
-      const mem = JSON.parse(localStorage.getItem(ODDS_MEM_KEY) || "{}");
+      const mem = JSON.parse(localStorage.getItem(ODDS_MEM_KEY) || localStorage.getItem("hkjc_v20_odds_memory") || "{}");
       const prevMap = new Map(matches.map(x => Array.of(x.id, x)));
       const nowMs = Date.now();
       const cutoffMs = nowMs - 2 * 60 * 1000;
       let changedThisSync = 0;
       let newlyAddedThisSync = 0;
 
-      const merged = [];
+      const merged = Array.of();
       for (const item of incomingList) {
         const id = String(item.id || item.code || "").trim();
         if (!id) continue;
@@ -661,50 +809,54 @@
         const isBrandNewLocal = !localEntry.firstSeenAt;
         if (isBrandNewLocal && Object.keys(mem).length > 0) newlyAddedThisSync++;
 
-        const sameLocalLine = !localEntry.line || localEntry.line === curLine;
-
         const finalH = prevObj.manualLock ? prevObj.oddsHigh : curH;
         const finalL = prevObj.manualLock ? prevObj.oddsLow : curL;
 
-        const openHigh = parseFloat(item.openHigh) || (sameLocalLine ? localEntry.openHigh : 0) || finalH;
-        const openLow = parseFloat(item.openLow) || (sameLocalLine ? localEntry.openLow : 0) || finalL;
+        // Preserve original opening line & opening implied goal total across line shifts!
+        const openLine = String(item.openLine || localEntry.openLine || curLine).trim();
+        const openHigh = parseFloat(item.openHigh) || parseFloat(localEntry.openHigh) || finalH;
+        const openLow = parseFloat(item.openLow) || parseFloat(localEntry.openLow) || finalL;
+        const openMarketLambda = (typeof item.openMarketLambda === "number" && item.openMarketLambda > 0.5)
+          ? item.openMarketLambda
+          : ((typeof localEntry.openMarketLambda === "number" && localEntry.openMarketLambda > 0.5)
+            ? localEntry.openMarketLambda
+            : Number(solveMarketImpliedLambda(openLine, openHigh, openLow).toFixed(4)));
 
-        const refLastH = sameLocalLine && localEntry.lastHigh ? localEntry.lastHigh : openHigh;
-        const refLastL = sameLocalLine && localEntry.lastLow ? localEntry.lastLow : openLow;
+        const refLastLine = localEntry.lastLine || openLine;
+        const refLastH = localEntry.lastHigh || openHigh;
+        const refLastL = localEntry.lastLow || openLow;
 
-        const movedNow = Math.abs(finalH - refLastH) >= 0.01 || Math.abs(finalL - refLastL) >= 0.01;
+        const movedNow = (curLine !== refLastLine) || Math.abs(finalH - refLastH) >= 0.01 || Math.abs(finalL - refLastL) >= 0.01;
         if (movedNow) changedThisSync++;
 
-        let history = [];
+        let history = Array.of();
         if (Array.isArray(item.oddsHistory) && item.oddsHistory.length) {
-          history = item.oddsHistory.slice(-14);
-        } else if (sameLocalLine && Array.isArray(localEntry.oddsHistory) && localEntry.oddsHistory.length) {
-          history = localEntry.oddsHistory.slice(-14);
+          history = item.oddsHistory.slice(-16);
+        } else if (Array.isArray(localEntry.oddsHistory) && localEntry.oddsHistory.length) {
+          history = localEntry.oddsHistory.slice(-16);
         } else {
-          history = Array.of({ t: (cloudStamp || formatHktNow()) + " (初盤)", h: openHigh, l: openLow });
+          history = Array.of({ t: (cloudStamp || formatHktNow()) + " (初盤)", line: openLine, h: openHigh, l: openLow });
         }
 
         const lastHist = history.at(-1);
-        if (!lastHist || Math.abs(Number(lastHist.h) - finalH) >= 0.01 || Math.abs(Number(lastHist.l) - finalL) >= 0.01) {
-          history.push({ t: cloudStamp || formatHktNow(), h: finalH, l: finalL });
-          if (history.length > 14) history = history.slice(-14);
+        const lastHistLine = lastHist && lastHist.line ? String(lastHist.line) : curLine;
+        if (!lastHist || lastHistLine !== curLine || Math.abs(Number(lastHist.h) - finalH) >= 0.01 || Math.abs(Number(lastHist.l) - finalL) >= 0.01) {
+          history.push({ t: cloudStamp || formatHktNow(), line: curLine, h: finalH, l: finalL });
+          if (history.length > 16) history = history.slice(-16);
         }
 
-        const prevHigh = movedNow
-          ? refLastH
-          : (parseFloat(item.prevHigh) || (sameLocalLine ? localEntry.prevHigh : 0) || openHigh);
-        const prevLow = movedNow
-          ? refLastL
-          : (parseFloat(item.prevLow) || (sameLocalLine ? localEntry.prevLow : 0) || openLow);
-
+        const prevHigh = movedNow ? refLastH : (parseFloat(item.prevHigh) || localEntry.prevHigh || openHigh);
+        const prevLow = movedNow ? refLastL : (parseFloat(item.prevLow) || localEntry.prevLow || openLow);
         const firstSeenAt = localEntry.firstSeenAt || nowMs;
 
         mem[id] = {
-          line: curLine,
+          openLine,
           openHigh,
           openLow,
+          openMarketLambda,
           prevHigh,
           prevLow,
+          lastLine: curLine,
           lastHigh: finalH,
           lastLow: finalL,
           firstSeenAt,
@@ -718,18 +870,20 @@
           ...item,
           id,
           line: curLine,
+          openLine,
           oddsHigh: finalH,
           oddsLow: finalL,
           openHigh,
           openLow,
+          openMarketLambda,
           prevHigh,
           prevLow,
           isNewMatch: Boolean(item.isNewMatch) || (isBrandNewLocal && Object.keys(mem).length > 1),
-          justMoved: movedNow || (nowMs - (mem[id].justMovedAt || 0) < 15 * 60 * 1000 && (Math.abs(finalH - prevHigh) >= 0.01 || Math.abs(finalL - prevLow) >= 0.01)),
+          justMoved: movedNow || (nowMs - (mem[id].justMovedAt || 0) < 15 * 60 * 1000 && (curLine !== openLine || Math.abs(finalH - prevHigh) >= 0.01 || Math.abs(finalL - prevLow) >= 0.01)),
           oddsHistory: history,
           kickoffMs: koMs,
           formGoalsAvg: typeof item.formGoalsAvg === "number" ? item.formGoalsAvg : prevObj.formGoalsAvg,
-          formSource: item.formSource || prevObj.formSource || ""
+          formDetail: item.formDetail || prevObj.formDetail || ""
         });
       }
 
@@ -738,57 +892,116 @@
       return { merged, changedThisSync, newlyAddedThisSync };
     }
 
+    function collectEspnStandingsEntries(node, bucket) {
+      if (!node || typeof node !== "object") return;
+      if (node.standings && Array.isArray(node.standings.entries)) {
+        for (const e of node.standings.entries) bucket.push(e);
+      }
+      if (Array.isArray(node.entries)) {
+        for (const e of node.entries) bucket.push(e);
+      }
+      if (Array.isArray(node.children)) {
+        for (const ch of node.children) collectEspnStandingsEntries(ch, bucket);
+      }
+    }
+
+    // Pulls actual Goals For (GF) and Goals Against (GA) per game from ESPN Standings & Scoreboard APIs (zero win-rate proxy!)
     async function syncGlobalTeamForm() {
       const pill = document.getElementById("espnPill");
-      const leagues = "eng.1,esp.1,ger.1,ita.1,fra.1,usa.1,mex.1,bra.1,arg.1,jpn.1,aus.1,ned.1,por.1,sco.1,tur.1,uefa.champions,uefa.europa,afc.champions".split(",");
-      const teamScores = new Map();
+      const leagues = "eng.1,eng.2,esp.1,ger.1,ger.2,ita.1,fra.1,usa.1,mex.1,bra.1,arg.1,jpn.1,aus.1,ned.1,por.1,sco.1,tur.1,bel.1,swe.1,nor.1,uefa.champions,uefa.europa,afc.champions".split(",");
+      const teamMetrics = new Map();
+
       await Promise.allSettled(leagues.map(async (lg) => {
-        const r = await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/" + lg + "/scoreboard", { cache: "no-store" });
-        if (!r.ok) return;
-        const j = await r.json();
-        for (const ev of (j.events || [])) {
-          const comp = (ev.competitions || []).at(0);
-          if (!comp) continue;
-          for (const c of (comp.competitors || [])) {
-            const name = String((c.team || {}).displayName || "").toLowerCase();
-            const shortName = String((c.team || {}).shortDisplayName || "").toLowerCase();
-            const rec = (c.records || []).at(0);
-            if (name && rec && rec.summary) {
-              const nums = String(rec.summary).split("-").map(Number);
-              if (nums.length >= 3) {
-                const gp = Math.max(1, nums.at(0) + nums.at(1) + nums.at(2));
-                const winRate = nums.at(0) / gp;
-                const estGoals = 2.35 + winRate * 1.15;
-                teamScores.set(name, estGoals);
-                if (shortName) teamScores.set(shortName, estGoals);
+        try {
+          const r = await fetch("https://site.api.espn.com/apis/v2/sports/soccer/" + lg + "/standings", { cache: "no-store" });
+          if (!r.ok) return;
+          const j = await r.json();
+          const entries = Array.of();
+          collectEspnStandingsEntries(j, entries);
+          if (!entries.length) return;
+
+          let totalGoalsLeague = 0;
+          let totalTeamGames = 0;
+          const parsedTeams = Array.of();
+
+          for (const ent of entries) {
+            const tm = ent.team || {};
+            const name = String(tm.displayName || "").toLowerCase().trim();
+            const shortName = String(tm.shortDisplayName || "").toLowerCase().trim();
+            const stats = Array.isArray(ent.stats) ? ent.stats : Array.of();
+
+            const findStat = (statNames) => {
+              for (const sn of statNames.split(",")) {
+                const hit = stats.find(s => s && (s.name === sn || s.type === sn || s.abbreviation === sn));
+                if (hit && typeof hit.value === "number" && !isNaN(hit.value)) return hit.value;
               }
+              return null;
+            };
+
+            const gp = findStat("gamesPlayed,GP");
+            const gf = findStat("pointsFor,goalsFor,GF,F");
+            const ga = findStat("pointsAgainst,goalsAgainst,GA,A");
+
+            if (name && gp && gp >= 3 && gf !== null && ga !== null) {
+              totalGoalsLeague += gf;
+              totalTeamGames += gp;
+              parsedTeams.push({ name, shortName, gp, gfPg: gf / gp, gaPg: ga / gp });
             }
           }
-        }
+
+          const lgMatchAvg = totalTeamGames > 0 ? Math.min(3.65, Math.max(1.95, (2.0 * totalGoalsLeague) / totalTeamGames)) : 2.70;
+          for (const pt of parsedTeams) {
+            const weight = pt.gp / (pt.gp + 6);
+            const halfLg = 0.5 * lgMatchAvg;
+            const adjGf = weight * pt.gfPg + (1 - weight) * halfLg;
+            const adjGa = weight * pt.gaPg + (1 - weight) * halfLg;
+            const obj = { gfPg: adjGf, gaPg: adjGa, rawGfPg: pt.gfPg, rawGaPg: pt.gaPg, gp: pt.gp, lgAvg: lgMatchAvg };
+            teamMetrics.set(pt.name, obj);
+            if (pt.shortName && pt.shortName.length >= 3) teamMetrics.set(pt.shortName, obj);
+          }
+        } catch (e) {}
       }));
 
       let aligned = 0;
       for (const m of matches) {
-        if (typeof m.formGoalsAvg === "number" && m.formGoalsAvg > 0) { aligned++; continue; }
-        const hEn = String(m.homeEn || TEAM_EN_DICT[m.home] || "").toLowerCase();
-        const aEn = String(m.awayEn || TEAM_EN_DICT[m.away] || "").toLowerCase();
-        let hVal = null, aVal = null;
-        for (const entry of teamScores.entries()) {
-          const k = entry.at(0), val = entry.at(1);
-          if (hEn && (k.includes(hEn) || hEn.includes(k))) hVal = val;
-          if (aEn && (k.includes(aEn) || aEn.includes(k))) aVal = val;
+        const hEn = String(m.homeEn || TEAM_EN_DICT[m.home] || "").toLowerCase().trim();
+        const aEn = String(m.awayEn || TEAM_EN_DICT[m.away] || "").toLowerCase().trim();
+        let hStat = null, aStat = null;
+
+        if (hEn || aEn) {
+          for (const entry of teamMetrics.entries()) {
+            const k = entry.at(0), val = entry.at(1);
+            if (!hStat && hEn && hEn.length >= 3 && (k === hEn || k.includes(hEn) || hEn.includes(k))) hStat = val;
+            if (!aStat && aEn && aEn.length >= 3 && (k === aEn || k.includes(aEn) || aEn.includes(k))) aStat = val;
+          }
         }
-        if (hVal || aVal) {
-          const prof = getLeagueProfile(m.league).avg;
-          m.formGoalsAvg = Number((((hVal || prof) + (aVal || prof)) * 0.5).toFixed(2));
-          m.formSource = "ESPN賽季戰績校準";
+
+        const baseAvg = getLeagueProfile(m.league).avg;
+        if (hStat && aStat) {
+          const lgAvg = 0.5 * (hStat.lgAvg + aStat.lgAvg);
+          const avgTeamG = Math.max(0.85, 0.5 * lgAvg);
+          const expHome = (hStat.gfPg / avgTeamG) * (aStat.gaPg / avgTeamG) * (0.54 * lgAvg);
+          const expAway = (aStat.gfPg / avgTeamG) * (hStat.gaPg / avgTeamG) * (0.46 * lgAvg);
+          m.formGoalsAvg = Number(Math.min(4.30, Math.max(1.55, expHome + expAway)).toFixed(2));
+          m.formDetail = "主場均入" + hStat.rawGfPg.toFixed(2) + "/失" + hStat.rawGaPg.toFixed(2) + "・客場均入" + aStat.rawGfPg.toFixed(2) + "/失" + aStat.rawGaPg.toFixed(2);
           aligned++;
+        } else if (hStat || aStat) {
+          const single = hStat || aStat;
+          const teamTot = single.gfPg + single.gaPg;
+          m.formGoalsAvg = Number((0.55 * teamTot + 0.45 * baseAvg).toFixed(2));
+          m.formDetail = "單邊GF/GA (" + (single.rawGfPg + single.rawGaPg).toFixed(2) + "球/場) + 聯賽基準";
+          aligned++;
+        } else {
+          m.formGoalsAvg = null;
+          m.formDetail = "";
         }
       }
+
       if (pill) {
         pill.className = "feed-pill ok";
-        pill.textContent = "跨彩池+賽程：已對齊 " + aligned + " 場";
+        pill.textContent = "GF/GA 攻防已對齊：" + aligned + " 場";
       }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
       renderAll();
     }
 
@@ -798,7 +1011,7 @@
       try {
         if (manual) addLog("正在同步最新馬會賽事與即時賠率 (ETag + jsDelivr 雙通道)...");
         const { data, mode } = await fetchZeroCacheCloudJson(manual);
-        const rawList = Array.isArray(data) ? data : (data.matches || []);
+        const rawList = Array.isArray(data) ? data : (data.matches || Array.of());
         const cloudHkt = data.updatedAtHkt || formatHktNow();
         const cloudIso = data.updatedAtIso || "";
         const cloudChanged = Number(data.oddsChangedCount || 0);
@@ -821,7 +1034,7 @@
           addLog(
             "同步完成 (" + mode + ")：雲端更新於 " + cloudHkt +
             "｜實時抓獲 " + cloudFreshScraped + " 場｜新增賽事 +" + Math.max(cloudNewAdded, newlyAddedThisSync) +
-            " 場｜賠率變動 " + Math.max(cloudChanged, changedThisSync) + " 場。"
+            " 場｜賠率/球線變動 " + Math.max(cloudChanged, changedThisSync) + " 場。"
           );
           syncGlobalTeamForm();
         }
@@ -837,7 +1050,7 @@
 
     function setStrategyMode(mode) {
       strategyMode = mode;
-      localStorage.setItem("hkjc_v20_mode", mode);
+      localStorage.setItem("hkjc_v21_mode", mode);
       "strict,standard,active".split(",").forEach(k => {
         const el = document.getElementById("modeBtn_" + k);
         if (el) el.classList.toggle("active", k === mode);
@@ -847,7 +1060,7 @@
 
     function setDropThreshold(val) {
       dropThreshold = parseFloat(val) || 3.0;
-      localStorage.setItem("hkjc_v20_drop", String(dropThreshold));
+      localStorage.setItem("hkjc_v21_drop", String(dropThreshold));
       renderAll();
     }
 
@@ -865,7 +1078,8 @@
       renderAll();
     }
 
-    function formatOddMove(openVal, curVal) {
+    function formatOddMove(openVal, curVal, lineShifted) {
+      if (lineShifted) return '<span style="color:var(--hkjc-gold);font-size:0.68rem;">移線</span>';
       const diff = openVal - curVal;
       const diffPct = openVal > 1.01 ? (diff / openVal) * 100 : 0;
       if (diff >= 0.01) return '<span class="odd-down">▼' + diffPct.toFixed(1) + '%</span>';
@@ -909,10 +1123,10 @@
       });
 
       filtered.sort((a, b) => {
-        if (sortBy === "edge") {
+        if (sortBy === "ev") {
           const tierRank = { bet: 3, hold: 2, pass: 1 };
           if (tierRank[b.ev.tier] !== tierRank[a.ev.tier]) return tierRank[b.ev.tier] - tierRank[a.ev.tier];
-          return b.ev.bestEdge - a.ev.bestEdge;
+          return b.ev.rawEvPct - a.ev.rawEvPct;
         }
         if (sortBy === "drop") return b.ev.maxAbsDrop - a.ev.maxAbsDrop;
         return (a.m.kickoffMs || 9e15) - (b.m.kickoffMs || 9e15);
@@ -920,7 +1134,7 @@
 
       const listEl = document.getElementById("matchList");
       if (filtered.length === 0) {
-        listEl.innerHTML = '<div class="match-card" style="text-align:center;color:var(--text-muted);padding:28px;">目前篩選條件下沒有賽事，請切換上方篩選標籤或策略鬆緊度。</div>';
+        listEl.innerHTML = '<div class="match-card" style="text-align:center;color:var(--text-muted);padding:28px;">目前篩選條件下沒有賽事，請切換上方篩選標籤或 +EV 策略門檻。</div>';
         renderInspector();
         return;
       }
@@ -940,35 +1154,39 @@
         const movedCls = ev.hasAnyMove ? " just-moved" : "";
         const newCls = m.isNewMatch ? " is-new" : "";
 
-        let moveTag = '<span class="tele-tag">初盤 ' + ev.openH.toFixed(2) + ' / ' + ev.openL.toFixed(2) + '</span>';
-        if (ev.hasSignificantDrop) {
-          moveTag = '<span class="tele-tag drop">🔥 ' + (ev.dropPctH >= ev.dropPctL ? '大盤落飛 ' + ev.openH.toFixed(2) + '→' + ev.oddsH.toFixed(2) + ' (▼' + ev.dropPctH.toFixed(1) + '%)' : '細盤落飛 ' + ev.openL.toFixed(2) + '→' + ev.oddsL.toFixed(2) + ' (▼' + ev.dropPctL.toFixed(1) + '%)') + '</span>';
+        let moveTag = '<span class="tele-tag">初盤 (' + ev.openLine + ') ' + ev.openH.toFixed(2) + ' / ' + ev.openL.toFixed(2) + '</span>';
+        if (ev.lineShifted) {
+          moveTag = '<span class="tele-tag drop">🔀 球線變動：' + ev.openLine + ' → ' + ev.lineStr + '（隱含 ' + ev.openMarketLambda.toFixed(2) + '→' + ev.marketLambda.toFixed(2) + '球）</span>';
+        } else if (ev.hasSignificantDrop) {
+          moveTag = '<span class="tele-tag drop">🔥 ' + (ev.sameLineDropH >= ev.sameLineDropL ? '大盤落飛 ' + ev.openH.toFixed(2) + '→' + ev.oddsH.toFixed(2) + ' (▼' + ev.sameLineDropH.toFixed(1) + '%)' : '細盤落飛 ' + ev.openL.toFixed(2) + '→' + ev.oddsL.toFixed(2) + ' (▼' + ev.sameLineDropL.toFixed(1) + '%)') + '</span>';
         } else if (ev.hasAnyMove) {
           moveTag = '<span class="tele-tag good">🔄 變盤：大 ' + ev.openH.toFixed(2) + '→' + ev.oddsH.toFixed(2) + ' ｜ 細 ' + ev.openL.toFixed(2) + '→' + ev.oddsL.toFixed(2) + '</span>';
         }
 
         const newBadge = m.isNewMatch ? '<span class="tele-tag newtag">✨ 新開盤賽事</span>' : '';
+        const pushNote = ev.asian.pPush > 0.005 ? ('・走水 ' + Math.round(ev.asian.pPush * 100) + '%') : '';
 
         html += '<div class="match-card' + isSel + movedCls + newCls + '" onclick="selectMatch(\'' + m.id + '\')">' +
           '<div class="card-top">' +
             '<div><span class="ko-badge">🕒 ' + formatKickoffHkt(m.kickoffMs) + '</span><span class="fb-code">' + m.id + '</span><span>' + (m.league || "足球賽事") + '</span></div>' +
-            '<span class="line-pill">球線 ' + ev.lineStr + '</span>' +
+            '<span class="line-pill">球線 ' + ev.lineStr + (ev.lineShifted ? ' (初' + ev.openLine + ')' : '') + '</span>' +
           '</div>' +
           '<div class="teams-row">' +
             '<div class="teams-title">' + m.home + ' <span style="color:var(--text-muted);font-weight:500;">對</span> ' + m.away + '</div>' +
             '<span class="verdict-badge ' + vClass + '">' + ev.verdictText + '</span>' +
           '</div>' +
           '<div class="metrics-strip">' +
-            '<div><span class="m-label">即時大 / 細 (' + ev.lineStr + ')</span><span class="m-val">' + ev.oddsH.toFixed(2) + ' ' + formatOddMove(ev.openH, ev.oddsH) + ' / ' + ev.oddsL.toFixed(2) + ' ' + formatOddMove(ev.openL, ev.oddsL) + '</span></div>' +
-            '<div><span class="m-label">跨彩池預期總入球</span><span class="m-val" style="color:var(--hkjc-gold);">' + ev.lambdaFinal.toFixed(2) + ' 球</span></div>' +
-            '<div><span class="m-label">模型大 / 細勝率</span><span class="m-val">' + Math.round(ev.modelOver * 100) + '% / ' + Math.round(ev.modelUnder * 100) + '%</span></div>' +
-            '<div><span class="m-label">最高去水優勢</span><span class="m-val" style="color:' + (ev.bestEdge >= 1.5 ? '#34d399' : '#e2e8f0') + ';">' + (ev.bestEdge >= 0 ? '+' : '') + ev.bestEdge.toFixed(1) + '%</span></div>' +
+            '<div><span class="m-label">即時大 / 細 (' + ev.lineStr + ')</span><span class="m-val">' + ev.oddsH.toFixed(2) + ' ' + formatOddMove(ev.openH, ev.oddsH, ev.lineShifted) + ' / ' + ev.oddsL.toFixed(2) + ' ' + formatOddMove(ev.openL, ev.oddsL, ev.lineShifted) + '</span></div>' +
+            '<div><span class="m-label">獨立模型 vs 盤口隱含</span><span class="m-val" style="color:var(--hkjc-gold);">' + ev.lambdaFinal.toFixed(2) + ' / ' + ev.marketLambda.toFixed(2) + '球</span></div>' +
+            '<div><span class="m-label">精確大 / 細率' + pushNote + '</span><span class="m-val">' + Math.round(ev.asian.pOverWin * 100) + '% / ' + Math.round(ev.asian.pUnderWin * 100) + '%</span></div>' +
+            '<div><span class="m-label">扣水後真實期望值 (EV)</span><span class="m-val" style="color:' + (ev.rawEvPct > 0 ? '#34d399' : '#f87171') + ';">' + (ev.rawEvPct >= 0 ? '+' : '') + ev.rawEvPct.toFixed(2) + '%</span></div>' +
           '</div>' +
           '<div class="live-telemetry">' +
             newBadge +
             moveTag +
             '<span class="tele-tag sofa">' + ev.profile.tag + '</span>' +
             '<span class="tele-tag">' + ev.hadInfo.note + '</span>' +
+            (ev.hasForm ? '<span class="tele-tag good">⚽ 實戰GF/GA：' + ev.formLambda.toFixed(2) + '球</span>' : '') +
           '</div>' +
           '<div style="margin-top:8px;font-size:0.74rem;color:var(--text-muted);">' + ev.reason + '</div>' +
         '</div>';
@@ -992,9 +1210,9 @@
       selectedId = m.id;
       const ev = evaluateMatch(m);
       const vClass = ev.tier === "bet" ? "v-bet" : (ev.tier === "hold" ? "v-hold" : "v-pass");
-      const histHtml = (m.oddsHistory || []).slice().reverse().map(h =>
+      const histHtml = (m.oddsHistory || Array.of()).slice().reverse().map(h =>
         '<div style="display:flex;justify-content:space-between;border-bottom:1px dashed rgba(148,163,184,0.12);padding:3px 0;">' +
-        '<span>' + h.t + '</span><span>大 <strong>' + Number(h.h).toFixed(2) + '</strong> / 細 <strong>' + Number(h.l).toFixed(2) + '</strong></span></div>'
+        '<span>' + h.t + (h.line ? ' [' + h.line + ']' : '') + '</span><span>大 <strong>' + Number(h.h).toFixed(2) + '</strong> / 細 <strong>' + Number(h.l).toFixed(2) + '</strong></span></div>'
       ).join("") || "<div>等待下輪變盤紀錄...</div>";
 
       panel.innerHTML =
@@ -1004,34 +1222,37 @@
           '<span class="verdict-badge ' + vClass + '">' + ev.verdictText + '</span>' +
         '</div>' +
 
-        '<div class="section-title">五大實戰量化支柱分解（即時跟隨馬會變盤重算）</div>' +
+        '<div class="section-title">v21 嚴謹精算五大支柱分解（不追高落飛・嚴格扣水正EV）</div>' +
         '<div class="factor-box">' +
-          '<div class="factor-row"><span>1. 主客和×大細跨彩池精算 (權重 30%)</span><strong>' + ev.hadInfo.lambda.toFixed(2) + ' 球</strong></div>' +
-          '<div class="factor-row"><span>2. 馬會賠率落飛動能 (權重 25%・門檻 ' + dropThreshold.toFixed(1) + '%)</span><strong style="color:' + (ev.hasSignificantDrop ? '#fda4af' : '#cbd5e1') + ';">大 ' + (ev.dropPctH >= 0 ? '▼' : '▲') + Math.abs(ev.dropPctH).toFixed(1) + '% / 細 ' + (ev.dropPctL >= 0 ? '▼' : '▲') + Math.abs(ev.dropPctL).toFixed(1) + '%</strong></div>' +
-          '<div class="factor-row"><span>3. 聯賽歷史入球基準 (權重 20%)</span><strong>' + ev.profile.avg.toFixed(2) + ' 球</strong></div>' +
-          '<div class="factor-row"><span>4. 球隊賽季近況預期 (權重 20%)</span><strong>' + ev.formLambda.toFixed(2) + ' 球 ' + (ev.hasForm ? '(已對齊)' : '(基準估算)') + '</strong></div>' +
-          '<div class="factor-row"><span>5. 馬會盤口隱含入球 vs 最終模型預期 (λ)</span><strong style="color:var(--hkjc-gold);">盤口 ' + ev.marketLambda.toFixed(2) + ' 球 → 模型 ' + ev.lambdaFinal.toFixed(2) + ' 球</strong></div>' +
-          '<div class="factor-row"><span>推薦方向去水優勢 / 原始期望值</span><strong style="color:#34d399;">' + (ev.bestEdge >= 0 ? '+' : '') + ev.bestEdge.toFixed(2) + '% / ' + (ev.rawEvPct >= 0 ? '+' : '') + ev.rawEvPct.toFixed(1) + '%</strong></div>' +
+          '<div class="factor-row"><span>1. Dixon-Coles 1X2 雙變量解算</span><strong>' + ev.hadInfo.lambda.toFixed(2) + ' 球 (' + (ev.hadInfo.active ? 'λ主' + ev.hadInfo.lambdaH.toFixed(2) + '/λ客' + ev.hadInfo.lambdaA.toFixed(2) : '基準') + ')</strong></div>' +
+          '<div class="factor-row"><span>2. ESPN 實戰得失球率 (GF+GA/場)</span><strong>' + ev.formLambda.toFixed(2) + ' 球 ' + (ev.hasForm ? '(真實攻防)' : '(聯賽基準)') + '</strong></div>' +
+          (m.formDetail ? '<div class="factor-row"><span style="color:var(--text-muted);font-size:0.72rem;">球隊真實攻防明細</span><span style="color:#7dd3fc;font-size:0.72rem;">' + m.formDetail + '</span></div>' : '') +
+          '<div class="factor-row"><span>3. 聯賽歷史入球基準</span><strong>' + ev.profile.avg.toFixed(2) + ' 球</strong></div>' +
+          '<div class="factor-row"><span>4. 初盤隱含入球 → 現盤隱含入球</span><strong>' + ev.openMarketLambda.toFixed(2) + ' 球 (' + ev.openLine + ') → ' + ev.marketLambda.toFixed(2) + ' 球 (' + ev.lineStr + ')</strong></div>' +
+          '<div class="factor-row"><span>5. 落飛/移線信號（僅作確認或逆向否決）</span><strong style="color:' + (ev.reverseSteamBlocked ? '#f87171' : (ev.steamConfirmed ? '#34d399' : '#cbd5e1')) + ';">' + (ev.reverseSteamBlocked ? '⚠️ 逆向資金否決' : (ev.steamConfirmed ? '✅ 同向資金確認' : '中性盤路')) + '</strong></div>' +
+          '<div class="factor-row"><span>最終模型預期總入球 (λ)</span><strong style="color:var(--hkjc-gold);">' + ev.lambdaFinal.toFixed(2) + ' 球</strong></div>' +
+          '<div class="factor-row"><span>亞洲球線 (' + ev.lineStr + ') 大贏 / 走水 / 細贏率</span><strong>' + (ev.asian.pOverWin * 100).toFixed(1) + '% / ' + (ev.asian.pPush * 100).toFixed(1) + '% / ' + (ev.asian.pUnderWin * 100).toFixed(1) + '%</strong></div>' +
+          '<div class="factor-row"><span>大盤真實 EV / 細盤真實 EV (馬會抽水 ' + ev.vigPct.toFixed(1) + '%)</span><strong style="color:' + (ev.rawEvPct > 0 ? '#34d399' : '#f87171') + ';">' + (ev.rawEvOverPct >= 0 ? '+' : '') + ev.rawEvOverPct.toFixed(2) + '% / ' + (ev.rawEvUnderPct >= 0 ? '+' : '') + ev.rawEvUnderPct.toFixed(2) + '%</strong></div>' +
         '</div>' +
 
-        '<div class="section-title">初盤 vs 最新馬會賠率時間軸（雙引擎每 5 分鐘同步）</div>' +
+        '<div class="section-title">初盤 (' + ev.openLine + ') vs 最新馬會賠率 (' + ev.lineStr + ') 時間軸</div>' +
         '<div class="factor-box">' +
           '<div class="odds-grid">' +
-            '<div class="odds-cell"><label>初盤「大」賠率</label><input type="number" step="0.01" value="' + ev.openH.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'openHigh\', this.value)" /></div>' +
-            '<div class="odds-cell"><label>初盤「細」賠率</label><input type="number" step="0.01" value="' + ev.openL.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'openLow\', this.value)" /></div>' +
+            '<div class="odds-cell"><label>初盤「大」賠率 (' + ev.openLine + ')</label><input type="number" step="0.01" value="' + ev.openH.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'openHigh\', this.value)" /></div>' +
+            '<div class="odds-cell"><label>初盤「細」賠率 (' + ev.openLine + ')</label><input type="number" step="0.01" value="' + ev.openL.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'openLow\', this.value)" /></div>' +
             '<div class="odds-cell"><label>最新「大」賠率 (' + ev.lineStr + ')</label><input type="number" step="0.01" value="' + ev.oddsH.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'oddsHigh\', this.value)" /></div>' +
             '<div class="odds-cell"><label>最新「細」賠率 (' + ev.lineStr + ')</label><input type="number" step="0.01" value="' + ev.oddsL.toFixed(2) + '" onchange="updateMatchField(\'' + m.id + '\', \'oddsLow\', this.value)" /></div>' +
           '</div>' +
           (m.manualLock ? '<div style="margin-top:6px;"><button class="btn-outline" style="padding:4px 9px;font-size:0.72rem;" onclick="unlockManualOdds(\'' + m.id + '\')">🔓 解除手動鎖定，恢復自動跟隨馬會雲端賠率</button></div>' : '') +
-          '<div style="margin-top:9px;font-size:0.73rem;color:#93c5fd;font-weight:700;">馬會賠率變動時間軸：</div>' +
+          '<div style="margin-top:9px;font-size:0.73rem;color:#93c5fd;font-weight:700;">馬會賠率與球線變動時間軸：</div>' +
           '<div class="history-list">' + histHtml + '</div>' +
         '</div>' +
 
-        '<div class="section-title">臨場戰術與特殊場地微調（選填・權重 5%）</div>' +
+        '<div class="section-title">臨場戰術與特殊場地微調（選填）</div>' +
         '<div class="factor-box">' +
-          '<label class="check-row"><input type="checkbox" ' + (m.ctxOpenTactics ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxOpenTactics\', this.checked)" /> 雙方搶分戰意極強 / 高位對攻格局 (+0.18 球)</label>' +
-          '<label class="check-row"><input type="checkbox" ' + (m.ctxParkBus ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxParkBus\', this.checked)" /> 淘汰賽首回合保守 / 弱隊死守鐵桶陣 (-0.20 球)</label>' +
-          '<label class="check-row"><input type="checkbox" ' + (m.ctxHeavyRain ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxHeavyRain\', this.checked)" /> 直播確認球場嚴重積水或暴雪影響推進 (-0.24 球)</label>' +
+          '<label class="check-row"><input type="checkbox" ' + (m.ctxOpenTactics ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxOpenTactics\', this.checked)" /> 雙方搶分戰意極強 / 高位對攻格局 (+0.16 球)</label>' +
+          '<label class="check-row"><input type="checkbox" ' + (m.ctxParkBus ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxParkBus\', this.checked)" /> 淘汰賽首回合保守 / 弱隊死守鐵桶陣 (-0.18 球)</label>' +
+          '<label class="check-row"><input type="checkbox" ' + (m.ctxHeavyRain ? 'checked' : '') + ' onchange="toggleCtx(\'' + m.id + '\', \'ctxHeavyRain\', this.checked)" /> 直播確認球場嚴重積水或暴雪影響推進 (-0.22 球)</label>' +
         '</div>';
     }
 
@@ -1041,6 +1262,9 @@
       const num = parseFloat(val);
       if (isNaN(num) || num <= 1.01) return;
       m[field] = num;
+      if (field === "openHigh" || field === "openLow") {
+        m.openMarketLambda = Number(solveMarketImpliedLambda(m.openLine || m.line || "2.5", m.openHigh || m.oddsHigh, m.openLow || m.oddsLow).toFixed(4));
+      }
       if (field === "oddsHigh" || field === "oddsLow") m.manualLock = true;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
       renderAll();
@@ -1095,7 +1319,7 @@
       let count = 0;
       for (const ln of lines) {
         const mCode = ln.match(/(FB\d{4})/i);
-        const floats = ln.match(/\b\d+\.\d{2}\b/g) || [];
+        const floats = ln.match(/\b\d+\.\d{2}\b/g) || Array.of();
         if (mCode && floats.length >= 2) {
           const code = mCode.at(1).toUpperCase();
           const h = parseFloat(floats.at(0));
@@ -1106,8 +1330,8 @@
             ex.prevLow = ex.oddsLow;
             ex.oddsHigh = h;
             ex.oddsLow = l;
-            ex.oddsHistory = ex.oddsHistory || [];
-            ex.oddsHistory.push({ t: formatHktNow() + " (貼上)", h, l });
+            ex.oddsHistory = ex.oddsHistory || Array.of();
+            ex.oddsHistory.push({ t: formatHktNow() + " (貼上)", line: ex.line, h, l });
             count++;
           }
         }
@@ -1125,11 +1349,13 @@
       const line = document.getElementById("addLine").value.trim() || "2.5";
       const oddsHigh = parseFloat(document.getElementById("addHigh").value) || 1.85;
       const oddsLow = parseFloat(document.getElementById("addLow").value) || 1.85;
+      const openMkt = Number(solveMarketImpliedLambda(line, oddsHigh, oddsLow).toFixed(4));
       matches.unshift({
-        id, league, home, away, line, oddsHigh, oddsLow,
-        openHigh: oddsHigh, openLow: oddsLow, prevHigh: oddsHigh, prevLow: oddsLow,
+        id, league, home, away, line, openLine: line, oddsHigh, oddsLow,
+        openHigh: oddsHigh, openLow: oddsLow, openMarketLambda: openMkt,
+        prevHigh: oddsHigh, prevLow: oddsLow,
         kickoffMs: Date.now() + 3600000 * 4,
-        oddsHistory: Array.of({ t: formatHktNow(), h: oddsHigh, l: oddsLow })
+        oddsHistory: Array.of({ t: formatHktNow(), line, h: oddsHigh, l: oddsLow })
       });
       selectedId = id;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
@@ -1139,12 +1365,12 @@
 
     function hardResetCache() {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("hkjc_v20_matches");
       localStorage.removeItem("hkjc_v19_matches");
-      localStorage.removeItem("hkjc_v18_matches");
       cachedCommitEtag = "";
       cachedCommitSha = "";
       cachedCloudPayload = null;
-      location.href = location.pathname + "?v=20&t=" + Date.now();
+      location.href = location.pathname + "?v=21&t=" + Date.now();
     }
 
     function init() {
