@@ -1,4 +1,4 @@
-name: HKJC HiLo Live Odds & Drop Sync (v20)
+name: HKJC HiLo Live Odds & Drop Sync (v21)
 
 on:
   schedule:
@@ -48,7 +48,7 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Auto-sync HKJC fixtures & live odds (v20)"
+          git commit -m "Auto-sync HKJC fixtures & live odds (v21)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
           curl -s "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@${GITHUB_REF_NAME}/data/hkjc_hilo.json" > /dev/null || true
